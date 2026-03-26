@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# 建议忽略包含敏感 Provider 信息的 yaml
+# config.secret.yaml
