@@ -1,0 +1,238 @@
+mixed-port: 7890
+allow-lan: false
+bind-address: '*'
+mode: rule
+log-level: info
+external-controller: '127.0.0.1:9090'
+unified-delay: true
+hosts:
+    time.facebook.com: 17.253.84.125
+    time.android.com: 17.253.84.125
+dns:
+    enable: true
+    use-hosts: true
+    nameserver: [119.29.29.29, 223.5.5.5, 223.6.6.6, 'tcp://223.5.5.5', 'tcp://223.6.6.6', 'tls://dns.google:853', 'tls://8.8.8.8:853', 'tls://8.8.4.4:853', 'tls://dns.alidns.com', 'tls://223.5.5.5', 'tls://223.6.6.6', 'tls://dot.pub', 'tls://1.12.12.12', 'tls://120.53.53.53', 'https://dns.google/dns-query', 'https://8.8.8.8/dns-query', 'https://8.8.4.4/dns-query', 'https://dns.alidns.com/dns-query', 'https://223.5.5.5/dns-query', 'https://223.6.6.6/dns-query', 'https://doh.pub/dns-query', 'https://1.12.12.12/dns-query', 'https://120.53.53.53/dns-query']
+    default-nameserver: [119.29.29.29, 223.5.5.5, 223.6.6.6, 'tcp://119.29.29.29', 'tcp://223.5.5.5', 'tcp://223.6.6.6']
+
+profile:
+  store-selected: true
+  store-fake-ip: false
+
+# ========================
+# 机场节点订阅
+# ========================
+proxy-providers:
+  ######（机场备注）:
+    url: "机场链接url"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: DIRECT
+
+
+#此处填入自建节点/链式代理
+#proxies:
+#eg（链式代理模板）：
+#  - { name: "链式代理节点1", type: ss, server: "argosbx.de5.net", port: 18553, cipher: "2022-blake3-aes-128-gcm", password: "bCljz2yD", dialer-proxy: "手选节点 A" }
+#  - { name: "链式代理节点2", type: hysteria2, server: "argosbx.de5.net", port: 18286, password: "730a115b-", sni: "www.bing.com", alpn: ["h3"], skip-cert-verify: true, dialer-proxy: "手选节点 A" }
+
+# ========================
+# 策略组 Proxy Groups (高可用极简架构)
+# ========================
+proxy-groups:
+  # ==========================================
+  # 基础组件：三大手选组 (包含所有节点)
+  # ==========================================
+  - { name: 手选节点 A, type: select, include-all: true }
+  - { name: 手选节点 B, type: select, include-all: true }
+  - { name: 手选节点 C, type: select, include-all: true }
+
+  # ==========================================
+  # 业务分配与顶层路由
+  # ==========================================
+  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
+  - { name: AI与谷歌, type: select, proxies: [线路 A, 线路 B, 线路 C] } 
+  - { name: 海外抖音, type: select, proxies: [线路 B, 线路 C, 线路 A] } 
+  - { name: Emby服务, type: select, proxies: [线路 C, 线路 A, 线路 B] }
+  - { name: 影音娱乐, type: select, proxies: [线路 A, 线路 B, 线路 C] }
+  - { name: 社交媒体, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
+  
+  # 下方为静默组，保持隐藏以精简 UI
+  - { name: 国内服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C], hidden: true }
+  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
+
+  # ==========================================
+  # 核心架构：故障转移专线与全局自动 (置底)
+  # ==========================================
+  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 线路 B, type: fallback, proxies: [手选节点 B, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 线路 C, type: fallback, proxies: [手选节点 C, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 全局自动, type: url-test, include-all: true, exclude-filter: "(?i)dialer", url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+
+# ========================
+# 规则引擎（rules）
+# ========================
+rules:
+  # --- 自定义直连规则 ---
+  - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN-KEYWORD,douyin,国内服务
+  
+  # --- 广告拦截 ---
+  - RULE-SET,Block / Domain,广告拦截
+
+  # --- 人工智能与谷歌 ---
+  - RULE-SET,ChatGPT / Domain,AI与谷歌
+  - RULE-SET,Claude / Domain,AI与谷歌
+  - RULE-SET,Copilot / Domain,AI与谷歌
+  - RULE-SET,Gemini / Domain,AI与谷歌
+  - RULE-SET,Apple AI / Domain,AI与谷歌
+  - RULE-SET,Groq / Domain,AI与谷歌
+  - RULE-SET,Grok / Domain,AI与谷歌
+  - RULE-SET,Perplexity / Domain,AI与谷歌
+  - RULE-SET,Google / Domain,AI与谷歌
+
+  # --- 抖音 ---
+  - RULE-SET,TikTok / Domain,海外抖音
+  - RULE-SET,Douyin / Domain,国内服务
+
+  # --- 社交媒体 (常规流量) ---
+  - RULE-SET,Telegram / Domain,社交媒体
+  - RULE-SET,Twitter / Domain,社交媒体
+  - RULE-SET,Reddit / Domain,社交媒体
+
+  # --- 微软苹果Nvidia ---
+  - RULE-SET,Microsoft / Domain,微软苹果Nvidia
+  - RULE-SET,Apple / Domain,微软苹果Nvidia
+  - RULE-SET,Nvidia / Domain,微软苹果Nvidia
+  - RULE-SET,Apple-CN / Domain,DIRECT
+
+  # --- 影音娱乐 ---
+  - RULE-SET,Youtube / Domain,影音娱乐
+  - RULE-SET,Netflix / Domain,影音娱乐
+  - RULE-SET,Netflix / IP,影音娱乐,no-resolve
+  - RULE-SET,Disney / Domain,影音娱乐
+  - RULE-SET,HBO / Domain,影音娱乐
+  - RULE-SET,Spotify / Domain,影音娱乐
+  - RULE-SET,Crunchyroll / Domain,影音娱乐
+  - RULE-SET,Popcorn / Domain,影音娱乐
+  - RULE-SET,Amazon / Domain,影音娱乐
+  - RULE-SET,GitHub / Domain,影音娱乐
+
+  # --- 微信与微博 B站 ---
+  - RULE-SET,WeChat / Domain,国内服务
+  - RULE-SET,Weibo / Domain,国内服务
+  - RULE-SET,BiliBili / Domain,国内服务
+
+  # --- emby ---
+  - RULE-SET,emby / Domain,Emby服务
+
+  # --- 大陆网址 ---
+  - RULE-SET,China / Domain,国内服务
+  - RULE-SET,China / IP,国内服务,no-resolve
+
+  # --- 游戏平台 ---
+  - RULE-SET,Steam / Domain,游戏平台
+  - RULE-SET,Epic / Domain,游戏平台
+  - RULE-SET,EA / Domain,游戏平台
+  - RULE-SET,Blizzard / Domain,游戏平台
+  - RULE-SET,UBI / Domain,游戏平台
+  - RULE-SET,PlayStation / Domain,游戏平台
+  - RULE-SET,Nintend / Domain,游戏平台
+
+  # --- 其他出海/兜底规则分配 ---
+  - RULE-SET,OKX / Domain,漏网之鱼
+  - RULE-SET,Bybit / Domain,漏网之鱼
+  - RULE-SET,Binance / Domain,漏网之鱼
+  - RULE-SET,Turnstile / Domain,漏网之鱼
+  - RULE-SET,Proxy / Domain,漏网之鱼
+  - RULE-SET,Globe / Domain,漏网之鱼
+
+  # --- 直连与漏网之鱼 ---
+  - RULE-SET,GoogleFCM / Domain,DIRECT
+  - RULE-SET,Direct / Domain,DIRECT
+  - RULE-SET,Private / Domain,DIRECT
+  - MATCH,漏网之鱼
+
+# ========================
+# 规则集提供者
+# ========================
+rule-anchor:
+  ip: &ip { type: http, interval: 86400, behavior: ipcidr, format: mrs }
+  domain: &domain { type: http, interval: 86400, behavior: domain, format: mrs }
+  class: &class { type: http, interval: 86400, behavior: classical, format: text }
+
+rule-providers:
+  # --- 检测与直连 ---
+  TEST / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Check.list"}
+  Direct / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Direct/Direct.list"}
+  China / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/China/China.list"}
+  China / IP: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/ChinaIPs/ChinaIPs.list"}
+
+  # --- AI ---
+  ChatGPT / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/OpenAI/OpenAI.list"}
+  Claude / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Claude/Claude.list"}
+  Perplexity / Domain: {<<: *domain, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/perplexity.mrs"}
+  Copilot / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Copilot/Copilot.list"}
+  Gemini / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Gemini/Gemini.list"}
+  Groq / Domain: {<<: *domain, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/groq.mrs"}
+  Grok / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Grok.list"}
+  Apple AI / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/xpdigital/Apple-Rule/refs/heads/main/Apple-US.list"}
+
+  # --- 媒体、抖音与社交 ---
+  Youtube / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/YouTube/YouTube.list"}
+  Telegram / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Telegram/Telegram.list"}
+  Twitter / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Twitter/Twitter.list"}
+  GitHub / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GitHub/GitHub.list"}
+  TikTok / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/TikTok/TikTok.list"}
+  Douyin / Domain: {<<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list"}
+  Netflix / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Netflix/Netflix.list"}
+  Netflix / IP: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Netflix/Netflix.list"}
+  Disney / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Disney/Disney.list"}
+  HBO / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/HBO/HBO.list"}
+  Spotify / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Spotify/Spotify.list"}
+  Crunchyroll / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Crunchyroll.list"}
+  Popcorn / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Popcorn.list"}
+  Reddit / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Reddit/Reddit.list"}
+  emby / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Emby/Emby.list"}
+
+  # --- 微信微博 B站 ---
+  WeChat / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/WeChat/WeChat.list"}
+  Weibo / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Weibo/Weibo.list"}
+  BiliBili / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/BiliBili/BiliBili.list"}
+
+  # --- Google ---
+  Google / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Google/Google.list"}
+  GoogleFCM / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GoogleFCM/GoogleFCM.list"}
+
+  # --- 大厂与软件 ---
+  Microsoft / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Microsoft/Microsoft.list"}
+  Apple / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Apple/Apple.list"}
+  Apple-CN / Domain: {<<: *domain, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/apple-cn.mrs"}
+  Nvidia / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Nvidia/Nvidia.list"}
+  Turnstile / Domain: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/DonJone/DonRule/refs/heads/main/CloudflareTurnstile.list"}
+
+  # --- 游戏 ---
+  Steam / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Steam/Steam.list"}
+  Epic / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Epic/Epic.list"}
+  EA / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/EA/EA.list"}
+  Blizzard / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Blizzard/Blizzard.list"}
+  UBI / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/UBI/UBI.list"}
+  PlayStation / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/PlayStation/PlayStation.list"}
+  Nintend / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Nintendo/Nintendo.list"}
+
+  # --- 金融 ---
+  OKX / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/OKX/OKX.list"}
+  Bybit / Domain: {<<: *domain, url: "https://gh-proxy.com/github.com/metacubex/meta-rules-dat/raw/refs/heads/meta/geo/geosite/bybit.mrs"}
+  Binance / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Binance/Binance.list"}
+
+  # --- 其他 ---
+  Amazon / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Amazon/Amazon.list"}
+  Proxy / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Proxy/Proxy.list"}
+  Globe / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Global/Global.list"}
+  Block / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Advertising/Advertising.list"}
+  Private / Domain: {<<: *class, url: "https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Lan/Lan.list"}
