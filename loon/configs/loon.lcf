@@ -1,0 +1,185 @@
+# Loon自用配置 (高可用极简架构重构版)
+# =====================================
+# General
+# =====================================
+[General]
+mitm-on-wifi-access = true
+ipv6-vif = off
+ip-mode = v4-only
+disable-stun = true
+dns-reject-mode = LoopbackIP
+domain-reject-mode = DNS
+udp-fallback-mode = REJECT
+sni-sniffing = true
+disconnect-on-policy-change = true
+switch-node-after-failure-times = 3
+skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com
+bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32
+dns-server = system,223.5.5.5,119.29.29.29,8.8.8.8
+interface-mode = auto
+allow-udp-proxy = true
+allow-wifi-access = true
+wifi-access-http-port = 7222
+wifi-access-socks5-port = 7221
+proxy-test-url = http://cp.cloudflare.com/generate_204
+internet-test-url = http://connect.rom.miui.com/generate_204 
+test-timeout = 5
+geoip-url = https://github.com/Masaiki/GeoIP2-CN/raw/release/Country.mmdb
+#软路由直连相关
+ssid-trigger = "default":rule, "cellular":rule,"你的软路由wifi名":direct
+ipasn-url = https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb
+
+# =====================================
+# Host
+# =====================================
+[Host]
+iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
+
+# =====================================
+# Proxy 本地的代理节点
+# =====================================
+[Proxy]
+
+
+
+# =====================================
+# Remote Proxy 订阅链接
+# =====================================
+[Remote Proxy]
+
+
+
+# =====================================
+# Proxy Group (高可用极简架构)
+# =====================================
+[Proxy Group]
+# 1. 基础组件：三大手选组 (包含所有节点，未作剔除)
+手选节点A = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+手选节点B = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+手选节点C = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+
+# 2. 核心架构：故障转移专线与全局自动
+线路A = fallback,手选节点A,全局自动,url=http://cp.cloudflare.com/generate_204,interval=30
+线路B = fallback,手选节点B,全局自动,url=http://cp.cloudflare.com/generate_204,interval=30
+线路C = fallback,手选节点C,全局自动,url=http://cp.cloudflare.com/generate_204,interval=30
+全局自动 = url-test,除拨号外,url=http://cp.cloudflare.com/generate_204,interval=30,tolerance=50,hidden=true
+
+# 3. 业务分配与顶层路由
+漏网之鱼 = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
+AI与谷歌 = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
+海外抖音 = select,线路B,线路C,线路A,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
+Emby服务 = select,线路C,线路A,线路B,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+影音娱乐 = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+社交媒体 = select,线路A,线路B,线路C,DIRECT,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png
+游戏平台 = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
+微软苹果Nvidia = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
+
+# 4. 静默组
+国内服务 = select,DIRECT,线路A,线路B,线路C,hidden=true
+广告拦截 = select,REJECT,hidden=true
+
+# =====================================
+# Remote Filter
+# =====================================
+[Remote Filter]
+全部节点 = NameRegex, FilterKey = ".*"
+除拨号外 = NameRegex, FilterKey = "^(?i)(?!.*dialer).*"
+
+# =====================================
+# Rule
+# =====================================
+[Rule]
+# 自定义直连
+DOMAIN-KEYWORD,libvio,DIRECT
+
+# 抖音严谨匹配
+DOMAIN-KEYWORD,douyin,国内服务
+
+# 信息收集拦截
+URL-REGEX,"\.log\.",广告拦截
+
+# 兜底策略
+FINAL,漏网之鱼
+
+# =====================================
+# Remote Rule
+# =====================================
+[Remote Rule]
+# 广告拦截与更新屏蔽
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/apple_update.list, policy=广告拦截, tag=苹果屏蔽系统更新@奶思, enabled=false
+
+# AI与谷歌
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/AI.list, policy=AI与谷歌, tag=AI分流合集@奶思, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GoogleVoice/GoogleVoice.list, policy=AI与谷歌, tag=Google Voice@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Google/Google.list, policy=AI与谷歌, tag=Google@Don, enabled=true
+
+# 海外抖音
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/TikTok/TikTok.list, policy=海外抖音, tag=TikTok@Don, enabled=true
+
+# 社交媒体
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Telegram/Telegram.list, policy=社交媒体, tag=Telegram@Don, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Twitter.list, policy=社交媒体, tag=Twitter@bm7, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Instagram/Instagram.list, policy=社交媒体, tag=Instagram@Don, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Facebook.list, policy=社交媒体, tag=Facebook@bm7, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Line/Line.list, policy=社交媒体, tag=Line@Don, enabled=true
+
+# 微软苹果Nvidia
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/AppleAll.list, policy=微软苹果Nvidia, tag=苹果服务@奶思, enabled=true
+
+# 影音娱乐
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GitHub/GitHub.list, policy=影音娱乐, tag=Github@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Spotify/Spotify.list, policy=影音娱乐, tag=Spotify@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/YouTubeMusic/YouTubeMusic.list, policy=影音娱乐, tag=YouTube Music@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/YouTube/YouTube.list, policy=影音娱乐, tag=YouTube@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Disney/Disney.list, policy=影音娱乐, tag=Disney@Don, enabled=true
+
+# 漏网之鱼与杂项
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Soul.list, policy=漏网之鱼, tag=Soul分流@奶思, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Talkatone.list, policy=漏网之鱼, tag=Talkatone分流, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/OKX.list, policy=漏网之鱼, tag=欧易分流@奶思, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Binance.list, policy=漏网之鱼, tag=币安分流@奶思, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/LAN.list, policy=DIRECT, tag=LAN@奶思, enabled=true
+
+# 国内服务
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/RedBook.list, policy=国内服务, tag=小红书IP@bm7, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Douyin.list, policy=国内服务, tag=DouYin@bm7, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/WeChat/WeChat.list, policy=国内服务, tag=WeChat@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Weibo/Weibo.list, policy=国内服务, tag=Weibo@Don, enabled=true
+https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/BiliBili/BiliBili.list, policy=国内服务, tag=哔哩哔哩@Don, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/GeoIP_CN.list, policy=国内服务, tag=GeoIP_CN@奶思, enabled=true
+
+# =====================================
+# Script / Remote Script / Plugin / Mitm
+# =====================================
+[Script]
+
+[Remote Script]
+https://github.com/fmz200/wool_scripts/raw/main/Loon/script/tasks.scripts, tag=定时任务合集@fmz200, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/script/tools.scripts, tag=脚本工具合集@fmz200, enabled=true
+
+[Plugin]
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/JD_Price.plugin, enabled=true
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/JD_remove_ads.plugin, enabled=true
+https://raw.githubusercontent.com/deezertidal/private/master/plugallery/ptj.plugin, enabled=true
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Bilibili_remove_ads.plugin, enabled=true
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Tieba_remove_ads.plugin, enabled=true
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Taobao_remove_ads.plugin, enabled=true
+https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/CoolApk_remove_ads.plugin, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/YouTube_remove_ads.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/YouTubeSubtitlesTranslation.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/QQMusic_remove_ads.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Google.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/weibo.plugin, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/WeChatMiniAds.plugin, enabled=true
+https://raw.githubusercontent.com/001ProMax/Surge/main/Loon/Spotify.plugin, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/spotify.png, enabled=true
+https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/Auto_Join_TF.plugin, policy=漏网之鱼, enabled=false
+https://raw.githubusercontent.com/Tartarus2014/Loon-Script/refs/heads/master/Plugin/skip-proxy.lpx, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/Imm.png, enabled=true
+https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/plugin/HTTPDNS.Block.plugin, enabled=true
+https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.plugin, policy=漏网之鱼, enabled=true
+https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Loon.plugin, policy=漏网之鱼, enabled=true
+https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/modules/script-hub.loon.plugin, policy=漏网之鱼, enabled=true
+
+[Mitm]
