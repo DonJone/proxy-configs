@@ -183,3 +183,7 @@ https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Loon.plu
 https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/modules/script-hub.loon.plugin, policy=漏网之鱼, enabled=true
 
 [Mitm]
+
+
+hostname = -www.google.com, *.google.cn, *.facebook.com, *.perplexity.ai
+skip-server-cert-verify = true
