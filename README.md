@@ -1,6 +1,6 @@
 # Proxy Configurations
 
-本项目提供针对 Mihomo (Clash Meta) 与 Loon 的网络代理配置文件，旨在构建一个人工干预优先级高且具备自动冗余能力的代理环境。
+本项目提供针对 Mihomo (Clash Meta)、Loon 及 Shadowrocket 优化的配置文件，旨在构建一个人工干预优先级高且具备自动冗余能力的代理环境。
 
 ## 目录结构说明
 
@@ -10,6 +10,9 @@
 - loon/
     - configs/: Loon 主配置文件 (.conf)。
     - rules/: 自定义 Loon 分流规则列表 (.list)。
+- Shadowrocket/
+    - configs/: 小火箭主配置文件 (.conf)。
+    - rules/: 自定义小火箭分流规则列表 (.list)。
 
 ## Mihomo 核心架构：三大手选组与 Fallback 机制
 
@@ -33,21 +36,10 @@
 3. 灾备无感的弹性方案
 在享受手动选择带来的 IP 稳定性时，Fallback 机制提供了兜底保障。即便手动指定的节点意外宕机，流量也会在毫秒级转移到备份节点池，实现了手动控制与高可用性的平衡。
 
-## Loon 配置说明
-
-Loon 目录下的配置遵循与 Mihomo 端一致的分流逻辑：
-- 规则同步：使用相同的远程规则集提供者，确保跨设备使用体验的一致性。
-- 纯净原则：配置文件仅包含核心分流逻辑、DNS 优化方案及规则引用，不包含任何第三方插件，保证系统轻量化运行。
-
 ## 技术实现参考 (Mihomo)
 
 proxy-groups:
-  # 包含所有节点的手选组
   - { name: 手选节点 A, type: select, include-all: true }
-
-  # 故障转移架构
   - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
-
-  # 业务策略关联
   - { name: AI与谷歌, type: select, proxies: [线路 A, 线路 B, 线路 C] }
 
