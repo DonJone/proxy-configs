@@ -32,13 +32,6 @@ proxy-providers:
       interval: 300
     proxy: DIRECT
 
-
-#此处填入自建节点/链式代理
-#proxies:
-#eg（链式代理模板）：
-#  - { name: "链式代理节点1", type: ss, server: "argosbx.de5.net", port: 18553, cipher: "2022-blake3-aes-128-gcm", password: "bCljz2yD", dialer-proxy: "手选节点 A" }
-#  - { name: "链式代理节点2", type: hysteria2, server: "argosbx.de5.net", port: 18286, password: "730a115b-", sni: "www.bing.com", alpn: ["h3"], skip-cert-verify: true, dialer-proxy: "手选节点 A" }
-
 # ========================
 # 策略组 Proxy Groups (高可用极简架构)
 # ========================
@@ -80,90 +73,88 @@ rules:
   # ==========================================
   # 1. 基础环境与私有网络 (最高优先级)
   # ==========================================
-  - RULE-SET,Private / Domain,DIRECT
-  - RULE-SET,GoogleFCM / Domain,DIRECT
+  - RULE-SET,Private,DIRECT
+  - RULE-SET,GoogleFCM,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
 
   # ==========================================
   # 2. 人工智能与谷歌服务 (AI与谷歌)
   # ==========================================
-  - RULE-SET,ChatGPT / Domain,AI与谷歌
-  - RULE-SET,Claude / Domain,AI与谷歌
-  - RULE-SET,Copilot / Domain,AI与谷歌
-  - RULE-SET,Gemini / Domain,AI与谷歌
-  - RULE-SET,Apple AI / Domain,AI与谷歌
-  - RULE-SET,Groq / Domain,AI与谷歌
-  - RULE-SET,Grok / Domain,AI与谷歌
-  - RULE-SET,Perplexity / Domain,AI与谷歌
-  - RULE-SET,Google / Domain,AI与谷歌
+  - RULE-SET,ChatGPT,AI与谷歌
+  - RULE-SET,Claude,AI与谷歌
+  - RULE-SET,Copilot,AI与谷歌
+  - RULE-SET,Gemini,AI与谷歌
+  - RULE-SET,Apple_AI,AI与谷歌
+  - RULE-SET,Groq,AI与谷歌
+  - RULE-SET,Grok,AI与谷歌
+  - RULE-SET,Perplexity,AI与谷歌
+  - RULE-SET,Google,AI与谷歌
 
   # ==========================================
   # 3. 社交媒体与即时通讯 (社交媒体)
   # ==========================================
-  - RULE-SET,Telegram / Domain,社交媒体
-  - RULE-SET,Twitter / Domain,社交媒体
-  - RULE-SET,Reddit / Domain,社交媒体
+  - RULE-SET,Telegram,社交媒体
+  - RULE-SET,Twitter,社交媒体
+  - RULE-SET,Reddit,社交媒体
 
   # ==========================================
   # 4. 影音娱乐分流 (影音娱乐/Emby)
   # ==========================================
-  - RULE-SET,Youtube / Domain,影音娱乐
-  - RULE-SET,Netflix / Domain,影音娱乐
-  - RULE-SET,Netflix / IP,影音娱乐,no-resolve
-  - RULE-SET,Disney / Domain,影音娱乐
-  - RULE-SET,HBO / Domain,影音娱乐
-  - RULE-SET,Spotify / Domain,影音娱乐
-  - RULE-SET,Crunchyroll / Domain,影音娱乐
-  - RULE-SET,Popcorn / Domain,影音娱乐
-  - RULE-SET,Amazon / Domain,影音娱乐
-  - RULE-SET,GitHub / Domain,影音娱乐
-  - RULE-SET,emby / Domain,Emby服务
+  - RULE-SET,Youtube,影音娱乐
+  - RULE-SET,Netflix,影音娱乐
+  - RULE-SET,Netflix_IP,影音娱乐,no-resolve
+  - RULE-SET,Disney,影音娱乐
+  - RULE-SET,HBO,影音娱乐
+  - RULE-SET,Spotify,影音娱乐
+  - RULE-SET,Crunchyroll,影音娱乐
+  - RULE-SET,Popcorn,影音娱乐
+  - RULE-SET,Amazon,影音娱乐
+  - RULE-SET,GitHub,影音娱乐
+  - RULE-SET,Emby,Emby服务
 
   # ==========================================
   # 5. 跨国巨头分流 (微软/苹果/Nvidia)
   # ==========================================
-  - RULE-SET,Microsoft / Domain,微软苹果Nvidia
-  - RULE-SET,Apple / Domain,微软苹果Nvidia
-  - RULE-SET,Nvidia / Domain,微软苹果Nvidia
-  - RULE-SET,Apple-CN / Domain,DIRECT
+  - RULE-SET,Microsoft,微软苹果Nvidia
+  - RULE-SET,Apple,微软苹果Nvidia
+  - RULE-SET,Nvidia,微软苹果Nvidia
+  - RULE-SET,Apple_CN,DIRECT
 
   # ==========================================
   # 6. 游戏平台分流 (游戏平台)
   # ==========================================
-  - RULE-SET,Steam / Domain,游戏平台
-  - RULE-SET,Epic / Domain,游戏平台
-  - RULE-SET,EA / Domain,游戏平台
-  - RULE-SET,Blizzard / Domain,游戏平台
-  - RULE-SET,UBI / Domain,游戏平台
-  - RULE-SET,PlayStation / Domain,游戏平台
-  - RULE-SET,Nintend / Domain,游戏平台
+  - RULE-SET,Steam,游戏平台
+  - RULE-SET,Epic,游戏平台
+  - RULE-SET,EA,游戏平台
+  - RULE-SET,Blizzard,游戏平台
+  - RULE-SET,UBI,游戏平台
+  - RULE-SET,PlayStation,游戏平台
+  - RULE-SET,Nintendo,游戏平台
 
   # ==========================================
   # 7. 抖音与特定业务 (国内服务/海外抖音)
   # ==========================================
-  - RULE-SET,TikTok / Domain,海外抖音
+  - RULE-SET,TikTok,海外抖音
   - DOMAIN-KEYWORD,douyin,国内服务
-  - RULE-SET,Douyin / Domain,国内服务
+  - RULE-SET,Douyin,国内服务
 
   # ==========================================
   # 8. 其它出海/杂项规则 (漏网之鱼)
   # ==========================================
-  - RULE-SET,OKX / Domain,漏网之鱼
-  - RULE-SET,Bybit / Domain,漏网之鱼
-  - RULE-SET,Binance / Domain,漏网之鱼
-  - RULE-SET,Turnstile / Domain,漏网之鱼
-  - RULE-SET,Proxy / Domain,漏网之鱼
-  - RULE-SET,Globe / Domain,漏网之鱼
+  - RULE-SET,OKX,漏网之鱼
+  - RULE-SET,Bybit,漏网之鱼
+  - RULE-SET,Binance,漏网之鱼
+  - RULE-SET,Turnstile,漏网之鱼
+  - RULE-SET,Proxy,漏网之鱼
+  - RULE-SET,Global,漏网之鱼
 
   # ==========================================
   # 9. 大陆流量兜底 (国内服务/DIRECT)
   # ==========================================
   # 核心大陆域名直连判定
-  - RULE-SET,Direct / Domain,DIRECT
-  # 大陆业务域名分流
-  - RULE-SET,China / Domain,国内服务
+  - RULE-SET,CN_Domain,DIRECT
   # 大陆 IP 段兜底 (不强制 DNS 解析)
-  - RULE-SET,China / IP,国内服务,no-resolve
+  - RULE-SET,China_IP,国内服务,no-resolve
 
   # ==========================================
   # 10. 最终兜底逻辑
@@ -182,67 +173,66 @@ rule-anchor:
 rule-providers:
 
 # --- 检测与直连 ---
-  LAN / IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"}
-  Private / Domain: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"}
-  TEST / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Check.list"}
+  LAN_IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"}
+  Private: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"}
+  TEST: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Check.list"}
   CN_Domain: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt", path: ./ruleset/cn_domain.yaml}
-  China / IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt", path: ./ruleset/cn_ip.yaml}
+  China_IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt", path: ./ruleset/cn_ip.yaml}
 
 
   # --- AI ---
-  ChatGPT / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list"}
-  Claude / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list"}
-  Perplexity / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs"}
-  Copilot / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list"}
-  Gemini / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list"}
-  Groq / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs"}
-  Grok / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list"}
-  Apple AI / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list"}
+  ChatGPT: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list"}
+  Claude: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list"}
+  Perplexity: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs"}
+  Copilot: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list"}
+  Gemini: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list"}
+  Groq: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs"}
+  Grok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list"}
+  Apple_AI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list"}
 
   # --- 媒体、抖音与社交 ---
-  Youtube / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list"}
-  Telegram / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list"}
-  Twitter / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list"}
-  GitHub / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list"}
-  TikTok / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list"}
-  Douyin / Domain: {<<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list"}
-  Netflix / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
-  Netflix / IP: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
-  Disney / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list"}
-  HBO / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list"}
-  Spotify / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list"}
-  Crunchyroll / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list"}
-  Popcorn / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list"}
-  Reddit / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list"}
-  emby / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list"}
-
+  Youtube: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list"}
+  Telegram: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list"}
+  Twitter: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list"}
+  GitHub: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list"}
+  TikTok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list"}
+  Douyin: {<<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list"}
+  Netflix: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
+  Netflix_IP: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
+  Disney: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list"}
+  HBO: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list"}
+  Spotify: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list"}
+  Crunchyroll: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list"}
+  Popcorn: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list"}
+  Reddit: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list"}
+  Emby: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list"}
 
   # --- Google ---
-  Google / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list"}
-  GoogleFCM / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list"}
+  Google: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list"}
+  GoogleFCM: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list"}
 
   # --- 大厂与软件 ---
-  Microsoft / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list"}
-  Apple / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list"}
-  Apple-CN / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs"}
-  Nvidia / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list"}
-  Turnstile / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list"}
+  Microsoft: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list"}
+  Apple: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list"}
+  Apple_CN: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs"}
+  Nvidia: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list"}
+  Turnstile: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list"}
 
   # --- 游戏 ---
-  Steam / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list"}
-  Epic / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list"}
-  EA / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list"}
-  Blizzard / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list"}
-  UBI / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list"}
-  PlayStation / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list"}
-  Nintend / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list"}
+  Steam: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list"}
+  Epic: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list"}
+  EA: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list"}
+  Blizzard: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list"}
+  UBI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list"}
+  PlayStation: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list"}
+  Nintendo: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list"}
 
   # --- 金融 ---
-  OKX / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list"}
-  Bybit / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs"}
-  Binance / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list"}
+  OKX: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list"}
+  Bybit: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs"}
+  Binance: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list"}
 
   # --- 其他 ---
-  Amazon / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list"}
-  Proxy / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list"}
-  Globe / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list"}
+  Amazon: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list"}
+  Proxy: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list"}
+  Global: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list"}
