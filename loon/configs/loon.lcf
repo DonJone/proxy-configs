@@ -101,52 +101,44 @@ URL-REGEX,"\.log\.",广告拦截
 # 兜底策略
 FINAL,漏网之鱼
 
-# =====================================
-# Remote Rule
-# =====================================
+
 [Remote Rule]
-# 广告拦截与更新屏蔽
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/apple_update.list, policy=广告拦截, tag=苹果屏蔽系统更新@奶思, enabled=false
+
+# ==========================================
+#LAN
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/private.txt, policy=DIRECT, tag=私有网络@Loyal, enabled=true
+
 
 # AI与谷歌
 https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/AI.list, policy=AI与谷歌, tag=AI分流合集@奶思, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GoogleVoice/GoogleVoice.list, policy=AI与谷歌, tag=Google Voice@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Google/Google.list, policy=AI与谷歌, tag=Google@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleVoice/GoogleVoice.list, policy=AI与谷歌, tag=Google Voice@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list, policy=AI与谷歌, tag=Google@Don, enabled=true
 
 # 海外抖音
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/TikTok/TikTok.list, policy=海外抖音, tag=TikTok@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list, policy=海外抖音, tag=TikTok@Don, enabled=true
 
 # 社交媒体
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Telegram/Telegram.list, policy=社交媒体, tag=Telegram@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=社交媒体, tag=Telegram@Don, enabled=true
 https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Twitter.list, policy=社交媒体, tag=Twitter@bm7, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Instagram/Instagram.list, policy=社交媒体, tag=Instagram@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Instagram/Instagram.list, policy=社交媒体, tag=Instagram@Don, enabled=true
 https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Facebook.list, policy=社交媒体, tag=Facebook@bm7, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Line/Line.list, policy=社交媒体, tag=Line@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Line/Line.list, policy=社交媒体, tag=Line@Don, enabled=true
 
 # 微软苹果Nvidia
 https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/AppleAll.list, policy=微软苹果Nvidia, tag=苹果服务@奶思, enabled=true
 
 # 影音娱乐
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/GitHub/GitHub.list, policy=影音娱乐, tag=Github@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Spotify/Spotify.list, policy=影音娱乐, tag=Spotify@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/YouTubeMusic/YouTubeMusic.list, policy=影音娱乐, tag=YouTube Music@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/YouTube/YouTube.list, policy=影音娱乐, tag=YouTube@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Disney/Disney.list, policy=影音娱乐, tag=Disney@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=影音娱乐, tag=Github@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list, policy=影音娱乐, tag=Spotify@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTubeMusic/YouTubeMusic.list, policy=影音娱乐, tag=YouTube Music@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=影音娱乐, tag=YouTube@Don, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list, policy=影音娱乐, tag=Disney@Don, enabled=true
 
-# 漏网之鱼与杂项
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Soul.list, policy=漏网之鱼, tag=Soul分流@奶思, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Talkatone.list, policy=漏网之鱼, tag=Talkatone分流, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/OKX.list, policy=漏网之鱼, tag=欧易分流@奶思, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Binance.list, policy=漏网之鱼, tag=币安分流@奶思, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/LAN.list, policy=DIRECT, tag=LAN@奶思, enabled=true
+#CN
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用域名@Loyal, enabled=true
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内通用IP@Loyal, enabled=true
 
-# 国内服务
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/RedBook.list, policy=国内服务, tag=小红书IP@bm7, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/Douyin.list, policy=国内服务, tag=DouYin@bm7, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/WeChat/WeChat.list, policy=国内服务, tag=WeChat@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/Weibo/Weibo.list, policy=国内服务, tag=Weibo@Don, enabled=true
-https://raw.githubusercontent.com/DonJone/ios_rule_script/refs/heads/master/rule/Loon/BiliBili/BiliBili.list, policy=国内服务, tag=哔哩哔哩@Don, enabled=true
-https://github.com/fmz200/wool_scripts/raw/main/Loon/rule/GeoIP_CN.list, policy=国内服务, tag=GeoIP_CN@奶思, enabled=true
+
 
 # =====================================
 # Script / Remote Script / Plugin / Mitm
@@ -176,7 +168,7 @@ https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/weibo.plugin, enable
 https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/WeChatMiniAds.plugin, enabled=true
 https://raw.githubusercontent.com/001ProMax/Surge/main/Loon/Spotify.plugin, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/spotify.png, enabled=true
 https://github.com/fmz200/wool_scripts/raw/main/Loon/plugin/Auto_Join_TF.plugin, policy=漏网之鱼, enabled=false
-https://raw.githubusercontent.com/Tartarus2014/Loon-Script/refs/heads/master/Plugin/skip-proxy.lpx, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/Imm.png, enabled=true
+https://cdn.jsdelivr.net/gh/Tartarus2014/Loon-Script@master/Plugin/skip-proxy.lpx, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/Imm.png, enabled=true
 https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/plugin/HTTPDNS.Block.plugin, enabled=true
 https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.plugin, policy=漏网之鱼, enabled=true
 https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Loon.plugin, policy=漏网之鱼, enabled=true
