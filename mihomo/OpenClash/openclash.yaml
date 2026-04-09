@@ -186,7 +186,9 @@ rules:
   - RULE-SET,CN_Domain,DIRECT
   # 大陆 IP 段兜底 (不强制 DNS 解析)
   - RULE-SET,China_IP,国内服务,no-resolve
-
+  - GEOIP,CN,DIRECT,no-resolve
+  - GEOIP,CN,国内服务
+  
   # ==========================================
   # 10. 最终兜底逻辑
   # ==========================================
