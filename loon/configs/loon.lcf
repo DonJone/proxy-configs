@@ -101,8 +101,6 @@ DOMAIN-KEYWORD,emby, Emby服务
 # 信息收集拦截
 URL-REGEX,"\.log\.",广告拦截
 
-
-GEOIP,CN,国内服务,no-resolve
 GEOIP,CN,国内服务
 
 # 兜底策略
