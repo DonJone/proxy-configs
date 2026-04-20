@@ -46,19 +46,8 @@ https://raw.githubusercontent.com/DonJone/proxy-configs/main/Shadowrocket/config
 https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@main/Shadowrocket/configs/Shadowrocket.conf
 ```
 
-## 目录结构说明
 
-- mihomo/
-    - desktop&mobile/: 适配桌面端（Verge Rev, Mihomo Party）与移动端的通用配置文件。
-    - OpenClash/: 针对 OpenWrt 路由环境优化的配置文件。
-- loon/
-    - configs/: Loon 主配置文件 (.conf)。
-    - rules/: 自定义 Loon 分流规则列表 (.list)。
-- Shadowrocket/
-    - configs/: 小火箭主配置文件 (.conf)。
-    - rules/: 自定义小火箭分流规则列表 (.list)。
-
-## Mihomo 核心架构：三大手选组与 Fallback 机制
+##  核心架构：三大手选组与 Fallback 机制
 
 本配置方案的核心逻辑为“手动指定出口 + 自动故障备份”。系统通过 手选节点 A、手选节点 B、手选节点 C 三个策略组实现精准控制，并将其嵌套在 Fallback 策略中。
 
@@ -80,10 +69,4 @@ https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@main/Shadowrocket/configs/Shad
 3. 灾备无感的弹性方案
 在享受手动选择带来的 IP 稳定性时，Fallback 机制提供了兜底保障。即便手动指定的节点意外宕机，流量也会在毫秒级转移到备份节点池，实现了手动控制与高可用性的平衡。
 
-## 技术实现参考 (Mihomo)
-
-proxy-groups:
-  - { name: 手选节点 A, type: select, include-all: true }
-  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
-  - { name: AI与谷歌, type: select, proxies: [线路 A, 线路 B, 线路 C] }
 
