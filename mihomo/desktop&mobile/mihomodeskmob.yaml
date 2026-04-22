@@ -77,6 +77,7 @@ rules:
   - RULE-SET,GoogleFCM,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN-KEYWORD,emby, Emby服务
+  - DOMAIN-KEYWORD,uhdnow, Emby服务
 
   # ==========================================
   # 2. 人工智能与谷歌服务 (AI与谷歌)

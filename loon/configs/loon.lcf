@@ -97,6 +97,7 @@ DOMAIN-KEYWORD,douyin,国内服务
 
 #Emby服务,大多需要自己添加
 DOMAIN-KEYWORD,emby, Emby服务
+DOMAIN-KEYWORD,uhdnow, Emby服务
 
 # 信息收集拦截
 URL-REGEX,"\.log\.",广告拦截
