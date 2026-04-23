@@ -79,7 +79,7 @@ proxy-groups:
   - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
   - { name: AI与谷歌, type: select, proxies: [线路 A, 线路 B, 线路 C] } 
   - { name: 海外抖音, type: select, proxies: [线路 B, 线路 C, 线路 A] } 
-  - { name: Emby服务, type: select, proxies: [线路 C, 线路 A, 线路 B] }
+  - { name: Emby服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
   - { name: 影音娱乐, type: select, proxies: [线路 A, 线路 B, 线路 C] }
   - { name: 社交媒体, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
@@ -192,7 +192,7 @@ rules:
   
   
   # ==========================================
-  # 10. 最终兜底逻辑
+  # 10. 最终兜底逻辑线路 C, 线路 A, 线路 B
   # ==========================================
   - MATCH,漏网之鱼
 
