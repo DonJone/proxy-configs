@@ -89,6 +89,9 @@ Emby服务 = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubuse
 # Rule
 # =====================================
 [Rule]
+
+IP-CIDR,5.28.195.0/24,REJECT-NO-DROP,no-resolve
+
 # 自定义直连
 DOMAIN-KEYWORD,libvio,DIRECT
 
