@@ -1,0 +1,258 @@
+# ========================
+# OpenClash-融合优化配置 (Meta 内核完全版)
+# ========================
+port: 7890
+socks-port: 7891
+redir-port: 7892
+mixed-port: 7893
+tproxy-port: 7895
+
+allow-lan: true
+mode: rule
+log-level: info
+
+external-controller: 0.0.0.0:9090
+secret: "123456"
+
+# ========================
+# DNS 与 TUN 设置 (Redir-Host + TUN 模式)
+# ========================
+dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  ipv6: false
+  # 关闭 fake-ip，改用 redir-host 模式
+  enhanced-mode: redir-host
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+    - 114.114.114.114
+
+# 全局 IPv6 开关，建议与 DNS 配置保持一致
+ipv6: false
+
+tun:
+  enable: true
+  stack: system
+  device: utun
+  endpoint-independent-nat: true
+  # 提示：在 OpenClash 中，auto-route 通常由插件界面控制
+  # 若需内核自动接管路由，请将以下设为 true
+  auto-route: true
+  auto-detect-interface: true
+  auto-redirect: false
+  strict-route: false
+
+profile:
+  store-selected: true
+  # 关闭 Fake-IP 映射存储
+  store-fake-ip: false
+
+# ========================
+# 机场节点订阅
+# ========================
+proxy-providers:
+  ######（机场备注）:
+    url: "机场链接url"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: DIRECT
+
+# ========================
+# 策略组 Proxy Groups (高可用极简架构)
+# ========================
+proxy-groups:
+  # ==========================================
+  # 1. 基础组件：三大核心控制台 (你的手动选择面板)
+  # ==========================================
+  - { name: 亚太, type: select, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新|SG|Singapore|狮城|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  - { name: 欧美, type: select, include-all: true, filter: '(?i)(美|US|America|加|CA|Canada|英|UK|Kingdom|Britain|德|DE|Germany|法|FR|France|荷|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  - { name: 低倍, type: select, include-all: true, filter: '(?i)(0\.\d+\s*[xX倍]|低倍)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+
+  # ==========================================
+  # 2. 备用组件：同区自动测速池 (静默运行，精简 UI)
+  # ==========================================
+  - { name: 亚太备用, type: url-test, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新|SG|Singapore|狮城|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  - { name: 欧美备用, type: url-test, include-all: true, filter: '(?i)(美|US|America|加|CA|Canada|英|UK|Kingdom|Britain|德|DE|Germany|法|FR|France|荷|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)(0\.\d+\s*[xX倍]|低倍)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+
+  # ==========================================
+  # 3. 业务分配与顶层路由
+  # ==========================================
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png" }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png" }
+  - { name: Emby, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  - { name: 社交 ,流媒体,GitHub, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png" }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png" }
+  - { name: 微软苹果Nvdia, type: select, proxies: [DIRECT, 亚太区, 欧美区], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png" }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png" }
+
+  # ==========================================
+  # 4. 静默拦截组
+  # ==========================================
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
+  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
+
+  # ==========================================
+  # 5. 核心架构：同区故障转移专线 (置底)
+  # ==========================================
+  - { name: 亚太区, type: fallback, proxies: [亚太, 亚太备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 欧美区, type: fallback, proxies: [欧美, 欧美备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 低倍率, type: fallback, proxies: [低倍, 低倍备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+
+  
+# ========================
+# 规则引擎（rules）
+# ========================
+rules:
+  # ==========================================
+  # 1. 基础环境与私有网络 (最高优先级)
+  # ==========================================
+  - RULE-SET,Private,DIRECT
+  - RULE-SET,GoogleFCM,DIRECT
+  - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN-KEYWORD,emby,Emby
+  - DOMAIN-KEYWORD,uhdnow,Emby
+
+  # ==========================================
+  # 2. 人工智能与谷歌服务 (AI与Google)
+  # ==========================================
+  - RULE-SET,ChatGPT,AI与Google
+  - RULE-SET,Claude,AI与Google
+  - RULE-SET,Copilot,AI与Google
+  - RULE-SET,Gemini,AI与Google
+  - RULE-SET,Apple_AI,AI与Google
+  - RULE-SET,Groq,AI与Google
+  - RULE-SET,Grok,AI与Google
+  - RULE-SET,Perplexity,AI与Google
+  - RULE-SET,Google,AI与Google
+
+  # ==========================================
+  # 3. 社交、流媒体与代码托管 (合并组)
+  # ==========================================
+  - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
+  - RULE-SET,Telegram,社交 ,流媒体,GitHub
+  - RULE-SET,Twitter,社交 ,流媒体,GitHub
+  - RULE-SET,Reddit,社交 ,流媒体,GitHub
+  - RULE-SET,Youtube,社交 ,流媒体,GitHub
+  - RULE-SET,Netflix,社交 ,流媒体,GitHub
+  - RULE-SET,Netflix_IP,社交 ,流媒体,GitHub,no-resolve
+  - RULE-SET,Disney,社交 ,流媒体,GitHub
+  - RULE-SET,HBO,社交 ,流媒体,GitHub
+  - RULE-SET,Spotify,社交 ,流媒体,GitHub
+  - RULE-SET,Crunchyroll,社交 ,流媒体,GitHub
+  - RULE-SET,Popcorn,社交 ,流媒体,GitHub
+  - RULE-SET,Amazon,社交 ,流媒体,GitHub
+  - RULE-SET,GitHub,社交 ,流媒体,GitHub
+
+  # ==========================================
+  # 4. 专属影音服务 (Emby)
+  # ==========================================
+  - RULE-SET,Emby,Emby
+
+  # ==========================================
+  # 5. 跨国巨头分流 (微软/苹果/Nvdia)
+  # ==========================================
+  - RULE-SET,Microsoft,微软苹果Nvdia
+  - RULE-SET,Apple,微软苹果Nvdia
+  - RULE-SET,Nvidia,微软苹果Nvdia
+  - RULE-SET,Apple_CN,DIRECT
+
+  # ==========================================
+  # 6. 游戏平台分流 (游戏平台)
+  # ==========================================
+  - RULE-SET,Steam,游戏平台
+  - RULE-SET,Epic,游戏平台
+  - RULE-SET,EA,游戏平台
+  - RULE-SET,Blizzard,游戏平台
+  - RULE-SET,UBI,游戏平台
+  - RULE-SET,PlayStation,游戏平台
+  - RULE-SET,Nintendo,游戏平台
+
+  # ==========================================
+  # 7. 抖音与特定业务 (国内服务/TikTok)
+  # ==========================================
+  - RULE-SET,TikTok,TikTok
+  - DOMAIN-KEYWORD,douyin,国内服务
+  - RULE-SET,Douyin,国内服务
+
+  # ==========================================
+  # 8. 加密货币、出海与兜底规则 (加密货币与兜底)
+  # ==========================================
+  - RULE-SET,OKX,加密货币与兜底
+  - RULE-SET,Bybit,加密货币与兜底
+  - RULE-SET,Binance,加密货币与兜底
+  - RULE-SET,Turnstile,加密货币与兜底
+  - RULE-SET,Proxy,加密货币与兜底
+  - RULE-SET,Global,加密货币与兜底
+
+  # ==========================================
+  # 9. 大陆流量兜底 (国内服务/DIRECT)
+  # ==========================================
+  - GEOSITE,CN,国内服务
+  - GEOIP,CN,国内服务
+  
+  # ==========================================
+  # 10. 最终兜底逻辑
+  # ==========================================
+  - MATCH,加密货币与兜底
+
+# ========================
+# 规则集提供者
+# ========================
+rule-anchor:
+  ip: &ip { type: http, interval: 86400, behavior: ipcidr, format: mrs }
+  domain: &domain { type: http, interval: 86400, behavior: domain, format: mrs }
+  class: &class { type: http, interval: 86400, behavior: classical, format: text }
+
+rule-providers:
+  Private: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"}
+  CN_Domain: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt", path: ./ruleset/cn_domain.yaml}
+  China_IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt", path: ./ruleset/cn_ip.yaml}
+  ChatGPT: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list"}
+  Claude: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list"}
+  Perplexity: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs"}
+  Copilot: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list"}
+  Gemini: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list"}
+  Groq: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs"}
+  Grok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list"}
+  Apple_AI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list"}
+  Youtube: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list"}
+  Telegram: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list"}
+  Twitter: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list"}
+  GitHub: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list"}
+  TikTok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list"}
+  Douyin: {<<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list"}
+  Netflix: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
+  Netflix_IP: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
+  Disney: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list"}
+  HBO: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list"}
+  Spotify: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list"}
+  Crunchyroll: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list"}
+  Popcorn: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list"}
+  Reddit: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list"}
+  Emby: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list"}
+  Google: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list"}
+  GoogleFCM: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list"}
+  Microsoft: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list"}
+  Apple: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list"}
+  Apple_CN: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs"}
+  Nvidia: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list"}
+  Turnstile: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list"}
+  Steam: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list"}
+  Epic: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list"}
+  EA: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list"}
+  Blizzard: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list"}
+  UBI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list"}
+  PlayStation: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list"}
+  Nintendo: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list"}
+  OKX: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list"}
+  Bybit: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs"}
+  Binance: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list"}
+  Amazon: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list"}
+  Proxy: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list"}
+  Global: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list"}
