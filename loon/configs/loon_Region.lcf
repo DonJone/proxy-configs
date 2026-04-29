@@ -1,11 +1,12 @@
-# Loon自用配置 (高可用极简架构重构版 - 策略组重命名版)
+# Loon自用配置 (高可用极简架构重构版 - 符合Tartarus规范语法)
 # =====================================
 # General
 # =====================================
 [General]
-mitm-on-wifi-access = true
-ipv6-vif = off
+# IPv6 支持与 IP 模式
 ip-mode = v4-only
+ipv6-vif = off
+# DNS 与 拦截模式
 disable-stun = true
 dns-reject-mode = LoopbackIP
 domain-reject-mode = DNS
@@ -13,9 +14,11 @@ udp-fallback-mode = REJECT
 sni-sniffing = true
 disconnect-on-policy-change = true
 switch-node-after-failure-times = 3
+# 跳过代理与绕过 TUN
 skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com
 bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32
-dns-server = system,223.5.5.5,119.29.29.29,8.8.8.8
+# DNS 服务器
+dns-server = system, 223.5.5.5, 119.29.29.29, 8.8.8.8
 interface-mode = auto
 allow-udp-proxy = true
 allow-wifi-access = true
@@ -25,73 +28,58 @@ proxy-test-url = http://cp.cloudflare.com/generate_204
 internet-test-url = http://connect.rom.miui.com/generate_204 
 test-timeout = 5
 geoip-url = https://cdn.jsdelivr.net/gh/Masaiki/GeoIP2-CN@release/Country.mmdb
-#软路由直连相关
-ssid-trigger = "default":rule, "cellular":rule,"你的软路由wifi名":direct
+# SSID 触发规则
+ssid-trigger = "default":rule, "cellular":rule, "你的软路由wifi名":direct
 ipasn-url = https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb
 
 # =====================================
-# Host
-# =====================================
-[Host]
-iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
-
-# =====================================
-# Proxy 本地的代理节点
+# Proxy / Remote Proxy
 # =====================================
 [Proxy]
 
-# =====================================
-# Remote Proxy 订阅链接
-# =====================================
 [Remote Proxy]
 
+# =====================================
+# Proxy Group (规范语法版)
+# =====================================
 [Proxy Group]
-# =====================================
-# 1. 基础组件：三大核心控制台 (你的手动选择面板)
-# =====================================
-亚太 = select, filter=亚太节点, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-欧美 = select, filter=欧美节点, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-低倍 = select, filter=低倍节点, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+# 1. 基础手选组：直接调用 Remote Filter 中的过滤器名
+亚太 = select, 亚太节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+欧美 = select, 欧美节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+低倍 = select, 低倍节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+
+# 2. 备用自动组：直接调用过滤器名进行 url-test
+亚太备用 = url-test, 亚太节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+欧美备用 = url-test, 欧美节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+低倍备用 = url-test, 低倍节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+
+# 3. 故障转移架构：手选 -> 自动
+亚太区 = fallback, 亚太, 亚太备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+欧美区 = fallback, 欧美, 欧美备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+低倍率 = fallback, 低倍, 低倍备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+
+# 4. 业务分配分流
+AI与Google = select, 欧美区, 亚太区, 低倍率, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
+TikTok = select, 亚太区, 欧美区, 低倍率, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
+Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+社交流媒体Github = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+游戏平台 = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
+微软苹果Nvdia = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
+加密货币与兜底 = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
+
+# 5. 静默拦截与国内服务
+国内服务 = select, DIRECT, 亚太区, hidden = true
+广告拦截 = select, REJECT, hidden = true
 
 # =====================================
-# 2. 备用组件：同区自动测速池 (底层静默运行，隐藏不对外暴露)
-# =====================================
-亚太备用 = url-test, filter=亚太节点, url=http://cp.cloudflare.com/generate_204, interval=30, tolerance=50, hidden=true
-欧美备用 = url-test, filter=欧美节点, url=http://cp.cloudflare.com/generate_204, interval=30, tolerance=50, hidden=true
-低倍备用 = url-test, filter=低倍节点, url=http://cp.cloudflare.com/generate_204, interval=30, tolerance=50, hidden=true
-
-# =====================================
-# 3. 核心架构：同区故障转移 (首选你的手选节点 -> 宕机切同区备用)
-# =====================================
-亚太区 = fallback, 亚太, 亚太备用, url=http://cp.cloudflare.com/generate_204, interval=30
-欧美区 = fallback, 欧美, 欧美备用, url=http://cp.cloudflare.com/generate_204, interval=30
-低倍率 = fallback, 低倍, 低倍备用, url=http://cp.cloudflare.com/generate_204, interval=30
-
-# =====================================
-# 4. 业务分配与顶层路由
-# =====================================
-AI与Google = select, 欧美区, 亚太区, 低倍率, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
-TikTok = select, 亚太区, 欧美区, 低倍率, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
-Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-社交流媒体Github = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
-游戏平台 = select, DIRECT, 亚太区, 欧美区, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
-微软苹果Nvdia = select, DIRECT, 亚太区, 欧美区, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
-加密货币与兜底 = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
-
-# =====================================
-# 5. 静默拦截组
-# =====================================
-国内服务 = select, DIRECT, 亚太区, hidden=true
-广告拦截 = select, REJECT, hidden=true
-
-# =====================================
-# Remote Filter
+# Remote Filter (定义过滤逻辑)
 # =====================================
 [Remote Filter]
+# 全部节点与除拨号外
 全部节点 = NameRegex, FilterKey = ".*"
 除拨号外 = NameRegex, FilterKey = "^(?i)(?!.*dialer).*"
 
-# --- 新增的业务节点过滤器 ---
+# 业务节点过滤器
 亚太节点 = NameRegex, FilterKey = "(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
 欧美节点 = NameRegex, FilterKey = "(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
 低倍节点 = NameRegex, FilterKey = "(?i)(0\.\d+\s*[xX倍]|低倍)"
@@ -100,47 +88,30 @@ Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url=https://raw.gith
 # Rule
 # =====================================
 [Rule]
+# 抖音与 Emby 特殊分流
+DOMAIN-KEYWORD, douyin, 国内服务
+DOMAIN-KEYWORD, emby, Emby
+DOMAIN-KEYWORD, uhdnow, Emby
+# 拦截
+IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
+DOMAIN-KEYWORD, libvio, DIRECT
+URL-REGEX, "\.log\.", 广告拦截
+# 国内与兜底
+GEOIP, CN, 国内服务
+FINAL, 加密货币与兜底
 
-IP-CIDR,5.28.195.0/24,REJECT-NO-DROP,no-resolve
-
-# 自定义直连
-DOMAIN-KEYWORD,libvio,DIRECT
-
-# 抖音严谨匹配
-DOMAIN-KEYWORD,douyin,国内服务
-
-#Emby服务,大多需要自己添加
-DOMAIN-KEYWORD,emby, Emby
-DOMAIN-KEYWORD,uhdnow, Emby
-
-# 信息收集拦截
-URL-REGEX,"\.log\.",广告拦截
-
-GEOIP,CN,国内服务
-
-# 兜底策略
-FINAL,加密货币与兜底
-
+# =====================================
+# Remote Rule (引用外部规则库)
+# =====================================
 [Remote Rule]
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/private.txt, policy=DIRECT, tag=私有网络@Loyal, enabled=true
-https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/AI.list, policy=AI与Google, tag=AI分流合集@奶思, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleVoice/GoogleVoice.list, policy=AI与Google, tag=Google Voice@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list, policy=AI与Google, tag=Google@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list, policy=TikTok, tag=TikTok@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=社交流媒体Github, tag=Telegram@Don, enabled=true
-https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/Twitter.list, policy=社交流媒体Github, tag=Twitter@bm7, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Instagram/Instagram.list, policy=社交流媒体Github, tag=Instagram@Don, enabled=true
-https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/Facebook.list, policy=社交流媒体Github, tag=Facebook@bm7, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Line/Line.list, policy=社交流媒体Github, tag=Line@Don, enabled=true
-https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/AppleAll.list, policy=微软苹果Nvdia, tag=苹果服务@奶思, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=社交流媒体Github, tag=Github@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list, policy=社交流媒体Github, tag=Spotify@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTubeMusic/YouTubeMusic.list, policy=社交流媒体Github, tag=YouTube Music@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=社交流媒体Github, tag=YouTube@Don, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list, policy=社交流媒体Github, tag=Disney@Don, enabled=true
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用域名@Loyal, enabled=true
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内通用IP@Loyal, enabled=true
-
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/private.txt, policy=DIRECT, tag=私有网络, enabled=true
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/AI.list, policy=AI与Google, tag=AI分流, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=社交流媒体Github, tag=Telegram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=社交流媒体Github, tag=Github, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=社交流媒体Github, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用, enabled=true
+https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内IP, enabled=true
 # =====================================
 # Script / Remote Script / Plugin / Mitm
 # =====================================
