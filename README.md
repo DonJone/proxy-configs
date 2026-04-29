@@ -8,42 +8,42 @@
 #### 🔹 Mihomo (Desktop & Mobile)
 * **GitHub Raw:** 
 ```
-https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/desktop%26mobile/mihomodeskmob.yaml
+https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/desktop%26mobile/mihomo_Region.yaml
 ```
 * **jsDelivr CDN:** 
 ```
-https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomodeskmob.yaml
+https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region.yaml
 ```
 
 #### 🔹 Loon
 * **GitHub Raw:** 
 ```copy
-https://raw.githubusercontent.com/DonJone/proxy-configs/master/loon/configs/loon.lcf
+https://raw.githubusercontent.com/DonJone/proxy-configs/master/loon/configs/loon_Region.lcf
 ```
 * **jsDelivr CDN:** 
 ```copy
-https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon.lcf
+https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf
 ```
 
 
 #### 🔹 Mihomo (OpenClash)
 * **GitHub Raw:** 
 ```
-https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/OpenClash/openclash.yaml
+https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/OpenClash/openclash_Region.yaml
 ```
 * **jsDelivr CDN:** 
 ```
-https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash.yaml
+https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region.yaml
 ```
 
 #### 🔹 Shadowrocket
 * **GitHub Raw:** 
 ```
-https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/configs/Shadowrocket.conf
+https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/configs/Shadowrocket_Region.conf
 ```
 * **jsDelivr CDN:** 
 ```
-https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket.conf
+https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf
 ```
 
 
