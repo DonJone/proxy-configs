@@ -70,7 +70,7 @@ proxy-groups:
       name: 低倍,
       type: select,
       include-all: true,
-      filter: '(?i)(0(?:\.[1-7]\d*)?\s*[xX倍]|低倍)',
+      filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
 
@@ -102,7 +102,7 @@ proxy-groups:
       name: 低倍备用,
       type: url-test,
       include-all: true,
-      filter: '(?i)(0(?:\.[1-7]\d*)?\s*[xX倍]|低倍)',
+      filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,

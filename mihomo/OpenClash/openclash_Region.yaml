@@ -181,14 +181,14 @@ proxy-groups:
   # ==========================================
   - { name: 亚太, type: select, include-all: true, filter: '(?i)(?!.*0(?:\.[0-7]\d*)?\s*[xX倍])(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
   - { name: 欧美, type: select, include-all: true, filter: '(?i)(?!.*0(?:\.[0-7]\d*)?\s*[xX倍])(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
-  - { name: 低倍, type: select, include-all: true, filter: '(?i)(0(?:\.[1-7]\d*)?\s*[xX倍]|低倍)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  - { name: 低倍, type: select, include-all: true, filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
 
   # ==========================================
   # 2. 备用组件：同区自动测速池 (静默运行，精简 UI)
   # ==========================================
   - { name: 亚太备用, type: url-test, include-all: true, filter: '(?i)(?!.*0(?:\.[0-7]\d*)?\s*[xX倍])(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
   - { name: 欧美备用, type: url-test, include-all: true, filter: '(?i)(?!.*0(?:\.[0-7]\d*)?\s*[xX倍])(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
-  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)(0(?:\.[1-7]\d*)?\s*[xX倍]|低倍)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
 
   # ==========================================
   # 3. 业务分配与顶层路由
