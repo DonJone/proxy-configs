@@ -1,6 +1,6 @@
 # Proxy Configurations
 
-本项目提供针对 Mihomo (Clash Meta)、Loon 及 Shadowrocket 优化的配置文件，旨在构建一个人工干预优先级高且具备自动冗余能力的代理环境。
+本项目提供针对 Mihomo (Clash Meta)、Loon、Shadowrocket 及 sing-box 优化的配置文件，旨在构建一个人工干预优先级高且具备自动冗余能力的代理环境。
 
 以下是各平台客户端配置文件的 Raw 及 CDN 链接，可直接复制到客户端中作为订阅地址使用：
 
@@ -44,6 +44,16 @@ https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/conf
 * **jsDelivr CDN:** 
 ```
 https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf
+```
+
+#### 🔹 sing-box
+* **GitHub Raw:** 
+```
+https://raw.githubusercontent.com/DonJone/proxy-configs/master/sing-box/configs/sing-box_Region.json
+```
+* **jsDelivr CDN:** 
+```
+https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/sing-box/configs/sing-box_Region.json
 ```
 
 

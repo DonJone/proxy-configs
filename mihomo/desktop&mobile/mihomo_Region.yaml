@@ -5,65 +5,45 @@ mode: rule
 log-level: info
 external-controller: "127.0.0.1:9090"
 unified-delay: true
+tcp-concurrent: true
 hosts:
   time.facebook.com: 17.253.84.125
   time.android.com: 17.253.84.125
 dns:
   enable: true
   use-hosts: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
   nameserver:
     [
-      119.29.29.29,
-      223.5.5.5,
-      223.6.6.6,
-      "tcp://223.5.5.5",
-      "tcp://223.6.6.6",
-      "tls://dns.google:853",
-      "tls://8.8.8.8:853",
-      "tls://8.8.4.4:853",
-      "tls://dns.alidns.com",
-      "tls://223.5.5.5",
-      "tls://223.6.6.6",
-      "tls://dot.pub",
-      "tls://1.12.12.12",
-      "tls://120.53.53.53",
-      "https://dns.google/dns-query",
-      "https://8.8.8.8/dns-query",
-      "https://8.8.4.4/dns-query",
       "https://dns.alidns.com/dns-query",
-      "https://223.5.5.5/dns-query",
-      "https://223.6.6.6/dns-query",
       "https://doh.pub/dns-query",
-      "https://1.12.12.12/dns-query",
-      "https://120.53.53.53/dns-query",
+      "tls://dns.alidns.com",
+      "tls://dot.pub",
     ]
   default-nameserver:
     [
       119.29.29.29,
       223.5.5.5,
-      223.6.6.6,
-      "tcp://119.29.29.29",
-      "tcp://223.5.5.5",
-      "tcp://223.6.6.6",
     ]
 
 profile:
   store-selected: true
-  store-fake-ip: false
+  store-fake-ip: true
 
 # ========================
 # 机场节点订阅
 # ========================
 proxy-providers:
   ######（机场备注）:
-  url: "机场链接url"
-  type: http
-  interval: 86400
-  health-check:
-    enable: true
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-  proxy: DIRECT
+    url: "机场链接url"
+    type: http
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+    proxy: DIRECT
 
 # ========================
 # 策略组 Proxy Groups (高可用极简架构)
@@ -90,7 +70,8 @@ proxy-groups:
       name: 低倍,
       type: select,
       include-all: true,
-      filter: '(?i)(0\.\d+\s*[xX倍]|低倍)',
+      # 【修复】：调整正则兼容 0x 和 0倍
+      filter: '(?i)(0(\.\d+)?\s*[xX倍]|低倍)',
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
 
@@ -111,7 +92,8 @@ proxy-groups:
       name: 欧美备用,
       type: url-test,
       include-all: true,
-      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'",
+      # 【修复】：删除了末尾多余的游离双引号
+      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,
@@ -121,7 +103,8 @@ proxy-groups:
       name: 低倍备用,
       type: url-test,
       include-all: true,
-      filter: '(?i)(0\.\d+\s*[xX倍]|低倍)',
+      # 【修复】：调整正则兼容 0x 和 0倍
+      filter: '(?i)(0(\.\d+)?\s*[xX倍]|低倍)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,
@@ -149,10 +132,9 @@ proxy-groups:
       proxies: [DIRECT, 亚太区, 低倍率, 欧美区],
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
+  # 【修复】：重命名合并非法换行和带有逗号的策略组名称
   - {
-      name: 社交,
-      流媒体,
-      GitHub,
+      name: 社交流媒体GitHub,
       type: select,
       proxies: [亚太区, 欧美区, 低倍率, DIRECT],
       icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png",
@@ -163,8 +145,9 @@ proxy-groups:
       proxies: [DIRECT, 亚太区, 欧美区],
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png",
     }
+  # 【修复】：修正 Nvdia 为 Nvidia
   - {
-      name: 微软苹果Nvdia,
+      name: 微软苹果Nvidia,
       type: select,
       proxies: [DIRECT, 亚太区, 欧美区],
       icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png",
@@ -237,19 +220,20 @@ rules:
   # 3. 社交、流媒体与代码托管 (合并组)
   # ==========================================
   - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
-  - RULE-SET,Telegram,社交 ,流媒体,GitHub
-  - RULE-SET,Twitter,社交 ,流媒体,GitHub
-  - RULE-SET,Reddit,社交 ,流媒体,GitHub
-  - RULE-SET,Youtube,社交 ,流媒体,GitHub
-  - RULE-SET,Netflix,社交 ,流媒体,GitHub
-  - RULE-SET,Netflix_IP,社交 ,流媒体,GitHub,no-resolve
-  - RULE-SET,Disney,社交 ,流媒体,GitHub
-  - RULE-SET,HBO,社交 ,流媒体,GitHub
-  - RULE-SET,Spotify,社交 ,流媒体,GitHub
-  - RULE-SET,Crunchyroll,社交 ,流媒体,GitHub
-  - RULE-SET,Popcorn,社交 ,流媒体,GitHub
-  - RULE-SET,Amazon,社交 ,流媒体,GitHub
-  - RULE-SET,GitHub,社交 ,流媒体,GitHub
+  # 【修复】：同步更新分流出口为“社交流媒体GitHub”
+  - RULE-SET,Telegram,社交流媒体GitHub
+  - RULE-SET,Twitter,社交流媒体GitHub
+  - RULE-SET,Reddit,社交流媒体GitHub
+  - RULE-SET,Youtube,社交流媒体GitHub
+  - RULE-SET,Netflix,社交流媒体GitHub
+  - RULE-SET,Netflix_IP,社交流媒体GitHub,no-resolve
+  - RULE-SET,Disney,社交流媒体GitHub
+  - RULE-SET,HBO,社交流媒体GitHub
+  - RULE-SET,Spotify,社交流媒体GitHub
+  - RULE-SET,Crunchyroll,社交流媒体GitHub
+  - RULE-SET,Popcorn,社交流媒体GitHub
+  - RULE-SET,Amazon,社交流媒体GitHub
+  - RULE-SET,GitHub,社交流媒体GitHub
 
   # ==========================================
   # 4. 专属影音服务 (Emby)
@@ -257,11 +241,12 @@ rules:
   - RULE-SET,Emby,Emby
 
   # ==========================================
-  # 5. 跨国巨头分流 (微软/苹果/Nvdia)
+  # 5. 跨国巨头分流 (微软/苹果/Nvidia)
   # ==========================================
-  - RULE-SET,Microsoft,微软苹果Nvdia
-  - RULE-SET,Apple,微软苹果Nvdia
-  - RULE-SET,Nvidia,微软苹果Nvdia
+  # 【修复】：同步更新分流出口为正确的“微软苹果Nvidia”
+  - RULE-SET,Microsoft,微软苹果Nvidia
+  - RULE-SET,Apple,微软苹果Nvidia
+  - RULE-SET,Nvidia,微软苹果Nvidia
   - RULE-SET,Apple_CN,DIRECT
 
   # ==========================================

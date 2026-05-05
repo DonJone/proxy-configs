@@ -4,8 +4,8 @@
 # =====================================
 [General]
 # IPv6 支持与 IP 模式
-ip-mode = v4-only
-ipv6-vif = off
+ip-mode = dual
+ipv6-vif = auto
 # DNS 与 拦截模式
 disable-stun = true
 dns-reject-mode = LoopbackIP
@@ -62,9 +62,9 @@ ipasn-url = https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLi
 AI与Google = select, 欧美区, 亚太区, 低倍率, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
 TikTok = select, 亚太区, 欧美区, 低倍率, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
 Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-社交流媒体Github = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+社交流媒体GitHub = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
 游戏平台 = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
-微软苹果Nvdia = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
+微软苹果Nvidia = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
 加密货币与兜底 = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
 
 # 5. 静默拦截与国内服务
@@ -82,7 +82,7 @@ Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.gi
 # 业务节点过滤器
 亚太节点 = NameRegex, FilterKey = "(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
 欧美节点 = NameRegex, FilterKey = "(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
-低倍节点 = NameRegex, FilterKey = "(?i)(0\.\d+\s*[xX倍]|低倍)"
+低倍节点 = NameRegex, FilterKey = "(?i)(0(\.\d+)?\s*[xX倍]|低倍)"
 
 # =====================================
 # Rule
@@ -105,11 +105,44 @@ FINAL, 加密货币与兜底
 # =====================================
 [Remote Rule]
 https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/private.txt, policy=DIRECT, tag=私有网络, enabled=true
+# AI
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/AI.list, policy=AI与Google, tag=AI分流, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list, policy=AI与Google, tag=Claude, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list, policy=AI与Google, tag=Copilot, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list, policy=AI与Google, tag=Gemini, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list, policy=AI与Google, tag=Google, enabled=true
+https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list, policy=AI与Google, tag=Apple_AI, enabled=true
+# 社交流媒体
 https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=社交流媒体Github, tag=Telegram, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=社交流媒体Github, tag=Github, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=社交流媒体Github, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=社交流媒体GitHub, tag=Telegram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list, policy=社交流媒体GitHub, tag=Twitter, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list, policy=社交流媒体GitHub, tag=Reddit, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=社交流媒体GitHub, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list, policy=社交流媒体GitHub, tag=Netflix, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list, policy=社交流媒体GitHub, tag=Disney, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list, policy=社交流媒体GitHub, tag=HBO, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list, policy=社交流媒体GitHub, tag=Spotify, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list, policy=社交流媒体GitHub, tag=Amazon, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=社交流媒体GitHub, tag=GitHub, enabled=true
+# 微软苹果Nvidia
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list, policy=微软苹果Nvidia, tag=Apple, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list, policy=微软苹果Nvidia, tag=Nvidia, enabled=true
+# 游戏平台
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list, policy=游戏平台, tag=Steam, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list, policy=游戏平台, tag=Epic, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list, policy=游戏平台, tag=EA, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list, policy=游戏平台, tag=Blizzard, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list, policy=游戏平台, tag=UBI, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list, policy=游戏平台, tag=PlayStation, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list, policy=游戏平台, tag=Nintendo, enabled=true
+# 加密货币
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list, policy=加密货币与兜底, tag=OKX, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list, policy=加密货币与兜底, tag=Binance, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list, policy=加密货币与兜底, tag=Turnstile, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list, policy=加密货币与兜底, tag=Proxy, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list, policy=加密货币与兜底, tag=Global, enabled=true
+# 国内服务
 https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用, enabled=true
 https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内IP, enabled=true
 # =====================================

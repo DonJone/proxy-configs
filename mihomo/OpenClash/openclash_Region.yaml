@@ -1,177 +1,207 @@
-# ========================
-# OpenClash-融合优化配置 (Meta 内核完全版)
-# ========================
+# Custom_OpenClash_Rules
+# YAML 配置文件
+# 注释部分由 AI 补充，可能存在错误，请自行甄别！
+# ==================== 端口配置 Port Configuration ====================
+# HTTP 代理端口，用于处理 HTTP 协议流量
 port: 7890
+# SOCKS5 代理端口，用于处理 SOCKS5 协议流量
 socks-port: 7891
-redir-port: 7892
+# 混合端口（HTTP + SOCKS5），同时支持 HTTP 和 SOCKS5 协议
 mixed-port: 7893
+# 透明代理重定向端口（Linux 环境）
+redir-port: 7892
+# TProxy 端口（Linux 环境的透明代理）
 tproxy-port: 7895
-
+# 是否允许局域网连接，true 表示允许其他设备通过本机代理上网
 allow-lan: true
+# 绑定地址，"*" 表示监听所有网卡，可指定具体 IP
+bind-address: "*"
+# 工作模式：rule（规则模式）/ global（全局模式）/ direct（直连模式）
 mode: rule
-log-level: info
+# 是否启用 TCP 并发，可提高连接性能
+tcp-concurrent: true
+# 统一延迟计算，使延迟测试更准确
+unified-delay: true
 
-external-controller: 0.0.0.0:9090
-secret: "123456"
-
-# ========================
-# DNS 与 TUN 设置 (Redir-Host + TUN 模式)
-# ========================
-dns:
-  enable: true
-  listen: 0.0.0.0:7874
-  ipv6: false
-  # 关闭 fake-ip，改用 redir-host 模式
-  enhanced-mode: redir-host
-  nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-    - 114.114.114.114
-
-# 全局 IPv6 开关，建议与 DNS 配置保持一致
-ipv6: false
-
-tun:
-  enable: true
-  stack: system
-  device: utun
-  endpoint-independent-nat: true
-  # 提示：在 OpenClash 中，auto-route 通常由插件界面控制
-  # 若需内核自动接管路由，请将以下设为 true
-  auto-route: true
-  auto-detect-interface: true
-  auto-redirect: false
-  strict-route: false
-
-profile:
-  store-selected: true
-  # 关闭 Fake-IP 映射存储
-  store-fake-ip: false
-
-# ========================
-# 机场节点订阅
-# ========================
+# ==================== 代理提供者 Proxy Provider ====================
+# 用于从订阅链接获取节点，多机场用户复制整个 provider1 块并改名为 provider2, provider3...
+# 同时在后续所有 proxy-groups 的 use 列表中添加新provider
 proxy-providers:
-  ######（机场备注）:
-  url: "机场链接url"
-  type: http
-  interval: 86400
-  health-check:
-    enable: true
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-  proxy: DIRECT
+  provider1:
+    type: http  # 类型：http（从URL获取）或 file（本地文件）
+    url: "url"  # **填入你的订阅链接**
+    interval: 3600  # 订阅更新间隔（秒），3600=1小时
+    path: ./proxy_provider/provider1.yaml # 本地缓存路径
+    proxy: DIRECT  # 下载订阅时使用的代理策略
+    header:  # 自定义 HTTP 请求头
+    health-check:  # 节点健康检查
+      enable: true
+      interval: 600  # 检查间隔（秒）
+      url: https://cp.cloudflare.com/generate_204
+    override:  # 覆写节点配置
+      skip-cert-verify: true  # 跳过证书验证
+      udp: true  # 启用UDP
+      # additional-prefix: "[provider1]"  # 为节点名添加前缀
+      # additional-suffix: "test"  # 为节点名添加后缀
+
+# ==================== 地理数据库配置 GeoData Configuration ====================
+# 用于 IP 和域名的地理位置及分类判断
+geox-url:
+  # MaxMind 数据库（含中国 IP）
+  mmdb: https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb
+  # GeoIP 数据库
+  geoip: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
+  # GeoSite 数据库（域名分类）
+  geosite: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
+  # ASN（自治系统号）数据库，用于更精确的 IP 归属判断
+  asn: https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb
+# 是否自动更新 geodata 数据库
+geo-auto-update: true # 是否自动更新 geodata
+# 更新间隔（小时），24 = 每天更新一次
+geo-update-interval: 24 # 更新间隔，单位：小时
+# 使用 geodata 模式（而非传统的 IP-CIDR 文件）
+geodata-mode: true
+
+# ==================== 日志与控制 ====================
+# 日志级别：silent（静默）/ error（错误）/ warning（警告）/ info（信息）/ debug（调试）
+log-level: info
+# 是否启用 IPv6，true 表示支持 IPv6 流量
+ipv6: true
+# 外部控制器地址，用于 Web UI 和 API 访问，0.0.0.0:9090 表示监听所有网卡的 9090 端口
+external-controller: 0.0.0.0:9090
+
+# ==================== 配置文件存储 Profile ====================
+profile:
+  # 是否保存用户选择的策略组（重启后自动恢复）
+  store-selected: true
+  # 是否保存 Fake-IP 映射表（重启后保留 DNS 缓存）
+  store-fake-ip: true
+
+# ==================== TUN 虚拟网卡配置 ====================
+# TUN 模式可以接管系统全部流量，实现真正的全局代理
+tun:
+  # 是否启用 TUN 模式
+  enable: true
+  # 网络栈：system（系统栈）/ gvisor（内置用户态栈）/ mixed（混合）
+  stack: system
+  # DNS 劫持配置，劫持所有发往 53 端口的 DNS 请求
+  dns-hijack:
+    - 0.0.0.0:53
+  # 自动检测网络接口（OpenClash 环境下应设为 false，由 OpenClash 管理）
+  auto-detect-interface: false
+  # 自动配置路由表（OpenClash 环境下应设为 false）
+  auto-route: false
+  # 自动配置 iptables 重定向（OpenClash 环境下应设为 false）
+  auto-redirect: false
+  # 严格路由模式（OpenClash 环境下应设为 false）
+  strict-route: false
+  # 端点无关 NAT（提高 NAT 类型兼容性，适用于 P2P 和游戏）
+  endpoint-independent-nat: true
+
+# ==================== 流量嗅探器 Sniffer ====================
+# 嗅探器可以通过分析流量内容还原真实域名，提高分流准确性
+sniffer:
+  # 启用嗅探功能
+  enable: true
+  # 使用嗅探结果覆盖连接目标（推荐开启）
+  override-destination: true
+  # 嗅探协议配置
+  sniff:
+    # QUIC 协议嗅探（HTTP/3）
+    QUIC:
+      ports:
+      - 443
+    # TLS 协议嗅探（HTTPS）
+    TLS:
+      ports:
+      - 443  # 标准 HTTPS 端口
+      - 8443  # 常用替代 HTTPS 端口
+    # HTTP 协议嗅探
+    HTTP:
+      ports:
+      - 80  # 标准 HTTP 端口
+      - 8080-8880  # HTTP 常用端口范围
+      override-destination: true
+  # 强制对这些域名进行嗅探（即使已经有目标地址）
+  force-domain:
+    - "+.netflix.com"  # Netflix 主域名
+    - "+.nflxvideo.net"  # Netflix CDN
+    - "+.amazonaws.com"  # AWS 云服务
+    - "+.media.dssott.com"  # Disney+ 流媒体
+  # 跳过对这些域名的嗅探（避免干扰）
+  skip-domain:
+    - "+.apple.com"  # 苹果服务
+    - Mijia Cloud  # 米家云服务
+    - dlg.io.mi.com  # 小米设备通信
+    - "+.oray.com"  # 花生壳服务
+    - "+.sunlogin.net"  # 向日葵远程控制
+    - "+.push.apple.com"  # 苹果推送服务
+  # 解析纯 IP 连接（尝试通过 rDNS 反向解析获得域名）
+  parse-pure-ip: true
+  # 强制 DNS 映射（对纯 IP 连接尝试 DNS 映射）
+  force-dns-mapping: true
+
+# ==================== DNS 配置 ====================
+dns:
+  # 启用内置 DNS 服务器
+  enable: true
+  # DNS 服务器监听地址，0.0.0.0:7874 表示监听所有网卡的 7874 端口
+  listen: 0.0.0.0:7874
+  # 是否解析 IPv6 地址
+  ipv6: true
+  # DNS 增强模式：fake-ip（虚假 IP）/ redir-host（真实 IP），fake-ip 模式性能更好
+  enhanced-mode: fake-ip
+  # Fake-IP 地址池范围（私有地址段，不会与真实 IP 冲突）
+  fake-ip-range: 198.18.0.1/16
+  # Fake-IP 过滤列表（这些域名将返回真实 IP 而非 Fake-IP）
+  fake-ip-filter:
+    - '*.lan'  # 局域网域名
+    - localhost.ptlogin2.qq.com  # QQ 登录域名
+    - geosite:cn  # 中国大陆域名（使用 GeoSite 数据）
+  # Fake-IP 过滤模式：blacklist（黑名单）/ whitelist（白名单）
+  fake-ip-filter-mode: blacklist
+  # 是否遵循规则（false 表示所有 DNS 查询都通过直连查询，不经过代理规则）
+  respect-rules: false
+  # 主 DNS 服务器列表（用于实际域名解析）
+  nameserver:
+    - https://dns.alidns.com/dns-query#h3=true  # 阿里云 DoH，启用 DoH3
+    - https://doh.pub/dns-query  # 腾讯 DoH
+  # 默认 DNS 服务器（用于解析其他 DNS 服务器的域名）
+  default-nameserver:
+    - tls://1.12.12.12
+    - tls://120.53.53.53
+    
 
 # ========================
-# 策略组 Proxy Groups (高可用极简架构)
+# 策略组 Proxy Groups (高可用区域架构)
 # ========================
 proxy-groups:
   # ==========================================
   # 1. 基础组件：三大核心控制台 (你的手动选择面板)
   # ==========================================
-  - {
-      name: 亚太,
-      type: select,
-      include-all: true,
-      filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
-    }
-  - {
-      name: 欧美,
-      type: select,
-      include-all: true,
-      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'",
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
-    }
-  - {
-      name: 低倍,
-      type: select,
-      include-all: true,
-      filter: '(?i)(0\.\d+\s*[xX倍]|低倍)',
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
-    }
+  - { name: 亚太, type: select, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  - { name: 欧美, type: select, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  # 【修复】：调整正则，使其支持匹配不带小数点的 0x、0倍 节点
+  - { name: 低倍, type: select, include-all: true, filter: '(?i)(0(\.\d+)?\s*[xX倍]|低倍)', icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
 
   # ==========================================
   # 2. 备用组件：同区自动测速池 (静默运行，精简 UI)
   # ==========================================
-  - {
-      name: 亚太备用,
-      type: url-test,
-      include-all: true,
-      filter: "(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)",
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-      tolerance: 50,
-      hidden: true,
-    }
-  - {
-      name: 欧美备用,
-      type: url-test,
-      include-all: true,
-      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'",
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-      tolerance: 50,
-      hidden: true,
-    }
-  - {
-      name: 低倍备用,
-      type: url-test,
-      include-all: true,
-      filter: '(?i)(0\.\d+\s*[xX倍]|低倍)',
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-      tolerance: 50,
-      hidden: true,
-    }
+  - { name: 亚太备用, type: url-test, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  - { name: 欧美备用, type: url-test, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)(0(\.\d+)?\s*[xX倍]|低倍)', url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
 
   # ==========================================
   # 3. 业务分配与顶层路由
   # ==========================================
-  - {
-      name: AI与Google,
-      type: select,
-      proxies: [欧美区, 亚太区, 低倍率],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png",
-    }
-  - {
-      name: TikTok,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png",
-    }
-  - {
-      name: Emby,
-      type: select,
-      proxies: [DIRECT, 亚太区, 低倍率, 欧美区],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
-    }
-  - {
-      name: 社交,
-      流媒体,
-      GitHub,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png",
-    }
-  - {
-      name: 游戏平台,
-      type: select,
-      proxies: [DIRECT, 亚太区, 欧美区],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png",
-    }
-  - {
-      name: 微软苹果Nvdia,
-      type: select,
-      proxies: [DIRECT, 亚太区, 欧美区],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png",
-    }
-  - {
-      name: 加密货币与兜底,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png",
-    }
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png" }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png" }
+  - { name: Emby, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png" }
+  # 【修复】：将有逗号语病的策略组名称整合成合法字段，匹配下方规则
+  - { name: 社交流媒体GitHub, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png" }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png" }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区], icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png" }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT], icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png" }
 
   # ==========================================
   # 4. 静默拦截组
@@ -182,27 +212,9 @@ proxy-groups:
   # ==========================================
   # 5. 核心架构：同区故障转移专线 (置底)
   # ==========================================
-  - {
-      name: 亚太区,
-      type: fallback,
-      proxies: [亚太, 亚太备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 欧美区,
-      type: fallback,
-      proxies: [欧美, 欧美备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 低倍率,
-      type: fallback,
-      proxies: [低倍, 低倍备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
+  - { name: 亚太区, type: fallback, proxies: [亚太, 亚太备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 欧美区, type: fallback, proxies: [欧美, 欧美备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
+  - { name: 低倍率, type: fallback, proxies: [低倍, 低倍备用], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
 
 # ========================
 # 规则引擎（rules）
@@ -234,19 +246,20 @@ rules:
   # 3. 社交、流媒体与代码托管 (合并组)
   # ==========================================
   - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
-  - RULE-SET,Telegram,社交 ,流媒体,GitHub
-  - RULE-SET,Twitter,社交 ,流媒体,GitHub
-  - RULE-SET,Reddit,社交 ,流媒体,GitHub
-  - RULE-SET,Youtube,社交 ,流媒体,GitHub
-  - RULE-SET,Netflix,社交 ,流媒体,GitHub
-  - RULE-SET,Netflix_IP,社交 ,流媒体,GitHub,no-resolve
-  - RULE-SET,Disney,社交 ,流媒体,GitHub
-  - RULE-SET,HBO,社交 ,流媒体,GitHub
-  - RULE-SET,Spotify,社交 ,流媒体,GitHub
-  - RULE-SET,Crunchyroll,社交 ,流媒体,GitHub
-  - RULE-SET,Popcorn,社交 ,流媒体,GitHub
-  - RULE-SET,Amazon,社交 ,流媒体,GitHub
-  - RULE-SET,GitHub,社交 ,流媒体,GitHub
+  # 【修复】：将所有关联的 Target 修改为正确的 '社交流媒体GitHub'
+  - RULE-SET,Telegram,社交流媒体GitHub
+  - RULE-SET,Twitter,社交流媒体GitHub
+  - RULE-SET,Reddit,社交流媒体GitHub
+  - RULE-SET,Youtube,社交流媒体GitHub
+  - RULE-SET,Netflix,社交流媒体GitHub
+  - RULE-SET,Netflix_IP,社交流媒体GitHub,no-resolve
+  - RULE-SET,Disney,社交流媒体GitHub
+  - RULE-SET,HBO,社交流媒体GitHub
+  - RULE-SET,Spotify,社交流媒体GitHub
+  - RULE-SET,Crunchyroll,社交流媒体GitHub
+  - RULE-SET,Popcorn,社交流媒体GitHub
+  - RULE-SET,Amazon,社交流媒体GitHub
+  - RULE-SET,GitHub,社交流媒体GitHub
 
   # ==========================================
   # 4. 专属影音服务 (Emby)
@@ -254,11 +267,11 @@ rules:
   - RULE-SET,Emby,Emby
 
   # ==========================================
-  # 5. 跨国巨头分流 (微软/苹果/Nvdia)
+  # 5. 跨国巨头分流 (微软/苹果/Nvidia)
   # ==========================================
-  - RULE-SET,Microsoft,微软苹果Nvdia
-  - RULE-SET,Apple,微软苹果Nvdia
-  - RULE-SET,Nvidia,微软苹果Nvdia
+  - RULE-SET,Microsoft,微软苹果Nvidia
+  - RULE-SET,Apple,微软苹果Nvidia
+  - RULE-SET,Nvidia,微软苹果Nvidia
   - RULE-SET,Apple_CN,DIRECT
 
   # ==========================================
@@ -306,242 +319,52 @@ rules:
 rule-anchor:
   ip: &ip { type: http, interval: 86400, behavior: ipcidr, format: mrs }
   domain: &domain { type: http, interval: 86400, behavior: domain, format: mrs }
-  class:
-    &class { type: http, interval: 86400, behavior: classical, format: text }
+  class: &class { type: http, interval: 86400, behavior: classical, format: text }
 
 rule-providers:
-  Private:
-    {
-      <<: *class,
-      behavior: domain,
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt",
-    }
-  CN_Domain:
-    {
-      <<: *class,
-      behavior: domain,
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt",
-      path: ./ruleset/cn_domain.yaml,
-    }
-  China_IP:
-    {
-      <<: *class,
-      behavior: ipcidr,
-      url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt",
-      path: ./ruleset/cn_ip.yaml,
-    }
-  ChatGPT:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list",
-    }
-  Claude:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list",
-    }
-  Perplexity:
-    {
-      <<: *domain,
-      url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs",
-    }
-  Copilot:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list",
-    }
-  Gemini:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list",
-    }
-  Groq:
-    {
-      <<: *domain,
-      url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs",
-    }
-  Grok:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list",
-    }
-  Apple_AI:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list",
-    }
-  Youtube:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list",
-    }
-  Telegram:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list",
-    }
-  Twitter:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list",
-    }
-  GitHub:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list",
-    }
-  TikTok:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list",
-    }
-  Douyin:
-    {
-      <<: *class,
-      url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list",
-    }
-  Netflix:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list",
-    }
-  Netflix_IP:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list",
-    }
-  Disney:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list",
-    }
-  HBO:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list",
-    }
-  Spotify:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list",
-    }
-  Crunchyroll:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list",
-    }
-  Popcorn:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list",
-    }
-  Reddit:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list",
-    }
-  Emby:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list",
-    }
-  Google:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list",
-    }
-  GoogleFCM:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list",
-    }
-  Microsoft:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list",
-    }
-  Apple:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list",
-    }
-  Apple_CN:
-    {
-      <<: *domain,
-      url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs",
-    }
-  Nvidia:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list",
-    }
-  Turnstile:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list",
-    }
-  Steam:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list",
-    }
-  Epic:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list",
-    }
-  EA:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list",
-    }
-  Blizzard:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list",
-    }
-  UBI:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list",
-    }
-  PlayStation:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list",
-    }
-  Nintendo:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list",
-    }
-  OKX:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list",
-    }
-  Bybit:
-    {
-      <<: *domain,
-      url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs",
-    }
-  Binance:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list",
-    }
-  Amazon:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list",
-    }
-  Proxy:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list",
-    }
-  Global:
-    {
-      <<: *class,
-      url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list",
-    }
+  Private: { <<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt" }
+  CN_Domain: { <<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt", path: ./ruleset/cn_domain.yaml }
+  China_IP: { <<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt", path: ./ruleset/cn_ip.yaml }
+  ChatGPT: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list" }
+  Claude: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list" }
+  Perplexity: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs" }
+  Copilot: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list" }
+  Gemini: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list" }
+  Groq: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs" }
+  Grok: { <<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list" }
+  Apple_AI: { <<: *class, url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list" }
+  Youtube: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list" }
+  Telegram: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list" }
+  Twitter: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list" }
+  GitHub: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list" }
+  TikTok: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list" }
+  Douyin: { <<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list" }
+  Netflix: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list" }
+  Netflix_IP: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list" }
+  Disney: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list" }
+  HBO: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list" }
+  Spotify: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list" }
+  Crunchyroll: { <<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list" }
+  Popcorn: { <<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list" }
+  Reddit: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list" }
+  Emby: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list" }
+  Google: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list" }
+  GoogleFCM: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list" }
+  Microsoft: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list" }
+  Apple: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list" }
+  Apple_CN: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs" }
+  Nvidia: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list" }
+  Turnstile: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list" }
+  Steam: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list" }
+  Epic: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list" }
+  EA: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list" }
+  Blizzard: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list" }
+  UBI: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list" }
+  PlayStation: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list" }
+  Nintendo: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list" }
+  OKX: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list" }
+  Bybit: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs" }
+  Binance: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list" }
+  Amazon: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list" }
+  Proxy: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list" }
+  Global: { <<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list" }
