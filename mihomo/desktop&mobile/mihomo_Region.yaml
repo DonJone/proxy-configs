@@ -47,14 +47,15 @@ proxy-providers:
 
 proxy-groups:
   # ==========================================
-  # 1. 基础组件：三大核心控制台 (你的手动选择面板)
+  # 1. 基础组件：三大核心控制台
   # ==========================================
   - {
       name: 亚太,
       type: select,
       include-all: true,
       filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
-      exclude-filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      # 【修复】：排除了伪装成 0x 的 4.0x 等高倍率
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
   - {
@@ -62,27 +63,28 @@ proxy-groups:
       type: select,
       include-all: true,
       filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
-      exclude-filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      # 【修复】：排除了伪装成 0x 的 4.0x 等高倍率
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
   - {
       name: 低倍,
       type: select,
       include-all: true,
-      filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      # 【修复】：只有真正的 0.x 倍率（或低倍关键字）才会被收录
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
     }
 
   # ==========================================
-  # 2. 备用组件：同区自动测速池 (静默运行，精简 UI)
+  # 2. 备用组件：同区自动测速池 (隐藏)
   # ==========================================
-  # 【修复】：补充了缺失的“亚太备用”自动测速组
   - {
       name: 亚太备用,
       type: url-test,
       include-all: true,
       filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
-      exclude-filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,
@@ -93,7 +95,7 @@ proxy-groups:
       type: url-test,
       include-all: true,
       filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
-      exclude-filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,
@@ -103,90 +105,13 @@ proxy-groups:
       name: 低倍备用,
       type: url-test,
       include-all: true,
-      filter: '(?i)(0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
       url: "http://cp.cloudflare.com/generate_204",
       interval: 30,
       tolerance: 50,
       hidden: true,
     }
 
-  # ==========================================
-  # 3. 业务分配与顶层路由
-  # ==========================================
-  - {
-      name: AI与Google,
-      type: select,
-      proxies: [欧美区, 亚太区, 低倍率],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png",
-    }
-  - {
-      name: TikTok,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png",
-    }
-  - {
-      name: Emby,
-      type: select,
-      proxies: [DIRECT, 亚太区, 低倍率, 欧美区],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
-    }
-  - {
-      name: 社交流媒体GitHub,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png",
-    }
-  - {
-      name: 游戏平台,
-      type: select,
-      proxies: [DIRECT, 亚太区, 欧美区],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png",
-    }
-  - {
-      name: 微软苹果Nvidia,
-      type: select,
-      proxies: [DIRECT, 亚太区, 欧美区],
-      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png",
-    }
-  - {
-      name: 加密货币与兜底,
-      type: select,
-      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
-      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png",
-    }
-
-  # ==========================================
-  # 4. 静默拦截组
-  # ==========================================
-  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
-  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
-
-  # ==========================================
-  # 5. 核心架构：同区故障转移专线 (置底)
-  # ==========================================
-  - {
-      name: 亚太区,
-      type: fallback,
-      proxies: [亚太, 亚太备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 欧美区,
-      type: fallback,
-      proxies: [欧美, 欧美备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 低倍率,
-      type: fallback,
-      proxies: [低倍, 低倍备用],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-    
 # ========================
 # 规则引擎（rules）
 # ========================
