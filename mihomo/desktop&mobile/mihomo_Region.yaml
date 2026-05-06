@@ -111,6 +111,84 @@ proxy-groups:
       tolerance: 50,
       hidden: true,
     }
+    
+  # ==========================================
+  # 3. 业务分配与顶层路由
+  # ==========================================
+  - {
+      name: AI与Google,
+      type: select,
+      proxies: [欧美区, 亚太区, 低倍率],
+      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png",
+    }
+  - {
+      name: TikTok,
+      type: select,
+      proxies: [亚太区, 欧美区, 低倍率],
+      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png",
+    }
+  - {
+      name: Emby,
+      type: select,
+      proxies: [DIRECT, 亚太区, 低倍率, 欧美区],
+      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png",
+    }
+  - {
+      name: 社交流媒体GitHub,
+      type: select,
+      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
+      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png",
+    }
+  - {
+      name: 游戏平台,
+      type: select,
+      proxies: [DIRECT, 亚太区, 欧美区],
+      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png",
+    }
+  - {
+      name: 微软苹果Nvidia,
+      type: select,
+      proxies: [DIRECT, 亚太区, 欧美区],
+      icon: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png",
+    }
+  - {
+      name: 加密货币与兜底,
+      type: select,
+      proxies: [亚太区, 欧美区, 低倍率, DIRECT],
+      icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png",
+    }
+
+  # ==========================================
+  # 4. 静默拦截组
+  # ==========================================
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
+  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
+
+  # ==========================================
+  # 5. 核心架构：同区故障转移专线 (置底)
+  # ==========================================
+  - {
+      name: 亚太区,
+      type: fallback,
+      proxies: [亚太, 亚太备用],
+      url: "http://cp.cloudflare.com/generate_204",
+      interval: 30,
+    }
+  - {
+      name: 欧美区,
+      type: fallback,
+      proxies: [欧美, 欧美备用],
+      url: "http://cp.cloudflare.com/generate_204",
+      interval: 30,
+    }
+  - {
+      name: 低倍率,
+      type: fallback,
+      proxies: [低倍, 低倍备用],
+      url: "http://cp.cloudflare.com/generate_204",
+      interval: 30,
+    }
+    
 
 # ========================
 # 规则引擎（rules）
