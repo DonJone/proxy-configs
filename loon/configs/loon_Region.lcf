@@ -1,36 +1,33 @@
-# Loon自用配置 (高可用极简架构重构版 - 符合Tartarus规范语法)
-# =====================================
-# General
-# =====================================
 [General]
-# IPv6 支持与 IP 模式
-ip-mode = dual
-ipv6-vif = auto
-# DNS 与 拦截模式
-disable-stun = true
-dns-reject-mode = LoopbackIP
-domain-reject-mode = DNS
-udp-fallback-mode = REJECT
-sni-sniffing = true
-disconnect-on-policy-change = true
-switch-node-after-failure-times = 3
-# 跳过代理与绕过 TUN
-skip-proxy = 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,localhost,*.local,e.crashlynatics.com
-bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32
-# DNS 服务器
-dns-server = system, 223.5.5.5, 119.29.29.29, 8.8.8.8
-interface-mode = auto
-allow-udp-proxy = true
-allow-wifi-access = true
-wifi-access-http-port = 7222
-wifi-access-socks5-port = 7221
-proxy-test-url = http://cp.cloudflare.com/generate_204
-internet-test-url = http://connect.rom.miui.com/generate_204 
-test-timeout = 5
-geoip-url = https://cdn.jsdelivr.net/gh/Masaiki/GeoIP2-CN@release/Country.mmdb
-# SSID 触发规则
-ssid-trigger = "default":rule, "cellular":rule, "你的软路由wifi名":direct
-ipasn-url = https://raw.githubusercontent.com/P3TERX/GeoLite.mmdb/download/GeoLite2-ASN.mmdb
+ip-mode=v4-only
+ipv6-vif=off
+dns-server=system
+sni-sniffing=true
+disable-stun=true
+dns-reject-mode=LoopbackIP
+domain-reject-mode=DNS
+udp-fallback-mode=REJECT
+wifi-access-http-port=7222
+wifi-access-socks5-port=7221
+allow-wifi-access=false
+interface-mode=auto
+test-timeout=5
+disconnect-on-policy-change=false
+internet-test-url=http://connectivitycheck.platform.hicloud.com/generate_204
+proxy-test-url=http://www.gstatic.com/generate_204
+resource-parser=https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-parser.loon.min.js
+geoip-url=https://geodata.kelee.one/Country-Masaiki.mmdb
+ipasn-url=https://geodata.kelee.one/GeoLite2-ASN-P3TERX.mmdb
+skip-proxy=192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, localhost, *.local, e.crashlynatics.com
+bypass-tun=10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24, 192.0.2.0/24, 192.88.99.0/24, 192.168.0.0/16, 198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 255.255.255.255/32
+
+ssid-trigger = "default":rule, "cellular":rule,"你的软路由wifi名":direct
+
+# =====================================
+# Host
+# =====================================
+[Host]
+iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 
 # =====================================
 # Proxy / Remote Proxy
@@ -146,6 +143,8 @@ https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Glob
 # 国内服务
 https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用, enabled=true
 https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内IP, enabled=true
+
+
 # =====================================
 # Script / Remote Script / Plugin / Mitm
 # =====================================
