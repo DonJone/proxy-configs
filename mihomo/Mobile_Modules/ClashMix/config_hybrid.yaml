@@ -1,41 +1,51 @@
 # ============================================================
-# Line Config: echs-top 骨架 + 自建ABC线路故障转移架构
-# 骨架来源: echs-top (dns/rules/rule-providers/sniffer/tun)
-# 策略组来源: 自建 Architecture 2 (Line-based fallback)
+# ClashMix Hybrid: echs-top 骨架 + 自建区域故障转移 + ClashMix 设备参数
+# 骨架: echs-top (dns/rules/rule-providers/sniffer)
+# 策略组: 自建 Architecture 1
+# 设备: ClashMix (gvisor TUN / 三星豁免 / 自定义文件规则保留)
 # ============================================================
 
-# === 全局设置 (echs-top) ===
-ipv6: true
-allow-lan: false
-bind-address: '*'
+mixed-port: 7890
 mode: rule
-log-level: error
+allow-lan: true
 unified-delay: true
 tcp-concurrent: true
-find-process-mode: 'off'
-disable-keep-alive: false
-keep-alive-interval: 15
-keep-alive-idle: 300
+find-process-mode: strict
+log-level: warning
+ipv6: true
 etag-support: true
-port: 0
-socks-port: 0
-mixed-port: 7890
-tproxy-port: 0
-redir-port: 0
+external-controller: 0.0.0.0:9090
+external-ui: WebUI
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
 profile: { store-selected: true, store-fake-ip: true }
 
-# === TUN 虚拟网卡 (echs-top) ===
+# === TUN (ClashMix gvisor + 三星豁免) ===
 tun:
   enable: true
-  stack: mixed
+  stack: gvisor
+  device: Meta
+  udp-timeout: 300
   auto-route: true
-  auto-redirect: true
+  auto-redirect: false
   auto-detect-interface: true
-  strict-route: true
-  disable-icmp-forwarding: true
-  dns-hijack: [any:53,tcp://any:53]
+  strict-route: false
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  exclude-package:
+    - com.samsung.android.messaging
+    - com.samsung.android.app.telephonyui
+    - com.samsung.android.dialer
+    - com.samsung.android.incallui
+    - com.samsung.android.smartcallprovider
+    - com.samsung.android.intellivoiceservice
+    - com.android.settings
+    - com.qti.qcc
+    - com.sec.epdg
+    - com.sec.imsservice
 
-# === Hosts DNS 引导 (echs-top) ===
+# === Hosts (echs-top) ===
 hosts:
   dns.alidns.com: [223.5.5.5,223.6.6.6,'2400:3200::1','2400:3200:baba::1']
   doh.pub: [120.53.53.53,1.12.12.21]
@@ -44,10 +54,10 @@ hosts:
   services.googleapis.cn: services.googleapis.com
   google.cn: google.com
 
-# === 机场节点订阅 ===
+# === 机场订阅 ===
 proxy-providers:
   机场:
-    url: "机场链接url"
+    url: "订阅链接"
     type: http
     interval: 86400
     proxy: DIRECT
@@ -63,11 +73,11 @@ proxy-providers:
     override: { ip-version: dual }
     exclude-filter: '(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢'
 
-# === 规则集定义锚点 ===
-ip: &ip { type: http, interval: 86400, proxy: 漏网之鱼, behavior: ipcidr, format: mrs }
-domain: &domain { type: http, interval: 86400, proxy: 漏网之鱼, behavior: domain, format: mrs }
+# === 规则集锚点 ===
+ip: &ip { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs }
+domain: &domain { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs }
 
-# === 规则集提供者 (echs-top 27 套) ===
+# === 规则集 (echs-top 27 套 + ClashMix 自定义文件) ===
 rule-providers:
   private_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private_ip.mrs', path: ./rules/private_ip.mrs }
   private: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private.mrs', path: ./rules/private.mrs }
@@ -96,8 +106,17 @@ rule-providers:
   enhanced-FaaS-in-China_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/enhanced-FaaS-in-China_ip.mrs', path: ./rules/enhanced-FaaS-in-China_ip.mrs }
   direct_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_ip.mrs', path: ./rules/direct_ip.mrs }
   cn_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_ip.mrs', path: ./rules/cn_ip.mrs }
+  # ClashMix 自定义文件规则（优先匹配）
+  自定义直连:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userDirect.yaml
+  自定义代理:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userProxy.yaml
 
-# === IP 版本辅助节点 (echs-top) ===
+# === IP 版本辅助节点 ===
 proxies:
   - { name: IPV4优先, type: direct, udp: true, ip-version: ipv4-prefer }
   - { name: IPV6优先, type: direct, udp: true, ip-version: ipv6-prefer }
@@ -105,105 +124,74 @@ proxies:
   - { name: 仅IPV6, type: direct, udp: true, ip-version: ipv6 }
 
 # ============================================================
-# 策略组 (自建 Architecture 2 — ABC线路故障转移)
+# 策略组 (自建 Architecture 1 + 基础设施)
 # ============================================================
 proxy-groups:
-  # === 1. 基础组件：三大手选组 ===
-  - { name: 手选节点 A, type: select, include-all: true }
-  - { name: 手选节点 B, type: select, include-all: true }
-  - { name: 手选节点 C, type: select, include-all: true }
-
-  # === 2. 全局自动测速池 ===
-  - { name: 全局自动, type: url-test, include-all: true, exclude-filter: '(?i)dialer', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
-
-  # === 3. 故障转移线路 ===
-  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
-  - { name: 线路 B, type: fallback, proxies: [手选节点 B, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
-  - { name: 线路 C, type: fallback, proxies: [手选节点 C, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
-
-  # === 4. 业务分配 ===
-  - { name: AI与Google, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-  - { name: TikTok, type: select, proxies: [线路 B, 线路 C, 线路 A] }
-  - { name: Emby流媒体, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 通讯与Github, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
-  - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-
-  # === 5. 静默组 ===
-  - { name: 国内服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C], hidden: true }
+  - { name: 亚太, type: select, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 欧美, type: select, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 低倍, type: select, include-all: true, filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 亚太备用, type: url-test, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: 欧美备用, type: url-test, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区] }
+  - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
   - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
-
-  # === 6. 基础设施组 ===
-  - { name: 代理DNS, type: select, proxies: [漏网之鱼, 线路 A, 线路 B], hidden: true }
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
   - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
+  - { name: 亚太区, type: fallback, proxies: [亚太, 亚太备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 欧美区, type: fallback, proxies: [欧美, 欧美备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 低倍率, type: fallback, proxies: [低倍, 低倍备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
 
-# ============================================================
-# 规则引擎 (echs-top 骨架，目标组名适配ABC线路架构)
-# ============================================================
+# === 规则引擎 (echs-top 骨架 + ClashMix 自定义文件优先) ===
 rules:
-  # --- 端口级识别 ---
+  - RULE-SET,自定义代理,加密货币与兜底
+  - RULE-SET,自定义直连,国内服务
   - DST-PORT,5228-5230,DIRECT
-  - DST-PORT,1337/2710/6881-6999/7777,漏网之鱼
-
-  # --- 私有地址优先 ---
+  - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
-
-  # --- 广告拦截 ---
   - RULE-SET,AWAvenue-Ads,广告拦截
-
-  # --- 域名级分流（SUB-RULE 嵌套） ---
   - RULE-SET,fcm,DIRECT
   - SUB-RULE,(RULE-SET,captcha),captcha_rules
   - SUB-RULE,(RULE-SET,ai),ai_rules
   - SUB-RULE,(RULE-SET,telegram),telegram_rules
   - SUB-RULE,(RULE-SET,media),media_rules
-
-  # --- 国内服务直连 ---
   - RULE-SET,google-cn,AI与Google
   - RULE-SET,apple-cn,DIRECT
   - RULE-SET,microsoft-cn,DIRECT
   - RULE-SET,games-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
-
-  # --- 代理域名分流 ---
   - SUB-RULE,(RULE-SET,google),google_rules
   - SUB-RULE,(RULE-SET,trackerslist),trackerslist_rules
   - SUB-RULE,(RULE-SET,proxy_domain),proxy_rules
   - RULE-SET,github,通讯与Github
   - SUB-RULE,(RULE-SET,proxy),proxy_rules
-
-  # --- IP 级分流 ---
   - SUB-RULE,(RULE-SET,telegram_ip),telegram_rules
   - SUB-RULE,(RULE-SET,media_ip),media_rules
   - SUB-RULE,(RULE-SET,google_ip),google_rules
   - SUB-RULE,(RULE-SET,proxy_ip),proxy_rules
-
-  # --- 国内 IP 直连 ---
   - RULE-SET,enhanced-FaaS-in-China_ip,DIRECT
   - RULE-SET,direct_ip,DIRECT
   - RULE-SET,cn_ip,DIRECT
-
-  # --- QUIC 与高位端口兜底 ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-  - DST-PORT,10000-65535,漏网之鱼
+  - DST-PORT,10000-65535,加密货币与兜底
+  - MATCH,加密货币与兜底
 
-  # --- 全局兜底 ---
-  - MATCH,漏网之鱼
-
-# ============================================================
-# 子规则 (echs-top 骨架，MATCH 目标适配)
-# ============================================================
 sub-rules:
   fcm_rules:
     - MATCH,DIRECT
   captcha_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
   ai_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
     - MATCH,AI与Google
@@ -212,28 +200,27 @@ sub-rules:
     - MATCH,通讯与Github
   media_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,Emby流媒体
+    - MATCH,通讯与Github
   google_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
     - MATCH,AI与Google
   trackerslist_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
   proxy_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
 
-# ============================================================
-# DNS (echs-top 骨架)
-# ============================================================
+# === DNS (echs-top 骨架) ===
 direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
 direct-doh: &direct-doh ['https://dns.alidns.com/dns-query','https://doh.pub/dns-query&h3=false']
 proxy-doh: &proxy-doh ['https://dns.google/dns-query#代理DNS','https://dns.quad9.net/dns-query#代理DNS']
 
 dns:
   enable: true
-  cache-algorithm: arc
   ipv6: true
+  ipv6-timeout: 300
+  cache-algorithm: arc
   prefer-h3: true
   use-hosts: true
   use-system-hosts: false
@@ -276,9 +263,7 @@ dns:
   direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: true
 
-# ============================================================
-# 嗅探器 (echs-top 骨架)
-# ============================================================
+# === 嗅探器 (echs-top 骨架) ===
 sniffer:
   enable: true
   force-dns-mapping: true

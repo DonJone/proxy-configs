@@ -1,0 +1,200 @@
+# ============================================================
+# ClashMix Default + 自建区域故障转移架构
+# 骨架: ClashMix (自定义文件规则 / gvisor TUN / 三星豁免)
+# 策略组: 自建 Architecture 1
+# ============================================================
+
+mixed-port: 7890
+mode: rule
+allow-lan: true
+unified-delay: false
+tcp-concurrent: false
+find-process-mode: strict
+log-level: warning
+ipv6: true
+external-controller: 0.0.0.0:9090
+external-ui: WebUI
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+
+tun:
+  enable: true
+  stack: gvisor
+  device: Meta
+  udp-timeout: 300
+  auto-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+  strict-route: false
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  exclude-package:
+    - com.samsung.android.messaging
+    - com.samsung.android.app.telephonyui
+    - com.samsung.android.dialer
+    - com.samsung.android.incallui
+    - com.samsung.android.smartcallprovider
+    - com.samsung.android.intellivoiceservice
+    - com.android.settings
+    - com.qti.qcc
+    - com.sec.epdg
+    - com.sec.imsservice
+
+dns:
+  enable: true
+  ipv6: true
+  ipv6-timeout: 300
+  enhanced-mode: fake-ip
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - 'rule-set:自定义直连'
+    - 'rule-set:Fake-IP-Filter'
+    - 'rule-set:私有地址'
+  nameserver-policy:
+    'rule-set:自定义直连,中国域名,私有地址,GoogleFCM':
+      - 223.5.5.5#中国网站
+      - 119.29.29.29#中国网站
+    'rule-set:自定义代理':
+      - 1.1.1.1#代理
+      - 8.8.8.8#代理
+  nameserver:
+    - 1.1.1.1#代理
+    - 8.8.8.8#代理
+  proxy-server-nameserver:
+    - 223.5.5.5#中国网站
+    - 119.29.29.29#中国网站
+
+# === 机场订阅 ===
+pp: &pp
+  type: http
+  interval: 21600
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 3600
+    timeout: 3000
+    lazy: true
+    expected-status: 204
+
+proxy-providers:
+  机场1:
+    <<: *pp
+    url: "订阅链接"
+    path: ./proxy_providers/机场1.yaml
+
+# ============================================================
+# 策略组 (自建 Architecture 1 + 基础设施)
+# ============================================================
+proxy-groups:
+  - { name: 亚太, type: select, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 欧美, type: select, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 低倍, type: select, include-all: true, filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)' }
+  - { name: 亚太备用, type: url-test, include-all: true, filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: 欧美备用, type: url-test, include-all: true, filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)', exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: 低倍备用, type: url-test, include-all: true, filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区] }
+  - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
+  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
+  - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
+  - { name: 亚太区, type: fallback, proxies: [亚太, 亚太备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 欧美区, type: fallback, proxies: [欧美, 欧美备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 低倍率, type: fallback, proxies: [低倍, 低倍备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+
+# === 规则集 (ClashMix 风格：文件+HTTP 混合) ===
+rule-providers:
+  自定义直连:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userDirect.yaml
+
+  自定义代理:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userProxy.yaml
+
+  秋风广告规则:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/AWAvenue-Ads-Rule-Clash.yaml
+    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash-Classical.yaml"
+    interval: 86400
+
+  中国域名:
+    type: http
+    behavior: domain
+    format: yaml
+    path: ./rule_providers/中国域名.yaml
+    url: https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@latest/China/China_Domain.yaml
+    interval: 86400
+
+  中国IP:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    path: ./rule_providers/中国IP.mrs
+    url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo-lite/geoip/cn.mrs"
+    interval: 86400
+
+  私有地址:
+    type: http
+    behavior: classical
+    format: text
+    path: ./rule_providers/私有地址.txt
+    url: https://raw.githubusercontent.com/QuixoticHeart/rule-set/refs/heads/ruleset/meta/private.list
+    interval: 86400
+
+  GoogleFCM:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/GoogleFCM.yaml
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleFCM/GoogleFCM.yaml"
+    interval: 86400
+
+  Fake-IP-Filter:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./rule_providers/Fake-IP-Filter.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/raw/refs/heads/mihomo-ruleset/fakeip-filter.mrs"
+    interval: 86400
+
+# === 分流规则 (ClashMix 骨架，目标适配) ===
+rules:
+  - RULE-SET,自定义代理,加密货币与兜底
+  - RULE-SET,自定义直连,国内服务
+  - RULE-SET,私有地址,DIRECT
+  - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN-KEYWORD,uhdnow,Emby流媒体
+  - RULE-SET,GoogleFCM,DIRECT
+  - RULE-SET,秋风广告规则,广告拦截
+  - RULE-SET,中国域名,国内服务
+  - RULE-SET,中国IP,国内服务
+  - MATCH,加密货币与兜底

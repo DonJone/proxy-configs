@@ -1,0 +1,254 @@
+# ============================================================
+# AkashaProxy Default + 自建区域故障转移架构
+# 骨架: AkashaProxy (GEOSITE/GEOIP 分流 / redir-host / NTP)
+# 策略组: 自建 Architecture 1
+# ============================================================
+
+mode: rule
+mixed-port: 7890
+redir-port: 7892
+tproxy-port: 7893
+allow-lan: true
+ipv6: true
+unified-delay: true
+log-level: info
+tcp-concurrent: true
+keep-alive-interval: 30
+keep-alive-idle: 15
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+geox-url:
+  geosite: 'https://ghfast.top/https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat'
+  mmdb: 'https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-Country.mmdb'
+  geoip: 'https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geoip.dat'
+  asn: 'https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/geoip/release/GeoLite2-ASN.mmdb'
+geo-auto-update: true
+geo-update-interval: 6
+
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - Mijia Cloud
+    - "+.push.apple.com"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+ntp:
+  enable: true
+  write-to-system: false
+  server: time.apple.com
+  port: 123
+  interval: 30
+
+external-controller: 127.0.0.1:9090
+external-ui: zashboard
+external-ui-url: "https://ghfast.top/https://github.com/Zephyruso/zashboard/releases/latest/download/dist-no-fonts.zip"
+bind-address: "*"
+
+tun:
+  enable: true
+  device: mihoyo
+  stack: mixed
+  auto-route: true
+  strict-route: true
+  endpoint-independent-nat: true
+  auto-redirect: true
+  auto-detect-interface: true
+  dns-hijack:
+    - any:53
+
+hosts:
+  doh.pub: [1.12.12.21, 120.53.53.53, 1.12.12.12]
+  dot.pub: [1.12.12.21, 120.53.53.53, 1.12.12.12]
+  "*.alidns.com": [223.5.5.5, 223.6.6.6, '2400:3200::1', '2400:3200:baba::1']
+  dns.google: [8.8.8.8, 8.8.4.4, '2001:4860:4860::8888', '2001:4860:4860::8844']
+  cloudflare-dns.com: [1.1.1.1, 1.0.0.1, '2606:4700:4700::1111', '2606:4700:4700::1001']
+
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  cache-algorithm: arc
+  ipv6: false
+  respect-rules: true
+  enhanced-mode: redir-host
+  fake-ip-filter-mode: blacklist
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver:
+    - https://1.12.12.21/dns-query
+    - https://223.5.5.5/dns-query
+  nameserver:
+    - https://dns.alidns.com/dns-query
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://dot.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    "geosite:geolocation-!cn,gfw,!cn":
+      - https://dns.google/dns-query
+
+# === 机场订阅 ===
+pr: &pr
+  type: select
+  interval: 3600
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    timeout: 3000
+  include-all: true
+
+autotest: &autotest
+  type: url-test
+  interval: 300
+  tolerance: 100
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 120
+    timeout: 3000
+  include-all: true
+
+p: &p
+  type: http
+  interval: 3600
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    timeout: 1500
+    interval: 300
+    lazy: true
+
+proxy-providers:
+  机场:
+    <<: *p
+    url: "https://example.com/airport"
+
+# ============================================================
+# 策略组 (自建 Architecture 1 + 基础设施)
+# ============================================================
+proxy-groups:
+  - {
+      name: 亚太,
+      type: select,
+      include-all: true,
+      filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 欧美,
+      type: select,
+      include-all: true,
+      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 低倍,
+      type: select,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 亚太备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 欧美备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 低倍备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区] }
+  - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
+  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
+  - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
+  - {
+      name: 亚太区,
+      type: fallback,
+      proxies: [亚太, 亚太备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+  - {
+      name: 欧美区,
+      type: fallback,
+      proxies: [欧美, 欧美备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+  - {
+      name: 低倍率,
+      type: fallback,
+      proxies: [低倍, 低倍备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+
+# === 规则集 ===
+rule-providers:
+  AWAvenue:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/AWAvenue-Ads-Rule-Clash.yaml
+    url: "https://gcore.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash-Classical.yaml"
+    interval: 60480
+
+# === 分流规则 (AkashaProxy GEOSITE 骨架，目标适配) ===
+rules:
+  - AND,((NOT,((OR,((PROCESS-NAME,mihomo),(PROCESS-NAME,ClashMeta))))),(DST-PORT,853)),广告拦截
+  - GEOSITE,category-httpdns-cn,广告拦截
+  - RULE-SET,AWAvenue,广告拦截
+  - IP-CIDR,203.107.1.0/24,广告拦截,no-resolve
+  - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN-KEYWORD,uhdnow,Emby流媒体
+  - GEOSITE,private,国内服务
+  - GEOSITE,connectivity-check,国内服务
+  - GEOSITE,googlefcm,DIRECT
+  - GEOSITE,category-games@cn,国内服务
+  - GEOSITE,cn,国内服务
+  - GEOIP,PRIVATE,国内服务,no-resolve
+  - GEOIP,cn,国内服务,no-resolve
+  - GEOSITE,category-ai-!cn,AI与Google
+  - GEOSITE,geolocation-!cn,加密货币与兜底
+  - MATCH,加密货币与兜底

@@ -1,254 +1,316 @@
-# ========================
-# OpenClash-融合优化配置 (Meta 内核完全版)
-# ========================
+# ============================================================
+# OpenClash Line Config: echs-top 骨架 + 自建ABC线路故障转移架构
+# 骨架来源: echs-top (dns/rules/rule-providers/sniffer)
+# 策略组来源: 自建 Architecture 2 (Line-based fallback)
+# 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
+# ============================================================
+
+# === 端口 (OpenClash 多端口) ===
 port: 7890
 socks-port: 7891
-redir-port: 7892
 mixed-port: 7893
+redir-port: 7892
 tproxy-port: 7895
 
+# === 全局设置 ===
+ipv6: true
 allow-lan: true
+bind-address: '*'
 mode: rule
 log-level: info
-
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: 'off'
+disable-keep-alive: false
+keep-alive-interval: 15
+keep-alive-idle: 300
+etag-support: true
 external-controller: 0.0.0.0:9090
-secret: "123456"
 
-# ========================
-# DNS 与 TUN 设置 (Redir-Host + TUN 模式)
-# ========================
-dns:
-  enable: true
-  listen: 0.0.0.0:7874
-  ipv6: false
-  # 关闭 fake-ip，改用 redir-host 模式
-  enhanced-mode: redir-host
-  nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-    - 114.114.114.114
+profile: { store-selected: true, store-fake-ip: true }
 
-# 全局 IPv6 开关，建议与 DNS 配置保持一致
-ipv6: false
+# === Geodata (OpenClash 兼容) ===
+geox-url:
+  mmdb: 'https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb'
+  geoip: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat'
+  geosite: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat'
+  asn: 'https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb'
+geo-auto-update: true
+geo-update-interval: 24
+geodata-mode: true
 
+# === TUN (OpenClash 托管模式) ===
 tun:
   enable: true
   stack: system
   device: utun
-  endpoint-independent-nat: true
-  # 提示：在 OpenClash 中，auto-route 通常由插件界面控制
-  # 若需内核自动接管路由，请将以下设为 true
-  auto-route: true
-  auto-detect-interface: true
+  auto-route: false
   auto-redirect: false
+  auto-detect-interface: false
   strict-route: false
+  dns-hijack:
+    - 0.0.0.0:53
+  endpoint-independent-nat: true
 
-profile:
-  store-selected: true
-  # 关闭 Fake-IP 映射存储
-  store-fake-ip: false
+# === Hosts DNS 引导 (echs-top) ===
+hosts:
+  dns.alidns.com: [223.5.5.5,223.6.6.6,'2400:3200::1','2400:3200:baba::1']
+  doh.pub: [120.53.53.53,1.12.12.21]
+  dns.google: [8.8.8.8,8.8.4.4,'2001:4860:4860::8888','2001:4860:4860::8844']
+  dns.quad9.net: [9.9.9.9,149.112.112.112,'2620:fe::fe','2620:fe::9']
+  services.googleapis.cn: services.googleapis.com
+  google.cn: google.com
 
-# ========================
-# 机场节点订阅
-# ========================
+# === 机场节点订阅 ===
 proxy-providers:
-  ######（机场备注）:
+  机场:
     url: "机场链接url"
     type: http
     interval: 86400
+    proxy: DIRECT
+    header: { User-Agent: ["clash-verge/v2.4.7"] }
     health-check:
       enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: DIRECT
+      url: 'https://dns.google/generate_204'
+      expected-status: 204
+      interval: 900
+      timeout: 3000
+      max-failed-times: 2
+      lazy: false
+    override: { ip-version: dual }
+    exclude-filter: '(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢'
 
-# ========================
-# 策略组 Proxy Groups (高可用极简架构)
-# ========================
+# === 规则集定义锚点 ===
+ip: &ip { type: http, interval: 86400, proxy: 漏网之鱼, behavior: ipcidr, format: mrs }
+domain: &domain { type: http, interval: 86400, proxy: 漏网之鱼, behavior: domain, format: mrs }
+
+# === 规则集提供者 (echs-top 27 套) ===
+rule-providers:
+  private_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private_ip.mrs', path: ./rules/private_ip.mrs }
+  private: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private.mrs', path: ./rules/private.mrs }
+  AWAvenue-Ads: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/AWAvenue-Ads_domain.mrs', path: ./rules/AWAvenue-Ads.mrs }
+  fcm: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/googlefcm.mrs', path: ./rules/fcm.mrs }
+  captcha: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs', path: ./rules/captcha.mrs }
+  ai: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs', path: ./rules/ai.mrs }
+  telegram: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram.mrs', path: ./rules/telegram.mrs }
+  media: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media.mrs', path: ./rules/media.mrs }
+  google-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google-cn_domain.mrs', path: ./rules/google-cn.mrs }
+  google: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google.mrs', path: ./rules/google.mrs }
+  trackerslist: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/trackerslist.mrs', path: ./rules/trackerslist.mrs }
+  apple-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/apple-cn.mrs', path: ./rules/apple-cn.mrs }
+  microsoft-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/microsoft-cn.mrs', path: ./rules/microsoft-cn.mrs }
+  games-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/games-cn.mrs', path: ./rules/games-cn.mrs }
+  proxy_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy_domain.mrs', path: ./rules/proxy_domain.mrs }
+  direct_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_domain.mrs', path: ./rules/direct_domain.mrs }
+  github: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/github.mrs', path: ./rules/github.mrs }
+  proxy: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy.mrs', path: ./rules/proxy.mrs }
+  cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_domain.mrs', path: ./rules/cn.mrs }
+  dnsmasq-china-add: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/dnsmasq-china-add_domain.mrs', path: ./rules/dnsmasq-china-add.mrs }
+  telegram_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram_ip.mrs', path: ./rules/telegram_ip.mrs }
+  media_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media_ip.mrs', path: ./rules/media_ip.mrs }
+  google_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google_ip.mrs', path: ./rules/google_ip.mrs }
+  proxy_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy_ip.mrs', path: ./rules/proxy_ip.mrs }
+  enhanced-FaaS-in-China_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/enhanced-FaaS-in-China_ip.mrs', path: ./rules/enhanced-FaaS-in-China_ip.mrs }
+  direct_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_ip.mrs', path: ./rules/direct_ip.mrs }
+  cn_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_ip.mrs', path: ./rules/cn_ip.mrs }
+
+# === IP 版本辅助节点 (echs-top) ===
+proxies:
+  - { name: IPV4优先, type: direct, udp: true, ip-version: ipv4-prefer }
+  - { name: IPV6优先, type: direct, udp: true, ip-version: ipv6-prefer }
+  - { name: 仅IPV4, type: direct, udp: true, ip-version: ipv4 }
+  - { name: 仅IPV6, type: direct, udp: true, ip-version: ipv6 }
+
+# ============================================================
+# 策略组 (自建 Architecture 2 — ABC线路故障转移)
+# ============================================================
 proxy-groups:
-  # ==========================================
-  # 基础组件：三大手选组 (包含所有节点)
-  # ==========================================
+  # 1. 基础组件：三大手选组
   - { name: 手选节点 A, type: select, include-all: true }
   - { name: 手选节点 B, type: select, include-all: true }
   - { name: 手选节点 C, type: select, include-all: true }
 
-  # ==========================================
-  # 业务分配与顶层路由
-  # ==========================================
-  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-  - { name: AI与谷歌, type: select, proxies: [线路 A, 线路 B, 线路 C] } 
-  - { name: 海外抖音, type: select, proxies: [线路 B, 线路 C, 线路 A] } 
-  - { name: Emby服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 影音娱乐, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-  - { name: 社交媒体, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
+  # 2. 全局自动测速池
+  - { name: 全局自动, type: url-test, include-all: true, exclude-filter: '(?i)dialer', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+
+  # 3. 故障转移线路
+  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 线路 B, type: fallback, proxies: [手选节点 B, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 线路 C, type: fallback, proxies: [手选节点 C, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+
+  # 4. 业务分配
+  - { name: AI与Google, type: select, proxies: [线路 A, 线路 B, 线路 C] }
+  - { name: TikTok, type: select, proxies: [线路 B, 线路 C, 线路 A] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
+  - { name: 通讯与Github, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
   - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  
-  # 下方为静默组，保持隐藏以精简 UI
+  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
+
+  # 5. 静默组
   - { name: 国内服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C], hidden: true }
   - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
 
-  # ==========================================
-  # 核心架构：故障转移专线与全局自动 (置底)
-  # ==========================================
-  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
-  - { name: 线路 B, type: fallback, proxies: [手选节点 B, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
-  - { name: 线路 C, type: fallback, proxies: [手选节点 C, 全局自动], url: "http://cp.cloudflare.com/generate_204", interval: 30 }
-  - { name: 全局自动, type: url-test, include-all: true, exclude-filter: "(?i)dialer", url: "http://cp.cloudflare.com/generate_204", interval: 30, tolerance: 50, hidden: true }
+  # 6. 基础设施组
+  - { name: 代理DNS, type: select, proxies: [漏网之鱼, 线路 A, 线路 B], hidden: true }
+  - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
 
-# ========================
-# 规则引擎（rules）
-# ========================
+# ============================================================
+# 规则引擎 (echs-top 骨架，目标组名适配ABC线路架构)
+# ============================================================
 rules:
-  # ==========================================
-  # 1. 基础环境与私有网络 (最高优先级)
-  # ==========================================
-  - RULE-SET,Private,DIRECT
-  - RULE-SET,GoogleFCM,DIRECT
+  # --- 端口级识别 ---
+  - DST-PORT,5228-5230,DIRECT
+  - DST-PORT,1337/2710/6881-6999/7777,漏网之鱼
+
+  # --- 私有地址优先 ---
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
-  - DOMAIN-KEYWORD,emby, Emby服务
-  - DOMAIN-KEYWORD,uhdnow, Emby服务  
+  - DOMAIN-KEYWORD,uhdnow,Emby流媒体
 
-  # ==========================================
-  # 2. 人工智能与谷歌服务 (AI与谷歌)
-  # ==========================================
-  - RULE-SET,ChatGPT,AI与谷歌
-  - RULE-SET,Claude,AI与谷歌
-  - RULE-SET,Copilot,AI与谷歌
-  - RULE-SET,Gemini,AI与谷歌
-  - RULE-SET,Apple_AI,AI与谷歌
-  - RULE-SET,Groq,AI与谷歌
-  - RULE-SET,Grok,AI与谷歌
-  - RULE-SET,Perplexity,AI与谷歌
-  - RULE-SET,Google,AI与谷歌
+  # --- 广告拦截 ---
+  - RULE-SET,AWAvenue-Ads,广告拦截
 
-  # ==========================================
-  # 3. 社交媒体与即时通讯 (社交媒体)
-  # ==========================================
-  - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
-  - RULE-SET,Telegram,社交媒体
-  - RULE-SET,Twitter,社交媒体
-  - RULE-SET,Reddit,社交媒体
+  # --- 域名级分流 ---
+  - RULE-SET,fcm,DIRECT
+  - SUB-RULE,(RULE-SET,captcha),captcha_rules
+  - SUB-RULE,(RULE-SET,ai),ai_rules
+  - SUB-RULE,(RULE-SET,telegram),telegram_rules
+  - SUB-RULE,(RULE-SET,media),media_rules
 
-  # ==========================================
-  # 4. 影音娱乐分流 (影音娱乐/Emby)
-  # ==========================================
-  - RULE-SET,Youtube,影音娱乐
-  - RULE-SET,Netflix,影音娱乐
-  - RULE-SET,Netflix_IP,影音娱乐,no-resolve
-  - RULE-SET,Disney,影音娱乐
-  - RULE-SET,HBO,影音娱乐
-  - RULE-SET,Spotify,影音娱乐
-  - RULE-SET,Crunchyroll,影音娱乐
-  - RULE-SET,Popcorn,影音娱乐
-  - RULE-SET,Amazon,影音娱乐
-  - RULE-SET,GitHub,影音娱乐
-  - RULE-SET,Emby,Emby服务
+  # --- 国内服务直连 ---
+  - RULE-SET,google-cn,AI与Google
+  - RULE-SET,apple-cn,DIRECT
+  - RULE-SET,microsoft-cn,DIRECT
+  - RULE-SET,games-cn,DIRECT
+  - RULE-SET,direct_domain,DIRECT
+  - RULE-SET,cn,DIRECT
 
-  # ==========================================
-  # 5. 跨国巨头分流 (微软/苹果/Nvidia)
-  # ==========================================
-  - RULE-SET,Microsoft,微软苹果Nvidia
-  - RULE-SET,Apple,微软苹果Nvidia
-  - RULE-SET,Nvidia,微软苹果Nvidia
-  - RULE-SET,Apple_CN,DIRECT
+  # --- 代理域名分流 ---
+  - SUB-RULE,(RULE-SET,google),google_rules
+  - SUB-RULE,(RULE-SET,trackerslist),trackerslist_rules
+  - SUB-RULE,(RULE-SET,proxy_domain),proxy_rules
+  - RULE-SET,github,通讯与Github
+  - SUB-RULE,(RULE-SET,proxy),proxy_rules
 
-  # ==========================================
-  # 6. 游戏平台分流 (游戏平台)
-  # ==========================================
-  - RULE-SET,Steam,游戏平台
-  - RULE-SET,Epic,游戏平台
-  - RULE-SET,EA,游戏平台
-  - RULE-SET,Blizzard,游戏平台
-  - RULE-SET,UBI,游戏平台
-  - RULE-SET,PlayStation,游戏平台
-  - RULE-SET,Nintendo,游戏平台
+  # --- IP 级分流 ---
+  - SUB-RULE,(RULE-SET,telegram_ip),telegram_rules
+  - SUB-RULE,(RULE-SET,media_ip),media_rules
+  - SUB-RULE,(RULE-SET,google_ip),google_rules
+  - SUB-RULE,(RULE-SET,proxy_ip),proxy_rules
 
-  # ==========================================
-  # 7. 抖音与特定业务 (国内服务/海外抖音)
-  # ==========================================
-  - RULE-SET,TikTok,海外抖音
-  - DOMAIN-KEYWORD,douyin,国内服务
-  - RULE-SET,Douyin,国内服务
+  # --- 国内 IP 直连 ---
+  - RULE-SET,enhanced-FaaS-in-China_ip,DIRECT
+  - RULE-SET,direct_ip,DIRECT
+  - RULE-SET,cn_ip,DIRECT
 
-  # ==========================================
-  # 8. 其它出海/杂项规则 (漏网之鱼)
-  # ==========================================
-  - RULE-SET,OKX,漏网之鱼
-  - RULE-SET,Bybit,漏网之鱼
-  - RULE-SET,Binance,漏网之鱼
-  - RULE-SET,Turnstile,漏网之鱼
-  - RULE-SET,Proxy,漏网之鱼
-  - RULE-SET,Global,漏网之鱼
+  # --- QUIC 与高位端口兜底 ---
+  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+  - DST-PORT,10000-65535,漏网之鱼
 
-  # ==========================================
-  # ==========================================
-  # 9. 大陆流量兜底 (国内服务/DIRECT)
-  # ==========================================
-  # 核心大陆域名直连判定
-  - GEOSITE,CN,国内服务
-  # 大陆 IP 段兜底 (不强制 DNS 解析)
-  - GEOIP,CN,国内服务
-  
-  
-  # ==========================================
-  # 10. 最终兜底逻辑线路 C, 线路 A, 线路 B
-  # ==========================================
+  # --- 全局兜底 ---
   - MATCH,漏网之鱼
 
-# ========================
-# 规则集提供者
-# ========================
-rule-anchor:
-  ip: &ip { type: http, interval: 86400, behavior: ipcidr, format: mrs }
-  domain: &domain { type: http, interval: 86400, behavior: domain, format: mrs }
-  class: &class { type: http, interval: 86400, behavior: classical, format: text }
+# ============================================================
+# 子规则 (echs-top 骨架，MATCH 目标适配)
+# ============================================================
+sub-rules:
+  fcm_rules:
+    - MATCH,DIRECT
+  captcha_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,漏网之鱼
+  ai_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,AI与Google
+  telegram_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,通讯与Github
+  media_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,Emby流媒体
+  google_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,AI与Google
+  trackerslist_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,漏网之鱼
+  proxy_rules:
+    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+    - MATCH,漏网之鱼
 
-rule-providers:
-  Private: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"}
-  CN_Domain: {<<: *class, behavior: domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt", path: ./ruleset/cn_domain.yaml}
-  China_IP: {<<: *class, behavior: ipcidr, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt", path: ./ruleset/cn_ip.yaml}
-  ChatGPT: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OpenAI/OpenAI.list"}
-  Claude: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list"}
-  Perplexity: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/perplexity.mrs"}
-  Copilot: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list"}
-  Gemini: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list"}
-  Groq: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/groq.mrs"}
-  Grok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Grok.list"}
-  Apple_AI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list"}
-  Youtube: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list"}
-  Telegram: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list"}
-  Twitter: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list"}
-  GitHub: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list"}
-  TikTok: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list"}
-  Douyin: {<<: *class, url: "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Loon/rule/Douyin.list"}
-  Netflix: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
-  Netflix_IP: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list"}
-  Disney: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list"}
-  HBO: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list"}
-  Spotify: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list"}
-  Crunchyroll: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Crunchyroll.list"}
-  Popcorn: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Popcorn.list"}
-  Reddit: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list"}
-  Emby: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Emby/Emby.list"}
-  Google: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list"}
-  GoogleFCM: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GoogleFCM/GoogleFCM.list"}
-  Microsoft: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list"}
-  Apple: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list"}
-  Apple_CN: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/apple-cn.mrs"}
-  Nvidia: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list"}
-  Turnstile: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list"}
-  Steam: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list"}
-  Epic: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list"}
-  EA: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list"}
-  Blizzard: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list"}
-  UBI: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list"}
-  PlayStation: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list"}
-  Nintendo: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list"}
-  OKX: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list"}
-  Bybit: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/metacubex/meta-rules-dat@meta/geo/geosite/bybit.mrs"}
-  Binance: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list"}
-  Amazon: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list"}
-  Proxy: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list"}
-  Global: {<<: *class, url: "https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list"}
+# ============================================================
+# DNS (echs-top 骨架 + OpenClash 监听端口)
+# ============================================================
+direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
+direct-doh: &direct-doh ['https://dns.alidns.com/dns-query','https://doh.pub/dns-query&h3=false']
+proxy-doh: &proxy-doh ['https://dns.google/dns-query#代理DNS','https://dns.quad9.net/dns-query#代理DNS']
+
+dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  cache-algorithm: arc
+  ipv6: true
+  prefer-h3: true
+  use-hosts: true
+  use-system-hosts: false
+  respect-rules: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: fd00:bada:55ed::1/64
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - 'rule-set:private'
+    - 'rule-set:fcm'
+    - 'rule-set:apple-cn'
+    - 'rule-set:microsoft-cn'
+    - 'rule-set:games-cn'
+    - 'rule-set:direct_domain'
+    - 'rule-set:cn'
+    - 'rule-set:dnsmasq-china-add'
+  proxy-server-nameserver: *direct-doh
+  nameserver-policy:
+    'rule-set:private': *direct-dns
+    'rule-set:AWAvenue-Ads': [rcode://name_error]
+    'rule-set:fcm': *direct-doh
+    'rule-set:captcha': *direct-doh
+    'rule-set:ai': *proxy-doh
+    'rule-set:telegram': *proxy-doh
+    'rule-set:media': *proxy-doh
+    'rule-set:google-cn': *proxy-doh
+    'rule-set:google': *proxy-doh
+    'rule-set:trackerslist': *proxy-doh
+    'rule-set:apple-cn': *direct-doh
+    'rule-set:microsoft-cn': *direct-doh
+    'rule-set:games-cn': *direct-doh
+    'rule-set:proxy_domain': *proxy-doh
+    'rule-set:direct_domain': *direct-doh
+    'rule-set:github': *proxy-doh
+    'rule-set:proxy': *proxy-doh
+    'rule-set:cn': *direct-dns
+    'rule-set:dnsmasq-china-add': *direct-dns
+  nameserver: *proxy-doh
+  direct-nameserver: *direct-doh
+  direct-nameserver-follow-policy: true
+
+# ============================================================
+# 嗅探器 (echs-top 骨架 + OpenClash 流媒体强制嗅探)
+# ============================================================
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP: { ports: [80,8080-8880], override-destination: true }
+    TLS: { ports: [443,8443] }
+    QUIC: { ports: [443,8443] }
+  force-domain:
+    - '+.netflix.com'
+    - '+.nflxvideo.net'
+    - '+.amazonaws.com'
+    - '+.media.dssott.com'
+  skip-domain: ['rule-set:private','rule-set:AWAvenue-Ads','rule-set:fcm','rule-set:captcha','rule-set:ai','rule-set:telegram','rule-set:media','rule-set:google-cn','rule-set:google','rule-set:trackerslist','rule-set:apple-cn','rule-set:microsoft-cn','rule-set:games-cn','rule-set:proxy_domain','rule-set:direct_domain','rule-set:github','rule-set:proxy','rule-set:cn']
+  skip-src-address: ['rule-set:private_ip','rule-set:telegram_ip','rule-set:media_ip','rule-set:google_ip','rule-set:proxy_ip','rule-set:enhanced-FaaS-in-China_ip','rule-set:direct_ip','rule-set:cn_ip']
+  skip-dst-address: ['rule-set:private_ip']

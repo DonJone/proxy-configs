@@ -1,15 +1,23 @@
 # ============================================================
-# Line Config: echs-top 骨架 + 自建ABC线路故障转移架构
-# 骨架来源: echs-top (dns/rules/rule-providers/sniffer/tun)
-# 策略组来源: 自建 Architecture 2 (Line-based fallback)
+# OpenClash Country Config: echs-top 骨架 + 自建国家/地区故障转移架构
+# 骨架来源: echs-top (dns/rules/rule-providers/sniffer)
+# 策略组来源: 自建 Architecture 1 (Country-based fallback)
+# 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
 # ============================================================
 
-# === 全局设置 (echs-top) ===
+# === 端口 (OpenClash 多端口) ===
+port: 7890
+socks-port: 7891
+mixed-port: 7893
+redir-port: 7892
+tproxy-port: 7895
+
+# === 全局设置 ===
 ipv6: true
-allow-lan: false
+allow-lan: true
 bind-address: '*'
 mode: rule
-log-level: error
+log-level: info
 unified-delay: true
 tcp-concurrent: true
 find-process-mode: 'off'
@@ -17,23 +25,32 @@ disable-keep-alive: false
 keep-alive-interval: 15
 keep-alive-idle: 300
 etag-support: true
-port: 0
-socks-port: 0
-mixed-port: 7890
-tproxy-port: 0
-redir-port: 0
+external-controller: 0.0.0.0:9090
+
 profile: { store-selected: true, store-fake-ip: true }
 
-# === TUN 虚拟网卡 (echs-top) ===
+# === Geodata (OpenClash 兼容) ===
+geox-url:
+  mmdb: 'https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb'
+  geoip: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat'
+  geosite: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat'
+  asn: 'https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb'
+geo-auto-update: true
+geo-update-interval: 24
+geodata-mode: true
+
+# === TUN (OpenClash 托管模式) ===
 tun:
   enable: true
-  stack: mixed
-  auto-route: true
-  auto-redirect: true
-  auto-detect-interface: true
-  strict-route: true
-  disable-icmp-forwarding: true
-  dns-hijack: [any:53,tcp://any:53]
+  stack: system
+  device: utun
+  auto-route: false
+  auto-redirect: false
+  auto-detect-interface: false
+  strict-route: false
+  dns-hijack:
+    - 0.0.0.0:53
+  endpoint-independent-nat: true
 
 # === Hosts DNS 引导 (echs-top) ===
 hosts:
@@ -64,8 +81,8 @@ proxy-providers:
     exclude-filter: '(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢'
 
 # === 规则集定义锚点 ===
-ip: &ip { type: http, interval: 86400, proxy: 漏网之鱼, behavior: ipcidr, format: mrs }
-domain: &domain { type: http, interval: 86400, proxy: 漏网之鱼, behavior: domain, format: mrs }
+ip: &ip { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs }
+domain: &domain { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs }
 
 # === 规则集提供者 (echs-top 27 套) ===
 rule-providers:
@@ -105,46 +122,218 @@ proxies:
   - { name: 仅IPV6, type: direct, udp: true, ip-version: ipv6 }
 
 # ============================================================
-# 策略组 (自建 Architecture 2 — ABC线路故障转移)
+# 策略组 (自建 Architecture 1 + 2 个基础设施组)
 # ============================================================
 proxy-groups:
-  # === 1. 基础组件：三大手选组 ===
-  - { name: 手选节点 A, type: select, include-all: true }
-  - { name: 手选节点 B, type: select, include-all: true }
-  - { name: 手选节点 C, type: select, include-all: true }
+  # ==========================================
+  # 1. 基础组件：按国家/地区手选池
+  # ==========================================
+  - {
+      name: 港,
+      type: select,
+      include-all: true,
+      filter: '(?i)(港|🇭🇰|HK|Hong\s?Kong|hongkong)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 澳,
+      type: select,
+      include-all: true,
+      filter: '(?i)(澳|🇲🇴|澳门|Macau|MO)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 台,
+      type: select,
+      include-all: true,
+      filter: '(?i)(台|🇹🇼|TW|Taiwan|Taipei|taipei)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 日,
+      type: select,
+      include-all: true,
+      filter: '(?i)(日|🇯🇵|JP|Japan|Tokyo|Osaka|东京|大阪)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 新,
+      type: select,
+      include-all: true,
+      filter: '(?i)(新加坡|狮城|🇸🇬|SG|Singapore)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 美,
+      type: select,
+      include-all: true,
+      filter: '(?i)(美|🇺🇸|US|USA|America|United\s?States|纽约|洛杉矶|芝加哥|西雅图|圣何塞|硅谷|达拉斯|波特兰|凤凰城|费利蒙|拉斯维加斯|圣克拉拉)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 欧,
+      type: select,
+      include-all: true,
+      filter: '(?i)(英|🇬🇧|UK|GB|Britain|United\s?Kingdom|伦敦|德|🇩🇪|DE|Germany|法|🇫🇷|FR|France|荷兰|🇳🇱|NL|Netherlands|俄|🇷🇺|RU|Russia|意|🇮🇹|IT|Italy|瑞士|🇨🇭|CH|Switzerland|瑞典|🇸🇪|SE|Sweden|西班牙|🇪🇸|ES|Spain|加拿大|🇨🇦|CA|Canada|阿根廷|🇦🇷|AR|Argentina|巴西|🇧🇷|BR|Brazil|墨西哥|🇲🇽|MX|Mexico|澳大利亚|🇦🇺|AU|Australia)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 其他,
+      type: select,
+      include-all: true,
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 低倍,
+      type: select,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
 
-  # === 2. 全局自动测速池 ===
-  - { name: 全局自动, type: url-test, include-all: true, exclude-filter: '(?i)dialer', url: 'http://cp.cloudflare.com/generate_204', interval: 30, tolerance: 50, hidden: true }
+  # ==========================================
+  # 2. 备用组件：同区自动测速池 (隐藏)
+  # ==========================================
+  - {
+      name: 港备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(港|🇭🇰|HK|Hong\s?Kong|hongkong)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 澳备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(澳|🇲🇴|澳门|Macau|MO)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 台备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(台|🇹🇼|TW|Taiwan|Taipei|taipei)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 日备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(日|🇯🇵|JP|Japan|Tokyo|Osaka|东京|大阪)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 新备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(新加坡|狮城|🇸🇬|SG|Singapore)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 美备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(美|🇺🇸|US|USA|America|United\s?States|纽约|洛杉矶|芝加哥|西雅图|圣何塞|硅谷|达拉斯|波特兰|凤凰城|费利蒙|拉斯维加斯|圣克拉拉)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 欧备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(英|🇬🇧|UK|GB|Britain|United\s?Kingdom|伦敦|德|🇩🇪|DE|Germany|法|🇫🇷|FR|France|荷兰|🇳🇱|NL|Netherlands|俄|🇷🇺|RU|Russia|意|🇮🇹|IT|Italy|瑞士|🇨🇭|CH|Switzerland|瑞典|🇸🇪|SE|Sweden|西班牙|🇪🇸|ES|Spain|加拿大|🇨🇦|CA|Canada|阿根廷|🇦🇷|AR|Argentina|巴西|🇧🇷|BR|Brazil|墨西哥|🇲🇽|MX|Mexico|澳大利亚|🇦🇺|AU|Australia)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 其他备用,
+      type: url-test,
+      include-all: true,
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 低倍备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
 
-  # === 3. 故障转移线路 ===
-  - { name: 线路 A, type: fallback, proxies: [手选节点 A, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
-  - { name: 线路 B, type: fallback, proxies: [手选节点 B, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
-  - { name: 线路 C, type: fallback, proxies: [手选节点 C, 全局自动], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  # ==========================================
+  # 3. 业务分配与顶层路由
+  # ==========================================
+  - { name: AI与Google, type: select, proxies: [美区, 日区, 台区, 新区, 港区, 欧区, 低倍区, 其他区] }
+  - { name: TikTok, type: select, proxies: [日区, 美区, 台区, 新区, 港区, 欧区, 低倍区, 其他区] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, 其他区] }
+  - { name: 通讯与Github, type: select, proxies: [港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, DIRECT, 其他区] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, 其他区] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 美区, 日区, 新区, 台区, 欧区, 低倍区, 其他区] }
+  - { name: 加密货币与兜底, type: select, proxies: [港区, 澳区, 台区, 日区, 新区, 美区, 欧区, 其他区, 低倍区, DIRECT] }
 
-  # === 4. 业务分配 ===
-  - { name: AI与Google, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-  - { name: TikTok, type: select, proxies: [线路 B, 线路 C, 线路 A] }
-  - { name: Emby流媒体, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 通讯与Github, type: select, proxies: [线路 A, 线路 B, 线路 C, DIRECT] }
-  - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-
-  # === 5. 静默组 ===
-  - { name: 国内服务, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C], hidden: true }
+  # ==========================================
+  # 4. 静默组
+  # ==========================================
+  - { name: 国内服务, type: select, proxies: [DIRECT, 港区, 日区, 新区], hidden: true }
   - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
 
-  # === 6. 基础设施组 ===
-  - { name: 代理DNS, type: select, proxies: [漏网之鱼, 线路 A, 线路 B], hidden: true }
+  # ==========================================
+  # 5. 基础设施组
+  # ==========================================
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 美区, 日区, 新区, 港区], hidden: true }
   - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
 
+  # ==========================================
+  # 6. 核心架构：同区故障转移专线 (置底)
+  # ==========================================
+  - { name: 港区, type: fallback, proxies: [港, 港备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 澳区, type: fallback, proxies: [澳, 澳备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 台区, type: fallback, proxies: [台, 台备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 日区, type: fallback, proxies: [日, 日备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 新区, type: fallback, proxies: [新, 新备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 美区, type: fallback, proxies: [美, 美备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 欧区, type: fallback, proxies: [欧, 欧备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 其他区, type: fallback, proxies: [其他, 其他备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+  - { name: 低倍区, type: fallback, proxies: [低倍, 低倍备用], url: 'http://cp.cloudflare.com/generate_204', interval: 30 }
+
 # ============================================================
-# 规则引擎 (echs-top 骨架，目标组名适配ABC线路架构)
+# 规则引擎 (echs-top 骨架，目标组名适配自建架构)
 # ============================================================
 rules:
   # --- 端口级识别 ---
   - DST-PORT,5228-5230,DIRECT
-  - DST-PORT,1337/2710/6881-6999/7777,漏网之鱼
+  - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
 
   # --- 私有地址优先 ---
   - RULE-SET,private_ip,DIRECT,no-resolve
@@ -155,7 +344,7 @@ rules:
   # --- 广告拦截 ---
   - RULE-SET,AWAvenue-Ads,广告拦截
 
-  # --- 域名级分流（SUB-RULE 嵌套） ---
+  # --- 域名级分流 ---
   - RULE-SET,fcm,DIRECT
   - SUB-RULE,(RULE-SET,captcha),captcha_rules
   - SUB-RULE,(RULE-SET,ai),ai_rules
@@ -190,10 +379,10 @@ rules:
 
   # --- QUIC 与高位端口兜底 ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-  - DST-PORT,10000-65535,漏网之鱼
+  - DST-PORT,10000-65535,加密货币与兜底
 
   # --- 全局兜底 ---
-  - MATCH,漏网之鱼
+  - MATCH,加密货币与兜底
 
 # ============================================================
 # 子规则 (echs-top 骨架，MATCH 目标适配)
@@ -203,7 +392,7 @@ sub-rules:
     - MATCH,DIRECT
   captcha_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
   ai_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
     - MATCH,AI与Google
@@ -218,13 +407,13 @@ sub-rules:
     - MATCH,AI与Google
   trackerslist_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
   proxy_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (echs-top 骨架)
+# DNS (echs-top 骨架 + OpenClash 监听端口)
 # ============================================================
 direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
 direct-doh: &direct-doh ['https://dns.alidns.com/dns-query','https://doh.pub/dns-query&h3=false']
@@ -232,6 +421,7 @@ proxy-doh: &proxy-doh ['https://dns.google/dns-query#代理DNS','https://dns.qua
 
 dns:
   enable: true
+  listen: 0.0.0.0:7874
   cache-algorithm: arc
   ipv6: true
   prefer-h3: true
@@ -277,7 +467,7 @@ dns:
   direct-nameserver-follow-policy: true
 
 # ============================================================
-# 嗅探器 (echs-top 骨架)
+# 嗅探器 (echs-top 骨架 + OpenClash 流媒体强制嗅探)
 # ============================================================
 sniffer:
   enable: true
@@ -288,6 +478,11 @@ sniffer:
     HTTP: { ports: [80,8080-8880], override-destination: true }
     TLS: { ports: [443,8443] }
     QUIC: { ports: [443,8443] }
+  force-domain:
+    - '+.netflix.com'
+    - '+.nflxvideo.net'
+    - '+.amazonaws.com'
+    - '+.media.dssott.com'
   skip-domain: ['rule-set:private','rule-set:AWAvenue-Ads','rule-set:fcm','rule-set:captcha','rule-set:ai','rule-set:telegram','rule-set:media','rule-set:google-cn','rule-set:google','rule-set:trackerslist','rule-set:apple-cn','rule-set:microsoft-cn','rule-set:games-cn','rule-set:proxy_domain','rule-set:direct_domain','rule-set:github','rule-set:proxy','rule-set:cn']
   skip-src-address: ['rule-set:private_ip','rule-set:telegram_ip','rule-set:media_ip','rule-set:google_ip','rule-set:proxy_ip','rule-set:enhanced-FaaS-in-China_ip','rule-set:direct_ip','rule-set:cn_ip']
   skip-dst-address: ['rule-set:private_ip']

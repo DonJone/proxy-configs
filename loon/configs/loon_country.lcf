@@ -40,32 +40,50 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 # Proxy Group (规范语法版)
 # =====================================
 [Proxy Group]
-# 1. 基础手选组：直接调用 Remote Filter 中的过滤器名
-亚太 = select, 亚太节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-欧美 = select, 欧美节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+# 1. 基础手选组：按国家/地区
+港 = select, 港节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+澳 = select, 澳节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+台 = select, 台节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+日 = select, 日节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+新 = select, 新节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+美 = select, 美节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+欧 = select, 欧节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+其他 = select, 其他节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
 低倍 = select, 低倍节点, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
 
-# 2. 备用自动组：直接调用过滤器名进行 url-test
-亚太备用 = url-test, 亚太节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
-欧美备用 = url-test, 欧美节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+# 2. 备用自动组
+港备用 = url-test, 港节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+澳备用 = url-test, 澳节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+台备用 = url-test, 台节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+日备用 = url-test, 日节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+新备用 = url-test, 新节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+美备用 = url-test, 美节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+欧备用 = url-test, 欧节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+其他备用 = url-test, 其他节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
 低倍备用 = url-test, 低倍节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
 
-# 3. 故障转移架构：手选 -> 自动
-亚太区 = fallback, 亚太, 亚太备用, url = http://cp.cloudflare.com/generate_204, interval = 30
-欧美区 = fallback, 欧美, 欧美备用, url = http://cp.cloudflare.com/generate_204, interval = 30
-低倍率 = fallback, 低倍, 低倍备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+# 3. 故障转移架构
+港区 = fallback, 港, 港备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+澳区 = fallback, 澳, 澳备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+台区 = fallback, 台, 台备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+日区 = fallback, 日, 日备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+新区 = fallback, 新, 新备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+美区 = fallback, 美, 美备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+欧区 = fallback, 欧, 欧备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+其他区 = fallback, 其他, 其他备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+低倍区 = fallback, 低倍, 低倍备用, url = http://cp.cloudflare.com/generate_204, interval = 30
 
 # 4. 业务分配分流
-AI与Google = select, 欧美区, 亚太区, 低倍率, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
-TikTok = select, 亚太区, 欧美区, 低倍率, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
-Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-通讯与Github = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
-游戏平台 = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
-微软苹果Nvidia = select, DIRECT, 亚太区, 欧美区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
-加密货币与兜底 = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
+AI与Google = select, 美区, 日区, 台区, 新区, 港区, 欧区, 低倍区, 其他区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
+TikTok = select, 日区, 美区, 台区, 新区, 港区, 欧区, 低倍区, 其他区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
+Emby流媒体 = select, DIRECT, 港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, 其他区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+通讯与Github = select, 港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, DIRECT, 其他区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
+游戏平台 = select, DIRECT, 港区, 台区, 日区, 新区, 美区, 欧区, 低倍区, 其他区, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
+微软苹果Nvidia = select, DIRECT, 美区, 日区, 新区, 台区, 欧区, 低倍区, 其他区, img-url = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
+加密货币与兜底 = select, 港区, 澳区, 台区, 日区, 新区, 美区, 欧区, 其他区, 低倍区, DIRECT, img-url = https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
 
 # 5. 静默拦截与国内服务
-国内服务 = select, DIRECT, 亚太区, hidden = true
+国内服务 = select, DIRECT, 港区, 日区, 新区, hidden = true
 广告拦截 = select, REJECT, hidden = true
 
 # =====================================
@@ -75,11 +93,14 @@ Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.gi
 全部节点 = NameRegex, FilterKey = ".*"
 除拨号外 = NameRegex, FilterKey = "^(?i)(?!.*dialer).*"
 
-# 【修复】：亚太与欧美排除了被误杀的高倍率节点 (引入负向后顾断言 ?<![0-9.])
-亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
-欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
-
-# 【修复】：真正的低倍率捕获规则，杜绝 4.0x
+港节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong\s?Kong|hongkong)"
+澳节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(澳|澳门|Macau|MO)"
+台节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(台|TW|Taiwan|Taipei|taipei)"
+日节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|JP|Japan|Tokyo|Osaka|东京|大阪)"
+新节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(新加坡|狮城|SG|Singapore)"
+美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|USA|America|United\s?States|纽约|洛杉矶|芝加哥|西雅图|圣何塞|硅谷|达拉斯|波特兰|凤凰城|费利蒙|拉斯维加斯|圣克拉拉)"
+欧节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(英|UK|GB|Britain|United\s?Kingdom|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|西班牙|ES|Spain|加拿大|CA|Canada|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico|澳大利亚|AU|Australia)"
+其他节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*"
 低倍节点 = NameRegex, FilterKey = "(?i)((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)"
 
 # =====================================
@@ -88,8 +109,8 @@ Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://raw.gi
 [Rule]
 # 抖音与 Emby 特殊分流
 DOMAIN-KEYWORD, douyin, 国内服务
-DOMAIN-KEYWORD, emby, Emby
-DOMAIN-KEYWORD, uhdnow, Emby
+DOMAIN-KEYWORD, emby, Emby流媒体
+DOMAIN-KEYWORD, uhdnow, Emby流媒体
 # 拦截
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
