@@ -1,7 +1,6 @@
 # Proxy Configurations
 
-本项目为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。规则骨架来自 [echs-top](https://github.com/echs-top/proxy)，策略组采用自建故障转移架构。
-
+本项目为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。
 ---
 
 ## 区域聚合架构（Region
