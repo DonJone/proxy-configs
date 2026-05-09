@@ -463,6 +463,12 @@ rule-providers:
       url: "https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/direct/cn-cdn.mrs",
       path: ./rules/cn-cdn.mrs,
     }
+  fcm:
+    {
+      <<: *domain,
+      url: "https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/proxy/googlefcm.mrs",
+      path: ./rules/fcm.mrs,
+    }
   direct_ip:
     {
       <<: *ip,
@@ -682,6 +688,7 @@ rules:
   - RULE-SET,microsoft-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
+  - RULE-SET,fcm,国内服务
 
   # --- Google ---
   - SUB-RULE,(RULE-SET,google),google_rules
@@ -782,6 +789,7 @@ dns:
     - "rule-set:direct_domain"
     - "rule-set:cn"
     - "rule-set:cn-cdn"
+    - "rule-set:fcm"
   proxy-server-nameserver: *direct-doh
   nameserver-policy:
     "rule-set:private": *direct-dns
@@ -845,6 +853,7 @@ dns:
     "rule-set:direct_domain": *direct-doh
     "rule-set:cn": *direct-dns
     "rule-set:cn-cdn": *direct-dns
+    "rule-set:fcm": *direct-doh
   nameserver: *proxy-doh
   direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: true

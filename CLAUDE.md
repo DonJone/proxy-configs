@@ -64,7 +64,7 @@ GinsRule-git 规则集通过 SUB-RULE 分发：
 
 | 规则集 | SUB-RULE | MATCH 出口 |
 |---|---|---|
-| fcm | fcm_rules | DIRECT |
+| fcm | — (直连规则) | 国内服务 |
 | captcha | captcha_rules | 加密货币与兜底（或漏网之鱼） |
 | ai | ai_rules | AI与Google |
 | telegram / telegram_ip | telegram_rules | 通讯与Github |

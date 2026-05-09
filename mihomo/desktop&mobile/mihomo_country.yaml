@@ -151,6 +151,7 @@ rule-providers:
   direct_domain: { <<: *domain, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/direct/direct-list.mrs', path: ./rules/direct_domain.mrs }
   cn: { <<: *domain, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/direct/cn-other.mrs', path: ./rules/cn.mrs }
   cn-cdn: { <<: *domain, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/direct/cn-cdn.mrs', path: ./rules/cn-cdn.mrs }
+  fcm: { <<: *domain, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/proxy/googlefcm.mrs', path: ./rules/fcm.mrs }
   direct_ip: { <<: *ip, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/ip/!cn.mrs', path: ./rules/direct_ip.mrs }
   cn_ip: { <<: *ip, url: 'https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/ip/cn.mrs', path: ./rules/cn_ip.mrs }
 
@@ -446,6 +447,7 @@ rules:
   - RULE-SET,microsoft-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
+  - RULE-SET,fcm,国内服务
 
   # --- Google ---
   - SUB-RULE,(RULE-SET,google),google_rules

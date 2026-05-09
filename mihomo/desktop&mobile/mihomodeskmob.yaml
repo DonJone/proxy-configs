@@ -460,6 +460,12 @@ rule-providers:
       url: "https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/direct/cn-cdn.mrs",
       path: ./rules/cn-cdn.mrs,
     }
+  fcm:
+    {
+      <<: *domain,
+      url: "https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/mihomo/proxy/googlefcm.mrs",
+      path: ./rules/fcm.mrs,
+    }
   direct_ip:
     {
       <<: *ip,
@@ -662,6 +668,7 @@ rules:
   - RULE-SET,microsoft-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
+  - RULE-SET,fcm,国内服务
 
   # --- Google ---
   - SUB-RULE,(RULE-SET,google),google_rules

@@ -27,7 +27,7 @@
 | `ai` `google` `google-cn`                                                 | **AI与Google**     | ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity, Google 全系 |
 | `media` `emby`                                                            | **Emby流媒体**     | YouTube, Netflix, Disney+, HBO, Spotify, Emby/Jellyfin          |
 | `telegram` `telegram_ip` `github`                                         | **通讯与Github**   | Telegram, Twitter, Reddit, GitHub                               |
-| `fcm` `private` `cn` `apple-cn` `microsoft-cn` `games-cn` `direct_domain` | **DIRECT**         | FCM 推送、私有网络、国内域名/CDN                                |
+| `private` `cn` `apple-cn` `microsoft-cn` `games-cn` `direct_domain` | **DIRECT**         | 私有网络、国内域名/CDN                                |
 | `AWAvenue-Ads`                                                            | **广告拦截**       | 广告/跟踪域名（DNS 层 NXDOMAIN + 规则层 REJECT）                |
 | `proxy` `proxy_domain` `captcha` `trackerslist`                           | **加密货币与兜底** | 其余代理流量 + MATCH 全局兜底                                   |
 
@@ -47,7 +47,7 @@
 
 | 组名     | 出口                           | 用途                                   |
 | -------- | ------------------------------ | -------------------------------------- |
-| 国内服务 | DIRECT, 亚太区                 | 国内流量兜底（规则未覆盖时的手动切换） |
+| 国内服务 | DIRECT, 亚太区                 | FCM 推送、国内流量兜底（规则未覆盖时的手动切换） |
 | 广告拦截 | REJECT                         | 广告域名规则出口                       |
 | 代理DNS  | 加密货币与兜底, 欧美区, 亚太区 | DoH 代理链（dns.google/quad9 走代理）  |
 | 代理QUIC | REJECT, PASS                   | UDP 443 强制 TCP 回退开关              |
