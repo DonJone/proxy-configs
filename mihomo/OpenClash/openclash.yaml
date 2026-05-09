@@ -1,7 +1,7 @@
 # ============================================================
-# OpenClash Line Config: GinsRule-git 规则 + 自建ABC线路故障转移架构
+# OpenClash Hybrid Config: GinsRule-git 规则 + 自建区域故障转移架构
 # 规则来源: GinsRule-git (dns/rules/rule-providers/sniffer)
-# 策略组来源: 自建 Architecture 2 (Line-based fallback)
+# 策略组来源: 自建 Architecture 1 (Region-based fallback)
 # 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
 # ============================================================
 
@@ -15,12 +15,12 @@ tproxy-port: 7895
 # === 全局设置 ===
 ipv6: true
 allow-lan: true
-bind-address: "*"
+bind-address: '*'
 mode: rule
 log-level: info
 unified-delay: true
 tcp-concurrent: true
-find-process-mode: "off"
+find-process-mode: 'off'
 disable-keep-alive: false
 keep-alive-interval: 15
 keep-alive-idle: 300
@@ -31,10 +31,10 @@ profile: { store-selected: true, store-fake-ip: true }
 
 # === Geodata (OpenClash 兼容) ===
 geox-url:
-  mmdb: "https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb"
-  geoip: "https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
-  geosite: "https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
-  asn: "https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
+  mmdb: 'https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb'
+  geoip: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat'
+  geosite: 'https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat'
+  asn: 'https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb'
 geo-auto-update: true
 geo-update-interval: 24
 geodata-mode: true
@@ -54,49 +54,35 @@ tun:
 
 # === Hosts DNS 引导 ===
 hosts:
-  dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
-  doh.pub: [120.53.53.53, 1.12.12.21]
-  dns.google: [8.8.8.8, 8.8.4.4, "2001:4860:4860::8888", "2001:4860:4860::8844"]
-  dns.quad9.net: [9.9.9.9, 149.112.112.112, "2620:fe::fe", "2620:fe::9"]
+  dns.alidns.com: [223.5.5.5,223.6.6.6,'2400:3200::1','2400:3200:baba::1']
+  doh.pub: [120.53.53.53,1.12.12.21]
+  dns.google: [8.8.8.8,8.8.4.4,'2001:4860:4860::8888','2001:4860:4860::8844']
+  dns.quad9.net: [9.9.9.9,149.112.112.112,'2620:fe::fe','2620:fe::9']
   services.googleapis.cn: services.googleapis.com
   google.cn: google.com
 
 # === 机场节点订阅 ===
 proxy-providers:
   机场:
-    url: "机场链接url"
+    url: "https://gist.githubusercontent.com/DonJone/eb0f825c60be25384d201b3a3b9b6579/raw/Don-mihomo"
     type: http
     interval: 86400
     proxy: DIRECT
     header: { User-Agent: ["clash-verge/v2.4.7"] }
     health-check:
       enable: true
-      url: "https://dns.google/generate_204"
+      url: 'https://dns.google/generate_204'
       expected-status: 204
       interval: 900
       timeout: 3000
       max-failed-times: 2
       lazy: false
     override: { ip-version: dual }
-    exclude-filter: "(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢"
+    exclude-filter: '(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢'
 
 # === 规则集定义锚点 ===
-ip:
-  &ip {
-    type: http,
-    interval: 86400,
-    proxy: 漏网之鱼,
-    behavior: ipcidr,
-    format: mrs,
-  }
-domain:
-  &domain {
-    type: http,
-    interval: 86400,
-    proxy: 漏网之鱼,
-    behavior: domain,
-    format: mrs,
-  }
+ip: &ip { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs }
+domain: &domain { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs }
 
 # === 规则集提供者 (GinsRule-git 全细分) ===
 rule-providers:
@@ -524,95 +510,112 @@ proxies:
   - { name: 仅IPV6, type: direct, udp: true, ip-version: ipv6 }
 
 # ============================================================
-# 策略组 (自建 Architecture 2 — ABC线路故障转移)
+# 策略组 (自建 Architecture 1 + 2 个基础设施组)
 # ============================================================
 proxy-groups:
-  # 1. 基础组件：三大手选组
-  - { name: 手选节点 A, type: select, include-all: true }
-  - { name: 手选节点 B, type: select, include-all: true }
-  - { name: 手选节点 C, type: select, include-all: true }
-
-  # 2. 全局自动测速池
+  # 1. 基础组件：三大手选池
   - {
-      name: 全局自动,
+      name: 亚太,
+      type: select,
+      include-all: true,
+      filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 欧美,
+      type: select,
+      include-all: true,
+      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+  - {
+      name: 低倍,
+      type: select,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+    }
+
+  # 2. 备用组件：同区自动测速池 (隐藏)
+  - {
+      name: 亚太备用,
       type: url-test,
       include-all: true,
-      exclude-filter: "(?i)dialer",
-      url: "http://cp.cloudflare.com/generate_204",
+      filter: '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 欧美备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)',
+      exclude-filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+      tolerance: 50,
+      hidden: true,
+    }
+  - {
+      name: 低倍备用,
+      type: url-test,
+      include-all: true,
+      filter: '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)',
+      url: 'http://cp.cloudflare.com/generate_204',
       interval: 30,
       tolerance: 50,
       hidden: true,
     }
 
-  # 3. 故障转移线路
-  - {
-      name: 线路 A,
-      type: fallback,
-      proxies: [手选节点 A, 全局自动],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 线路 B,
-      type: fallback,
-      proxies: [手选节点 B, 全局自动],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
-  - {
-      name: 线路 C,
-      type: fallback,
-      proxies: [手选节点 C, 全局自动],
-      url: "http://cp.cloudflare.com/generate_204",
-      interval: 30,
-    }
+  # 3. 业务分配与顶层路由
+  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
+  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
+  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区] }
+  - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
 
-  # 4. 业务分配
-  - { name: AI与Google, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-  - { name: TikTok, type: select, proxies: [线路 B, 线路 C, 线路 A] }
-  - {
-      name: Emby流媒体,
-      type: select,
-      proxies: [DIRECT, 线路 A, 线路 B, 线路 C],
-    }
-  - {
-      name: 通讯与Github,
-      type: select,
-      proxies: [线路 A, 线路 B, 线路 C, DIRECT],
-    }
-  - { name: 游戏平台, type: select, proxies: [DIRECT, 线路 A, 线路 B, 线路 C] }
-  - {
-      name: 微软苹果Nvidia,
-      type: select,
-      proxies: [DIRECT, 线路 A, 线路 B, 线路 C],
-    }
-  - { name: 漏网之鱼, type: select, proxies: [线路 A, 线路 B, 线路 C] }
-
-  # 5. 静默组
-  - {
-      name: 国内服务,
-      type: select,
-      proxies: [DIRECT, 线路 A, 线路 B, 线路 C],
-      hidden: true,
-    }
+  # 4. 静默组
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
   - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
 
-  # 6. 基础设施组
-  - {
-      name: 代理DNS,
-      type: select,
-      proxies: [漏网之鱼, 线路 A, 线路 B],
-      hidden: true,
-    }
+  # 5. 基础设施组
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
   - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
 
+  # 6. 核心架构：同区故障转移专线 (置底)
+  - {
+      name: 亚太区,
+      type: fallback,
+      proxies: [亚太, 亚太备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+  - {
+      name: 欧美区,
+      type: fallback,
+      proxies: [欧美, 欧美备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+  - {
+      name: 低倍率,
+      type: fallback,
+      proxies: [低倍, 低倍备用],
+      url: 'http://cp.cloudflare.com/generate_204',
+      interval: 30,
+    }
+
 # ============================================================
-# 规则引擎 (GinsRule-git 规则，目标组名适配ABC线路架构)
+# 规则引擎 (GinsRule-git 规则，目标组名适配自建架构)
 # ============================================================
 rules:
   # --- 端口级识别 ---
   - DST-PORT,5228-5230,DIRECT
-  - DST-PORT,1337/2710/6881-6999/7777,漏网之鱼
+  - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
 
   # --- 私有地址优先 ---
   - RULE-SET,private_ip,DIRECT,no-resolve
@@ -712,12 +715,15 @@ rules:
 
   # --- QUIC 与高位端口兜底 ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-  - DST-PORT,10000-65535,漏网之鱼
+  - DST-PORT,10000-65535,加密货币与兜底
 
   # --- 全局兜底 ---
   - MATCH,漏网之鱼
 
 # ============================================================
+# 子规则 (GinsRule-git 规则，MATCH 目标适配)
+# ============================================================
+
 # 子规则 (GinsRule-git 规则，MATCH 目标适配)
 # ============================================================
 sub-rules:
@@ -749,5 +755,118 @@ sub-rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
     - MATCH,漏网之鱼
 
+# DNS (GinsRule-git 骨架 + OpenClash 监听端口)
+# ============================================================
+direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
+direct-doh: &direct-doh ['https://dns.alidns.com/dns-query','https://doh.pub/dns-query&h3=false']
+proxy-doh: &proxy-doh ['https://dns.google/dns-query#代理DNS','https://dns.quad9.net/dns-query#代理DNS']
 
+
+dns:
+  enable: true
+  cache-algorithm: arc
+  ipv6: true
+  prefer-h3: true
+  use-hosts: true
+  use-system-hosts: false
+  respect-rules: false
+  listen: 0.0.0.0:7874
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: fd00:bada:55ed::1/64
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - "rule-set:private"
+    - "rule-set:apple-cn"
+    - "rule-set:microsoft-cn"
+    - "rule-set:direct_domain"
+    - "rule-set:cn"
+    - "rule-set:cn-cdn"
+  proxy-server-nameserver: *direct-doh
+  nameserver-policy:
+    "rule-set:private": *direct-dns
+    "rule-set:AWAvenue-Ads": [rcode://name_error]
+    "rule-set:reject_privacy": [rcode://name_error]
+    "rule-set:reject_list": [rcode://name_error]
+    "rule-set:ai": *proxy-doh
+    "rule-set:telegram": *proxy-doh
+    "rule-set:twitter": *proxy-doh
+    "rule-set:reddit": *proxy-doh
+    "rule-set:discord": *proxy-doh
+    "rule-set:facebook": *proxy-doh
+    "rule-set:instagram": *proxy-doh
+    "rule-set:threads": *proxy-doh
+    "rule-set:linkedin": *proxy-doh
+    "rule-set:signal": *proxy-doh
+    "rule-set:slack": *proxy-doh
+    "rule-set:snapchat": *proxy-doh
+    "rule-set:whatsapp": *proxy-doh
+    "rule-set:stackoverflow": *proxy-doh
+    "rule-set:wikipedia": *proxy-doh
+    "rule-set:line": *proxy-doh
+    "rule-set:youtube": *proxy-doh
+    "rule-set:netflix": *proxy-doh
+    "rule-set:disney": *proxy-doh
+    "rule-set:hbo": *proxy-doh
+    "rule-set:spotify": *proxy-doh
+    "rule-set:primevideo": *proxy-doh
+    "rule-set:amazon": *proxy-doh
+    "rule-set:twitch": *proxy-doh
+    "rule-set:appletv": *proxy-doh
+    "rule-set:tiktok": *proxy-doh
+    "rule-set:steam": *proxy-doh
+    "rule-set:epic": *proxy-doh
+    "rule-set:blizzard": *proxy-doh
+    "rule-set:playstation": *proxy-doh
+    "rule-set:nintendo": *proxy-doh
+    "rule-set:xbox": *proxy-doh
+    "rule-set:riot": *proxy-doh
+    "rule-set:apple": *proxy-doh
+    "rule-set:apple-music": *proxy-doh
+    "rule-set:microsoft": *proxy-doh
+    "rule-set:onedrive": *proxy-doh
+    "rule-set:google": *proxy-doh
+    "rule-set:github": *proxy-doh
+    "rule-set:gitlab": *proxy-doh
+    "rule-set:docker": *proxy-doh
+    "rule-set:notion": *proxy-doh
+    "rule-set:npm": *proxy-doh
+    "rule-set:vercel": *proxy-doh
+    "rule-set:speedtest": *proxy-doh
+    "rule-set:okx": *proxy-doh
+    "rule-set:binance": *proxy-doh
+    "rule-set:paypal": *proxy-doh
+    "rule-set:cloudflare": *proxy-doh
+    "rule-set:trackerslist": *proxy-doh
+    "rule-set:proxy_domain": *proxy-doh
+    "rule-set:proxy": *proxy-doh
+    "rule-set:apple-cn": *direct-doh
+    "rule-set:microsoft-cn": *direct-doh
+    "rule-set:direct_domain": *direct-doh
+    "rule-set:cn": *direct-dns
+    "rule-set:cn-cdn": *direct-dns
+  nameserver: *proxy-doh
+  direct-nameserver: *direct-doh
+  direct-nameserver-follow-policy: true
+
+
+# 嗅探器 (GinsRule-git 骨架 + OpenClash 流媒体强制嗅探)
+# ============================================================
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP: { ports: [80,8080-8880], override-destination: true }
+    TLS: { ports: [443,8443] }
+    QUIC: { ports: [443,8443] }
+  force-domain:
+    - '+.netflix.com'
+    - '+.nflxvideo.net'
+    - '+.amazonaws.com'
+    - '+.media.dssott.com'
+  skip-domain:
+  skip-src-address:
+  skip-dst-address: ["rule-set:private_ip"]
 
