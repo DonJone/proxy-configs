@@ -64,7 +64,7 @@ hosts:
 # === 机场节点订阅 ===
 proxy-providers:
   机场:
-    url: "https://gist.githubusercontent.com/DonJone/eb0f825c60be25384d201b3a3b9b6579/raw/Don-mihomo"
+    url: "机场链接url"
     type: http
     interval: 86400
     proxy: DIRECT
@@ -725,7 +725,7 @@ rules:
   - DST-PORT,10000-65535,加密货币与兜底
 
   # --- 全局兜底 ---
-  - MATCH,漏网之鱼
+  - MATCH,加密货币与兜底
 
 # ============================================================
 # 子规则 (GinsRule-git 规则，MATCH 目标适配)
@@ -757,10 +757,10 @@ sub-rules:
     - MATCH,AI与Google
   trackerslist_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
   proxy_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,漏网之鱼
+    - MATCH,加密货币与兜底
 
 # DNS (GinsRule-git 骨架 + OpenClash 监听端口)
 # ============================================================

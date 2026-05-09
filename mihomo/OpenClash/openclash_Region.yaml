@@ -64,7 +64,7 @@ hosts:
 # === 机场节点订阅 ===
 proxy-providers:
   机场:
-    url: "https://gist.githubusercontent.com/DonJone/eb0f825c60be25384d201b3a3b9b6579/raw/Don-mihomo"
+    url: "机场链接url"
     type: http
     interval: 86400
     proxy: DIRECT
