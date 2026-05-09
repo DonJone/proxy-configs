@@ -21,7 +21,7 @@ allow-udp-proxy = true
 allow-wifi-access = true
 wifi-access-http-port = 7222
 wifi-access-socks5-port = 7221
-resource-parser=https://raw.githubusercontent.com/sub-store-org/Sub-Store/release/sub-store-parser.loon.min.js
+resource-parser=https://cdn.jsdelivr.net/gh/sub-store-org/Sub-Store@release/sub-store-parser.loon.min.js
 proxy-test-url=http://www.gstatic.com/generate_204
 internet-test-url=http://connectivitycheck.platform.hicloud.com/generate_204 
 test-timeout = 5
@@ -55,9 +55,9 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 # =====================================
 [Proxy Group]
 # 1. 基础组件：三大手选组 (包含所有节点，未作剔除)
-手选节点A = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-手选节点B = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-手选节点C = select,全部节点,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
+手选节点A = select,全部节点,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+手选节点B = select,全部节点,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+手选节点C = select,全部节点,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 
 # 2. 核心架构：故障转移专线与全局自动
 线路A = fallback,手选节点A,全局自动,url=http://cp.cloudflare.com/generate_204,interval=30
@@ -66,14 +66,14 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 全局自动 = url-test,除拨号外,url=http://cp.cloudflare.com/generate_204,interval=30,tolerance=50,hidden=true
 
 # 3. 业务分配与顶层路由
-漏网之鱼 = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Bypass.png
-AI与Google = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/ChatGPT3.png
-TikTok = select,线路B,线路C,线路A,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/TikTok_1.png
-Emby流媒体 = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Server.png
-Emby流媒体 = select,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png
-通讯与Github = select,线路A,线路B,线路C,DIRECT,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Telegram_01.png
-游戏平台 = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Game.png
-微软苹果Nvidia = select,DIRECT,线路A,线路B,线路C,img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Apple_02.png
+漏网之鱼 = select,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
+AI与Google = select,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
+TikTok = select,线路B,线路C,线路A,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
+Emby流媒体 = select,DIRECT,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+Emby流媒体 = select,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+通讯与Github = select,线路A,线路B,线路C,DIRECT,img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Telegram_01.png
+游戏平台 = select,DIRECT,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+微软苹果Nvidia = select,DIRECT,线路A,线路B,线路C,img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
 
 # 4. 静默组
 国内服务 = select,DIRECT,线路A,线路B,线路C,hidden=true
@@ -114,67 +114,67 @@ FINAL,漏网之鱼
 
 [Remote Rule]
 [Remote Rule]
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
 # AI
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/ai/ai-other.lsr, policy=AI与Google, tag=AI分流, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ai/ai-other.lsr, policy=AI与Google, tag=AI分流, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
 # 社交流媒体
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/reddit.lsr, policy=通讯与Github, tag=Reddit, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/discord.lsr, policy=通讯与Github, tag=Discord, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/facebook.lsr, policy=通讯与Github, tag=Facebook, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/instagram.lsr, policy=通讯与Github, tag=Instagram, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/threads.lsr, policy=通讯与Github, tag=Threads, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/linkedin.lsr, policy=通讯与Github, tag=LinkedIn, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/signal.lsr, policy=通讯与Github, tag=Signal, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/slack.lsr, policy=通讯与Github, tag=Slack, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/snapchat.lsr, policy=通讯与Github, tag=Snapchat, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/whatsapp.lsr, policy=通讯与Github, tag=WhatsApp, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/stackoverflow.lsr, policy=通讯与Github, tag=Stackoverflow, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/wikipedia.lsr, policy=通讯与Github, tag=Wikipedia, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/line.lsr, policy=通讯与Github, tag=Line, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/gitlab.lsr, policy=通讯与Github, tag=GitLab, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/youtube.lsr, policy=Emby流媒体, tag=YouTube, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/netflix.lsr, policy=Emby流媒体, tag=Netflix, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/disney.lsr, policy=Emby流媒体, tag=Disney, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/hbo.lsr, policy=Emby流媒体, tag=HBO, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/spotify.lsr, policy=Emby流媒体, tag=Spotify, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/amazon.lsr, policy=Emby流媒体, tag=Amazon, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/twitch.lsr, policy=Emby流媒体, tag=Twitch, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体, tag=AppleTV, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/reddit.lsr, policy=通讯与Github, tag=Reddit, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/discord.lsr, policy=通讯与Github, tag=Discord, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/facebook.lsr, policy=通讯与Github, tag=Facebook, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/instagram.lsr, policy=通讯与Github, tag=Instagram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/threads.lsr, policy=通讯与Github, tag=Threads, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/linkedin.lsr, policy=通讯与Github, tag=LinkedIn, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/signal.lsr, policy=通讯与Github, tag=Signal, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/slack.lsr, policy=通讯与Github, tag=Slack, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/snapchat.lsr, policy=通讯与Github, tag=Snapchat, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/whatsapp.lsr, policy=通讯与Github, tag=WhatsApp, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/stackoverflow.lsr, policy=通讯与Github, tag=Stackoverflow, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/wikipedia.lsr, policy=通讯与Github, tag=Wikipedia, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/line.lsr, policy=通讯与Github, tag=Line, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gitlab.lsr, policy=通讯与Github, tag=GitLab, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/youtube.lsr, policy=Emby流媒体, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/netflix.lsr, policy=Emby流媒体, tag=Netflix, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/disney.lsr, policy=Emby流媒体, tag=Disney, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/hbo.lsr, policy=Emby流媒体, tag=HBO, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/spotify.lsr, policy=Emby流媒体, tag=Spotify, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/amazon.lsr, policy=Emby流媒体, tag=Amazon, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitch.lsr, policy=Emby流媒体, tag=Twitch, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体, tag=AppleTV, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
 # 微软苹果Nvidia
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/apple-music.lsr, policy=微软苹果Nvidia, tag=AppleMusic, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/onedrive.lsr, policy=微软苹果Nvidia, tag=OneDrive, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple-music.lsr, policy=微软苹果Nvidia, tag=AppleMusic, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/onedrive.lsr, policy=微软苹果Nvidia, tag=OneDrive, enabled=true
 # 游戏平台
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/epic.lsr, policy=游戏平台, tag=Epic, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/blizzard.lsr, policy=游戏平台, tag=Blizzard, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/playstation.lsr, policy=游戏平台, tag=PlayStation, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/nintendo.lsr, policy=游戏平台, tag=Nintendo, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/xbox.lsr, policy=游戏平台, tag=Xbox, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/riot.lsr, policy=游戏平台, tag=Riot, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/epic.lsr, policy=游戏平台, tag=Epic, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/blizzard.lsr, policy=游戏平台, tag=Blizzard, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/playstation.lsr, policy=游戏平台, tag=PlayStation, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/nintendo.lsr, policy=游戏平台, tag=Nintendo, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/xbox.lsr, policy=游戏平台, tag=Xbox, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/riot.lsr, policy=游戏平台, tag=Riot, enabled=true
 # 加密货币
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/okx.lsr, policy=漏网之鱼, tag=OKX, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/binance.lsr, policy=漏网之鱼, tag=Binance, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/cloudflare.lsr, policy=漏网之鱼, tag=Turnstile, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/proxy-list.lsr, policy=漏网之鱼, tag=Proxy, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/gfw-list.lsr, policy=漏网之鱼, tag=Global, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/paypal.lsr, policy=漏网之鱼, tag=PayPal, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/docker.lsr, policy=漏网之鱼, tag=Docker, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/notion.lsr, policy=漏网之鱼, tag=Notion, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/speedtest.lsr, policy=漏网之鱼, tag=Speedtest, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/protonmail.lsr, policy=漏网之鱼, tag=ProtonMail, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/okx.lsr, policy=漏网之鱼, tag=OKX, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/binance.lsr, policy=漏网之鱼, tag=Binance, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudflare.lsr, policy=漏网之鱼, tag=Turnstile, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/proxy-list.lsr, policy=漏网之鱼, tag=Proxy, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gfw-list.lsr, policy=漏网之鱼, tag=Global, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/paypal.lsr, policy=漏网之鱼, tag=PayPal, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/docker.lsr, policy=漏网之鱼, tag=Docker, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/notion.lsr, policy=漏网之鱼, tag=Notion, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/speedtest.lsr, policy=漏网之鱼, tag=Speedtest, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/protonmail.lsr, policy=漏网之鱼, tag=ProtonMail, enabled=true
 # 广告拦截
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/reject/privacy.lsr, policy=广告拦截, tag=隐私追踪, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/reject/reject-list.lsr, policy=广告拦截, tag=额外拦截, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/reject/privacy.lsr, policy=广告拦截, tag=隐私追踪, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/reject/reject-list.lsr, policy=广告拦截, tag=额外拦截, enabled=true
 # 国内服务
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
-https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
 
 
 # =====================================
@@ -188,13 +188,13 @@ https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/script/tasks.scripts, 
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/script/tools.scripts, tag=脚本工具合集@fmz200, enabled=true
 
 [Plugin]
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/JD_Price.plugin, enabled=true
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/JD_remove_ads.plugin, enabled=true
-https://raw.githubusercontent.com/deezertidal/private/master/plugallery/ptj.plugin, enabled=true
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Bilibili_remove_ads.plugin, enabled=true
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Tieba_remove_ads.plugin, enabled=true
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/Taobao_remove_ads.plugin, enabled=true
-https://raw.githubusercontent.com/ajune0527/vpn_tool/master/Tool/Loon/Plugin/CoolApk_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/JD_Price.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/JD_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/deezertidal/private@master/plugallery/ptj.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Bilibili_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Tieba_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Taobao_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/CoolApk_remove_ads.plugin, enabled=true
 https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true
 https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx, pin=true, enabled=true
 https://kelee.one/Tool/Loon/Lpx/YouTube_remove_ads.lpx, pin=true, enabled=true
@@ -204,13 +204,13 @@ https://kelee.one/Tool/Loon/Lpx/Google.lpx, enabled=true
 https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx, enabled=true
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/weibo.plugin, enabled=true
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/WeChatMiniAds.plugin, enabled=true
-https://raw.githubusercontent.com/001ProMax/Surge/main/Loon/Spotify.plugin, img-url=https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/spotify.png, enabled=true
+https://cdn.jsdelivr.net/gh/001ProMax/Surge@main/Loon/Spotify.plugin, img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/spotify.png, enabled=true
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/Auto_Join_TF.plugin, policy=漏网之鱼, enabled=false
-https://cdn.jsdelivr.net/gh/Tartarus2014/Loon-Script@master/Plugin/skip-proxy.lpx, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Alpha/Imm.png, enabled=true
-https://raw.githubusercontent.com/VirgilClyne/GetSomeFries/main/plugin/HTTPDNS.Block.plugin, enabled=true
-https://raw.githubusercontent.com/chavyleung/scripts/master/box/rewrite/boxjs.rewrite.loon.plugin, policy=漏网之鱼, enabled=true
-https://raw.githubusercontent.com/sub-store-org/Sub-Store/master/config/Loon.plugin, policy=漏网之鱼, enabled=true
-https://raw.githubusercontent.com/Script-Hub-Org/Script-Hub/main/modules/script-hub.loon.plugin, policy=漏网之鱼, enabled=true
+https://cdn.jsdelivr.net/gh/Tartarus2014/Loon-Script@master/Plugin/skip-proxy.lpx, img-url=https://cdn.jsdelivr.net/gh/Orz-3/mini@master/Alpha/Imm.png, enabled=true
+https://cdn.jsdelivr.net/gh/VirgilClyne/GetSomeFries@main/plugin/HTTPDNS.Block.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/chavyleung/scripts@master/box/rewrite/boxjs.rewrite.loon.plugin, policy=漏网之鱼, enabled=true
+https://cdn.jsdelivr.net/gh/sub-store-org/Sub-Store@master/config/Loon.plugin, policy=漏网之鱼, enabled=true
+https://cdn.jsdelivr.net/gh/Script-Hub-Org/Script-Hub@main/modules/script-hub.loon.plugin, policy=漏网之鱼, enabled=true
 
 [Mitm]
 

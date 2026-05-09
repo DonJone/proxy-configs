@@ -1,7 +1,6 @@
 # Proxy Configurations
 
-本项目为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。
----
+## 本项目为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。
 
 ## 区域聚合架构（Region
 
@@ -23,35 +22,35 @@
 
 七个业务入口组将 echs-top 的 27 套规则集分发到不同区域：
 
-| 规则集 | 出口 | 覆盖范围 |
-|---|---|---|
-| `ai` `google` `google-cn` | **AI与Google** | ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity, Google 全系 |
-| `media` `emby` | **Emby流媒体** | YouTube, Netflix, Disney+, HBO, Spotify, Emby/Jellyfin |
-| `telegram` `telegram_ip` `github` | **通讯与Github** | Telegram, Twitter, Reddit, GitHub |
-| `fcm` `private` `cn` `apple-cn` `microsoft-cn` `games-cn` `direct_domain` | **DIRECT** | FCM 推送、私有网络、国内域名/CDN |
-| `AWAvenue-Ads` | **广告拦截** | 广告/跟踪域名（DNS 层 NXDOMAIN + 规则层 REJECT） |
-| `proxy` `proxy_domain` `captcha` `trackerslist` | **加密货币与兜底** | 其余代理流量 + MATCH 全局兜底 |
+| 规则集                                                                    | 出口               | 覆盖范围                                                        |
+| ------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------- |
+| `ai` `google` `google-cn`                                                 | **AI与Google**     | ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity, Google 全系 |
+| `media` `emby`                                                            | **Emby流媒体**     | YouTube, Netflix, Disney+, HBO, Spotify, Emby/Jellyfin          |
+| `telegram` `telegram_ip` `github`                                         | **通讯与Github**   | Telegram, Twitter, Reddit, GitHub                               |
+| `fcm` `private` `cn` `apple-cn` `microsoft-cn` `games-cn` `direct_domain` | **DIRECT**         | FCM 推送、私有网络、国内域名/CDN                                |
+| `AWAvenue-Ads`                                                            | **广告拦截**       | 广告/跟踪域名（DNS 层 NXDOMAIN + 规则层 REJECT）                |
+| `proxy` `proxy_domain` `captcha` `trackerslist`                           | **加密货币与兜底** | 其余代理流量 + MATCH 全局兜底                                   |
 
 业务入口组的可选出口：
 
-| 业务组 | 可选区域 |
-|---|---|
-| AI与Google | 欧美区, 亚太区, 低倍率 |
-| TikTok | 亚太区, 欧美区, 低倍率 |
-| Emby流媒体 | DIRECT, 亚太区, 低倍率, 欧美区 |
-| 通讯与Github | 亚太区, 欧美区, 低倍率, DIRECT |
-| 游戏平台 | DIRECT, 亚太区, 欧美区, 低倍率 |
+| 业务组         | 可选区域                       |
+| -------------- | ------------------------------ |
+| AI与Google     | 欧美区, 亚太区, 低倍率         |
+| TikTok         | 亚太区, 欧美区, 低倍率         |
+| Emby流媒体     | DIRECT, 亚太区, 低倍率, 欧美区 |
+| 通讯与Github   | 亚太区, 欧美区, 低倍率, DIRECT |
+| 游戏平台       | DIRECT, 亚太区, 欧美区, 低倍率 |
 | 微软苹果Nvidia | DIRECT, 亚太区, 欧美区, 低倍率 |
 | 加密货币与兜底 | 亚太区, 欧美区, 低倍率, DIRECT |
 
 ### 静默与基础设施组
 
-| 组名 | 出口 | 用途 |
-|---|---|---|
-| 国内服务 | DIRECT, 亚太区 | 国内流量兜底（规则未覆盖时的手动切换） |
-| 广告拦截 | REJECT | 广告域名规则出口 |
-| 代理DNS | 加密货币与兜底, 欧美区, 亚太区 | DoH 代理链（dns.google/quad9 走代理） |
-| 代理QUIC | REJECT, PASS | UDP 443 强制 TCP 回退开关 |
+| 组名     | 出口                           | 用途                                   |
+| -------- | ------------------------------ | -------------------------------------- |
+| 国内服务 | DIRECT, 亚太区                 | 国内流量兜底（规则未覆盖时的手动切换） |
+| 广告拦截 | REJECT                         | 广告域名规则出口                       |
+| 代理DNS  | 加密货币与兜底, 欧美区, 亚太区 | DoH 代理链（dns.google/quad9 走代理）  |
+| 代理QUIC | REJECT, PASS                   | UDP 443 强制 TCP 回退开关              |
 
 ---
 
@@ -163,30 +162,30 @@ proxy-configs/
 
 ### 区域聚合（Region）
 
-| 平台 | Raw | CDN |
-|---|---|---|
-| Mihomo Desktop | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/desktop%26mobile/mihomo_Region.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region.yaml) |
-| Mihomo OpenClash | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/OpenClash/openclash_Region.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region.yaml) |
-| Loon | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/loon/configs/loon_Region.lcf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf) |
-| Shadowrocket | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/configs/Shadowrocket_Region.conf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf) |
+| 平台             | Raw                                                                                                           | CDN                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Mihomo Desktop   | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region.yaml)    | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region.yaml)    |
+| Mihomo OpenClash | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region.yaml)        | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region.yaml)        |
+| Loon             | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf)                  | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf)                  |
+| Shadowrocket     | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf) |
 
 ### 国家拆分（Country）
 
-| 平台 | Raw | CDN |
-|---|---|---|
-| Mihomo Desktop | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/desktop%26mobile/mihomo_country.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_country.yaml) |
-| Mihomo OpenClash | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/OpenClash/openclash_country.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_country.yaml) |
-| Loon | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/loon/configs/loon_country.lcf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_country.lcf) |
-| Shadowrocket | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/configs/Shadowrocket_country.conf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_country.conf) |
+| 平台             | Raw                                                                                                            | CDN                                                                                                            |
+| ---------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Mihomo Desktop   | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_country.yaml)    | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_country.yaml)    |
+| Mihomo OpenClash | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_country.yaml)        | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_country.yaml)        |
+| Loon             | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_country.lcf)                  | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_country.lcf)                  |
+| Shadowrocket     | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_country.conf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_country.conf) |
 
 ### ABC 线路
 
-| 平台 | Raw | CDN |
-|---|---|---|
-| Mihomo Desktop | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/desktop%26mobile/mihomodeskmob.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomodeskmob.yaml) |
-| Mihomo OpenClash | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/mihomo/OpenClash/openclash.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash.yaml) |
-| Loon | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/loon/configs/loon.lcf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon.lcf) |
-| Shadowrocket | [Raw](https://raw.githubusercontent.com/DonJone/proxy-configs/master/Shadowrocket/configs/Shadowrocket.conf) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket.conf) |
+| 平台             | Raw                                                                                                        | CDN                                                                                                        |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Mihomo Desktop   | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomodeskmob.yaml) | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomodeskmob.yaml) |
+| Mihomo OpenClash | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash.yaml)            | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash.yaml)            |
+| Loon             | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon.lcf)                      | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon.lcf)                      |
+| Shadowrocket     | [Raw](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket.conf)     | [CDN](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket.conf)     |
 
 ---
 
@@ -194,12 +193,12 @@ proxy-configs/
 
 `mihomo/Mobile_Modules/` 下为四个 Android 模块的适配配置，每个模块提供两套文件：`config.yaml`（模块原生骨架 + 本项目策略组）和 `config_hybrid.yaml`（echs-top 骨架 + 本项目策略组 + 模块设备参数）。
 
-| 模块 | 特点 |
-|---|---|
+| 模块        | 特点                                                              |
+| ----------- | ----------------------------------------------------------------- |
 | AkashaProxy | GEOSITE/GEOIP 分流，redir-host DNS，NTP 时间同步，strict 进程匹配 |
-| BoxProxy | 极简 MRS 规则，5 条规则覆盖全部分流，gvisor TUN |
-| ClashMix | 文件自定义规则 + HTTP 规则集混合，gvisor TUN，三星 VoLTE 豁免 |
-| Surfing | 28 规则集精细分流，UA 伪装，每应用独立图标，DNS_Hijack |
+| BoxProxy    | 极简 MRS 规则，5 条规则覆盖全部分流，gvisor TUN                   |
+| ClashMix    | 文件自定义规则 + HTTP 规则集混合，gvisor TUN，三星 VoLTE 豁免     |
+| Surfing     | 28 规则集精细分流，UA 伪装，每应用独立图标，DNS_Hijack            |
 
 ---
 
