@@ -1,6 +1,6 @@
 # ============================================================
-# OpenClash Hybrid Config: echs-top 骨架 + 自建区域故障转移架构
-# 骨架来源: echs-top (dns/rules/rule-providers/sniffer)
+# OpenClash Hybrid Config: GinsRule-git 规则 + 自建区域故障转移架构
+# 规则来源: GinsRule-git (dns/rules/rule-providers/sniffer)
 # 策略组来源: 自建 Architecture 1 (Region-based fallback)
 # 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
 # ============================================================
@@ -52,7 +52,7 @@ tun:
     - 0.0.0.0:53
   endpoint-independent-nat: true
 
-# === Hosts DNS 引导 (echs-top) ===
+# === Hosts DNS 引导 ===
 hosts:
   dns.alidns.com: [223.5.5.5,223.6.6.6,'2400:3200::1','2400:3200:baba::1']
   doh.pub: [120.53.53.53,1.12.12.21]
@@ -84,37 +84,100 @@ proxy-providers:
 ip: &ip { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs }
 domain: &domain { type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs }
 
-# === 规则集提供者 (echs-top 27 套) ===
+# === 规则集提供者 (GinsRule-git 全细分) ===
 rule-providers:
-  private_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private_ip.mrs', path: ./rules/private_ip.mrs }
-  private: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private.mrs', path: ./rules/private.mrs }
-  AWAvenue-Ads: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/AWAvenue-Ads_domain.mrs', path: ./rules/AWAvenue-Ads.mrs }
-  fcm: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/googlefcm.mrs', path: ./rules/fcm.mrs }
-  captcha: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs', path: ./rules/captcha.mrs }
-  ai: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs', path: ./rules/ai.mrs }
-  telegram: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram.mrs', path: ./rules/telegram.mrs }
-  media: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media.mrs', path: ./rules/media.mrs }
-  google-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google-cn_domain.mrs', path: ./rules/google-cn.mrs }
-  google: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google.mrs', path: ./rules/google.mrs }
-  trackerslist: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/trackerslist.mrs', path: ./rules/trackerslist.mrs }
-  apple-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/apple-cn.mrs', path: ./rules/apple-cn.mrs }
-  microsoft-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/microsoft-cn.mrs', path: ./rules/microsoft-cn.mrs }
-  games-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/games-cn.mrs', path: ./rules/games-cn.mrs }
-  proxy_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy_domain.mrs', path: ./rules/proxy_domain.mrs }
-  direct_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_domain.mrs', path: ./rules/direct_domain.mrs }
-  github: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/github.mrs', path: ./rules/github.mrs }
-  proxy: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy.mrs', path: ./rules/proxy.mrs }
-  cn: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_domain.mrs', path: ./rules/cn.mrs }
-  dnsmasq-china-add: { <<: *domain, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/dnsmasq-china-add_domain.mrs', path: ./rules/dnsmasq-china-add.mrs }
-  telegram_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram_ip.mrs', path: ./rules/telegram_ip.mrs }
-  media_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media_ip.mrs', path: ./rules/media_ip.mrs }
-  google_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google_ip.mrs', path: ./rules/google_ip.mrs }
-  proxy_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/proxy_ip.mrs', path: ./rules/proxy_ip.mrs }
-  enhanced-FaaS-in-China_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/enhanced-FaaS-in-China_ip.mrs', path: ./rules/enhanced-FaaS-in-China_ip.mrs }
-  direct_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/direct_ip.mrs', path: ./rules/direct_ip.mrs }
-  cn_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/cn_ip.mrs', path: ./rules/cn_ip.mrs }
+  # --- 私有/本地 ---
+  private: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/bypass-domain.mrs', path: ./rules/private.mrs }
+  private_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/ip/private.mrs', path: ./rules/private_ip.mrs }
 
-# === IP 版本辅助节点 (echs-top) ===
+  # --- AI 服务 ---
+  ai: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/ai/ai-other.mrs', path: ./rules/ai.mrs }
+
+  # --- 通讯与社交 ---
+  telegram: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/telegram.mrs', path: ./rules/telegram.mrs }
+  telegram_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/ip/telegram.mrs', path: ./rules/telegram_ip.mrs }
+  twitter: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/twitter.mrs', path: ./rules/twitter.mrs }
+  reddit: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/reddit.mrs', path: ./rules/reddit.mrs }
+  discord: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/discord.mrs', path: ./rules/discord.mrs }
+  facebook: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/facebook.mrs', path: ./rules/facebook.mrs }
+  instagram: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/instagram.mrs', path: ./rules/instagram.mrs }
+  threads: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/threads.mrs', path: ./rules/threads.mrs }
+  linkedin: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/linkedin.mrs', path: ./rules/linkedin.mrs }
+  signal: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/signal.mrs', path: ./rules/signal.mrs }
+  slack: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/slack.mrs', path: ./rules/slack.mrs }
+  snapchat: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/snapchat.mrs', path: ./rules/snapchat.mrs }
+  whatsapp: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/whatsapp.mrs', path: ./rules/whatsapp.mrs }
+  stackoverflow: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/stackoverflow.mrs', path: ./rules/stackoverflow.mrs }
+  wikipedia: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/wikipedia.mrs', path: ./rules/wikipedia.mrs }
+  gitlab: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/gitlab.mrs', path: ./rules/gitlab.mrs }
+  line: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/line.mrs', path: ./rules/line.mrs }
+
+  # --- 流媒体 ---
+  youtube: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/youtube.mrs', path: ./rules/youtube.mrs }
+  netflix: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/netflix.mrs', path: ./rules/netflix.mrs }
+  disney: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/disney.mrs', path: ./rules/disney.mrs }
+  hbo: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/hbo.mrs', path: ./rules/hbo.mrs }
+  spotify: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/spotify.mrs', path: ./rules/spotify.mrs }
+  primevideo: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/primevideo.mrs', path: ./rules/primevideo.mrs }
+  amazon: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/amazon.mrs', path: ./rules/amazon.mrs }
+  twitch: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/twitch.mrs', path: ./rules/twitch.mrs }
+  appletv: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/appletv.mrs', path: ./rules/appletv.mrs }
+
+  # --- TikTok ---
+  tiktok: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/tiktok.mrs', path: ./rules/tiktok.mrs }
+
+  # --- 游戏平台 ---
+  steam: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/steam.mrs', path: ./rules/steam.mrs }
+  epic: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/epic.mrs', path: ./rules/epic.mrs }
+  blizzard: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/blizzard.mrs', path: ./rules/blizzard.mrs }
+  playstation: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/playstation.mrs', path: ./rules/playstation.mrs }
+  nintendo: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/nintendo.mrs', path: ./rules/nintendo.mrs }
+  xbox: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/xbox.mrs', path: ./rules/xbox.mrs }
+  riot: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/riot.mrs', path: ./rules/riot.mrs }
+
+  # --- 微软 / 苹果 / 云服务 ---
+  apple: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/apple.mrs', path: ./rules/apple.mrs }
+  apple-music: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/apple-music.mrs', path: ./rules/apple-music.mrs }
+  microsoft: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/microsoft.mrs', path: ./rules/microsoft.mrs }
+  onedrive: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/onedrive.mrs', path: ./rules/onedrive.mrs }
+
+  # --- 加密货币 / 金融 ---
+  okx: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/okx.mrs', path: ./rules/okx.mrs }
+  binance: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/binance.mrs', path: ./rules/binance.mrs }
+  paypal: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/paypal.mrs', path: ./rules/paypal.mrs }
+  cloudflare: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/cloudflare.mrs', path: ./rules/cloudflare.mrs }
+
+  # --- Google ---
+  google: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/google.mrs', path: ./rules/google.mrs }
+
+  # --- 开发者 / 基础设施 ---
+  github: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/github.mrs', path: ./rules/github.mrs }
+  docker: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/docker.mrs', path: ./rules/docker.mrs }
+  notion: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/notion.mrs', path: ./rules/notion.mrs }
+  npm: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/npm.mrs', path: ./rules/npm.mrs }
+  vercel: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/vercel.mrs', path: ./rules/vercel.mrs }
+  speedtest: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/speedtest.mrs', path: ./rules/speedtest.mrs }
+
+  # --- 代理兜底 (全域) ---
+  proxy_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/gfw-list.mrs', path: ./rules/proxy_domain.mrs }
+  proxy: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/proxy-list.mrs', path: ./rules/proxy.mrs }
+
+  # --- 国内直连 ---
+  apple-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/apple-cdn.mrs', path: ./rules/apple-cn.mrs }
+  microsoft-cn: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/microsoft-cdn.mrs', path: ./rules/microsoft-cn.mrs }
+  direct_domain: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/direct-list.mrs', path: ./rules/direct_domain.mrs }
+  cn: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/cn-other.mrs', path: ./rules/cn.mrs }
+  cn-cdn: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/direct/cn-cdn.mrs', path: ./rules/cn-cdn.mrs }
+  direct_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/ip/!cn.mrs', path: ./rules/direct_ip.mrs }
+  cn_ip: { <<: *ip, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/ip/cn.mrs', path: ./rules/cn_ip.mrs }
+
+  # --- 广告 / 跟踪拦截 ---
+  AWAvenue-Ads: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/reject/ads.mrs', path: ./rules/AWAvenue-Ads.mrs }
+  trackerslist: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/reject/tracking.mrs', path: ./rules/trackerslist.mrs }
+  reject_privacy: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/reject/privacy.mrs', path: ./rules/reject_privacy.mrs }
+  reject_list: { <<: *domain, url: 'https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/reject/reject-list.mrs', path: ./rules/reject_list.mrs }
+
+# === IP 版本辅助节点 ===
 proxies:
   - { name: IPV4优先, type: direct, udp: true, ip-version: ipv4-prefer }
   - { name: IPV6优先, type: direct, udp: true, ip-version: ipv6-prefer }
@@ -222,7 +285,7 @@ proxy-groups:
     }
 
 # ============================================================
-# 规则引擎 (echs-top 骨架，目标组名适配自建架构)
+# 规则引擎 (GinsRule-git 规则，目标组名适配自建架构)
 # ============================================================
 rules:
   # --- 端口级识别 ---
@@ -237,37 +300,91 @@ rules:
 
   # --- 广告拦截 ---
   - RULE-SET,AWAvenue-Ads,广告拦截
+  - RULE-SET,reject_privacy,广告拦截
+  - RULE-SET,reject_list,广告拦截
 
-  # --- 域名级分流 ---
-  - RULE-SET,fcm,DIRECT
-  - SUB-RULE,(RULE-SET,captcha),captcha_rules
+  # --- AI 服务 ---
   - SUB-RULE,(RULE-SET,ai),ai_rules
+
+  # --- 通讯与社交 ---
   - SUB-RULE,(RULE-SET,telegram),telegram_rules
-  - SUB-RULE,(RULE-SET,media),media_rules
+  - SUB-RULE,(RULE-SET,twitter),telegram_rules
+  - SUB-RULE,(RULE-SET,reddit),telegram_rules
+  - SUB-RULE,(RULE-SET,discord),telegram_rules
+  - SUB-RULE,(RULE-SET,facebook),telegram_rules
+  - SUB-RULE,(RULE-SET,instagram),telegram_rules
+  - SUB-RULE,(RULE-SET,threads),telegram_rules
+  - SUB-RULE,(RULE-SET,linkedin),telegram_rules
+  - SUB-RULE,(RULE-SET,signal),telegram_rules
+  - SUB-RULE,(RULE-SET,slack),telegram_rules
+  - SUB-RULE,(RULE-SET,snapchat),telegram_rules
+  - SUB-RULE,(RULE-SET,whatsapp),telegram_rules
+  - SUB-RULE,(RULE-SET,stackoverflow),telegram_rules
+  - SUB-RULE,(RULE-SET,wikipedia),telegram_rules
+  - SUB-RULE,(RULE-SET,line),telegram_rules
+
+  # --- 流媒体 ---
+  - SUB-RULE,(RULE-SET,youtube),media_rules
+  - SUB-RULE,(RULE-SET,netflix),media_rules
+  - SUB-RULE,(RULE-SET,disney),media_rules
+  - SUB-RULE,(RULE-SET,hbo),media_rules
+  - SUB-RULE,(RULE-SET,spotify),media_rules
+  - SUB-RULE,(RULE-SET,primevideo),media_rules
+  - SUB-RULE,(RULE-SET,amazon),media_rules
+  - SUB-RULE,(RULE-SET,twitch),media_rules
+  - SUB-RULE,(RULE-SET,appletv),media_rules
+
+  # --- TikTok ---
+  - SUB-RULE,(RULE-SET,tiktok),tiktok_rules
+
+  # --- 游戏平台 ---
+  - SUB-RULE,(RULE-SET,steam),gaming_rules
+  - SUB-RULE,(RULE-SET,epic),gaming_rules
+  - SUB-RULE,(RULE-SET,blizzard),gaming_rules
+  - SUB-RULE,(RULE-SET,playstation),gaming_rules
+  - SUB-RULE,(RULE-SET,nintendo),gaming_rules
+  - SUB-RULE,(RULE-SET,xbox),gaming_rules
+  - SUB-RULE,(RULE-SET,riot),gaming_rules
+
+  # --- 微软苹果云服务 ---
+  - SUB-RULE,(RULE-SET,apple),applems_rules
+  - SUB-RULE,(RULE-SET,apple-music),applems_rules
+  - SUB-RULE,(RULE-SET,microsoft),applems_rules
+  - SUB-RULE,(RULE-SET,onedrive),applems_rules
 
   # --- 国内服务直连 ---
-  - RULE-SET,google-cn,AI与Google
   - RULE-SET,apple-cn,DIRECT
   - RULE-SET,microsoft-cn,DIRECT
-  - RULE-SET,games-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
 
-  # --- 代理域名分流 ---
+  # --- Google ---
   - SUB-RULE,(RULE-SET,google),google_rules
+
+  # --- 开发者与基础设施 ---
+  - RULE-SET,github,通讯与Github
+  - SUB-RULE,(RULE-SET,gitlab),telegram_rules
+  - SUB-RULE,(RULE-SET,docker),proxy_rules
+  - SUB-RULE,(RULE-SET,notion),proxy_rules
+  - SUB-RULE,(RULE-SET,npm),proxy_rules
+  - SUB-RULE,(RULE-SET,vercel),proxy_rules
+  - SUB-RULE,(RULE-SET,speedtest),proxy_rules
+
+  # --- 加密货币与金融 ---
+  - SUB-RULE,(RULE-SET,okx),proxy_rules
+  - SUB-RULE,(RULE-SET,binance),proxy_rules
+  - SUB-RULE,(RULE-SET,paypal),proxy_rules
+  - SUB-RULE,(RULE-SET,cloudflare),proxy_rules
+
+  # --- 代理兜底 ---
   - SUB-RULE,(RULE-SET,trackerslist),trackerslist_rules
   - SUB-RULE,(RULE-SET,proxy_domain),proxy_rules
-  - RULE-SET,github,通讯与Github
   - SUB-RULE,(RULE-SET,proxy),proxy_rules
 
   # --- IP 级分流 ---
   - SUB-RULE,(RULE-SET,telegram_ip),telegram_rules
-  - SUB-RULE,(RULE-SET,media_ip),media_rules
-  - SUB-RULE,(RULE-SET,google_ip),google_rules
-  - SUB-RULE,(RULE-SET,proxy_ip),proxy_rules
 
   # --- 国内 IP 直连 ---
-  - RULE-SET,enhanced-FaaS-in-China_ip,DIRECT
   - RULE-SET,direct_ip,DIRECT
   - RULE-SET,cn_ip,DIRECT
 
@@ -279,14 +396,9 @@ rules:
   - MATCH,加密货币与兜底
 
 # ============================================================
-# 子规则 (echs-top 骨架，MATCH 目标适配)
+# 子规则 (GinsRule-git 规则，MATCH 目标适配)
 # ============================================================
 sub-rules:
-  fcm_rules:
-    - MATCH,DIRECT
-  captcha_rules:
-    - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-    - MATCH,加密货币与兜底
   ai_rules:
     - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
     - MATCH,AI与Google
@@ -307,7 +419,7 @@ sub-rules:
     - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (echs-top 骨架 + OpenClash 监听端口)
+# DNS (GinsRule-git 骨架 + OpenClash 监听端口)
 # ============================================================
 direct-dns: &direct-dns [119.29.29.29,223.5.5.5,'2402:4e00::','2400:3200::1']
 direct-doh: &direct-doh ['https://dns.alidns.com/dns-query','https://doh.pub/dns-query&h3=false']
@@ -328,40 +440,80 @@ dns:
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - 'rule-set:private'
-    - 'rule-set:fcm'
     - 'rule-set:apple-cn'
     - 'rule-set:microsoft-cn'
-    - 'rule-set:games-cn'
     - 'rule-set:direct_domain'
     - 'rule-set:cn'
-    - 'rule-set:dnsmasq-china-add'
+    - 'rule-set:cn-cdn'
   proxy-server-nameserver: *direct-doh
   nameserver-policy:
     'rule-set:private': *direct-dns
     'rule-set:AWAvenue-Ads': [rcode://name_error]
-    'rule-set:fcm': *direct-doh
-    'rule-set:captcha': *direct-doh
+    'rule-set:reject_privacy': [rcode://name_error]
+    'rule-set:reject_list': [rcode://name_error]
     'rule-set:ai': *proxy-doh
     'rule-set:telegram': *proxy-doh
-    'rule-set:media': *proxy-doh
-    'rule-set:google-cn': *proxy-doh
+    'rule-set:twitter': *proxy-doh
+    'rule-set:reddit': *proxy-doh
+    'rule-set:discord': *proxy-doh
+    'rule-set:facebook': *proxy-doh
+    'rule-set:instagram': *proxy-doh
+    'rule-set:threads': *proxy-doh
+    'rule-set:linkedin': *proxy-doh
+    'rule-set:signal': *proxy-doh
+    'rule-set:slack': *proxy-doh
+    'rule-set:snapchat': *proxy-doh
+    'rule-set:whatsapp': *proxy-doh
+    'rule-set:stackoverflow': *proxy-doh
+    'rule-set:wikipedia': *proxy-doh
+    'rule-set:line': *proxy-doh
+    'rule-set:youtube': *proxy-doh
+    'rule-set:netflix': *proxy-doh
+    'rule-set:disney': *proxy-doh
+    'rule-set:hbo': *proxy-doh
+    'rule-set:spotify': *proxy-doh
+    'rule-set:primevideo': *proxy-doh
+    'rule-set:amazon': *proxy-doh
+    'rule-set:twitch': *proxy-doh
+    'rule-set:appletv': *proxy-doh
+    'rule-set:tiktok': *proxy-doh
+    'rule-set:steam': *proxy-doh
+    'rule-set:epic': *proxy-doh
+    'rule-set:blizzard': *proxy-doh
+    'rule-set:playstation': *proxy-doh
+    'rule-set:nintendo': *proxy-doh
+    'rule-set:xbox': *proxy-doh
+    'rule-set:riot': *proxy-doh
+    'rule-set:apple': *proxy-doh
+    'rule-set:apple-music': *proxy-doh
+    'rule-set:microsoft': *proxy-doh
+    'rule-set:onedrive': *proxy-doh
     'rule-set:google': *proxy-doh
+    'rule-set:github': *proxy-doh
+    'rule-set:gitlab': *proxy-doh
+    'rule-set:docker': *proxy-doh
+    'rule-set:notion': *proxy-doh
+    'rule-set:npm': *proxy-doh
+    'rule-set:vercel': *proxy-doh
+    'rule-set:speedtest': *proxy-doh
+    'rule-set:okx': *proxy-doh
+    'rule-set:binance': *proxy-doh
+    'rule-set:paypal': *proxy-doh
+    'rule-set:cloudflare': *proxy-doh
     'rule-set:trackerslist': *proxy-doh
+    'rule-set:proxy_domain': *proxy-doh
+    'rule-set:proxy': *proxy-doh
     'rule-set:apple-cn': *direct-doh
     'rule-set:microsoft-cn': *direct-doh
-    'rule-set:games-cn': *direct-doh
-    'rule-set:proxy_domain': *proxy-doh
     'rule-set:direct_domain': *direct-doh
-    'rule-set:github': *proxy-doh
-    'rule-set:proxy': *proxy-doh
     'rule-set:cn': *direct-dns
-    'rule-set:dnsmasq-china-add': *direct-dns
+    'rule-set:cn-cdn': *direct-dns
   nameserver: *proxy-doh
   direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: true
 
 # ============================================================
-# 嗅探器 (echs-top 骨架 + OpenClash 流媒体强制嗅探)
+# 嗅探器 (GinsRule-git 骨架 + OpenClash 流媒体强制嗅探)
 # ============================================================
 sniffer:
   enable: true
@@ -377,6 +529,6 @@ sniffer:
     - '+.nflxvideo.net'
     - '+.amazonaws.com'
     - '+.media.dssott.com'
-  skip-domain: ['rule-set:private','rule-set:AWAvenue-Ads','rule-set:fcm','rule-set:captcha','rule-set:ai','rule-set:telegram','rule-set:media','rule-set:google-cn','rule-set:google','rule-set:trackerslist','rule-set:apple-cn','rule-set:microsoft-cn','rule-set:games-cn','rule-set:proxy_domain','rule-set:direct_domain','rule-set:github','rule-set:proxy','rule-set:cn']
-  skip-src-address: ['rule-set:private_ip','rule-set:telegram_ip','rule-set:media_ip','rule-set:google_ip','rule-set:proxy_ip','rule-set:enhanced-FaaS-in-China_ip','rule-set:direct_ip','rule-set:cn_ip']
+  skip-domain: ['rule-set:private','rule-set:AWAvenue-Ads','rule-set:reject_privacy','rule-set:reject_list','rule-set:ai','rule-set:telegram','rule-set:twitter','rule-set:reddit','rule-set:discord','rule-set:facebook','rule-set:instagram','rule-set:threads','rule-set:linkedin','rule-set:signal','rule-set:slack','rule-set:snapchat','rule-set:whatsapp','rule-set:stackoverflow','rule-set:wikipedia','rule-set:line','rule-set:youtube','rule-set:netflix','rule-set:disney','rule-set:hbo','rule-set:spotify','rule-set:primevideo','rule-set:amazon','rule-set:twitch','rule-set:appletv','rule-set:tiktok','rule-set:steam','rule-set:epic','rule-set:blizzard','rule-set:playstation','rule-set:nintendo','rule-set:xbox','rule-set:riot','rule-set:apple','rule-set:apple-music','rule-set:microsoft','rule-set:onedrive','rule-set:google','rule-set:github','rule-set:gitlab','rule-set:docker','rule-set:notion','rule-set:npm','rule-set:vercel','rule-set:speedtest','rule-set:okx','rule-set:binance','rule-set:paypal','rule-set:cloudflare','rule-set:trackerslist','rule-set:proxy_domain','rule-set:proxy','rule-set:apple-cn','rule-set:microsoft-cn','rule-set:direct_domain','rule-set:cn']
+  skip-src-address: ['rule-set:private_ip','rule-set:telegram_ip','rule-set:direct_ip','rule-set:cn_ip']
   skip-dst-address: ['rule-set:private_ip']

@@ -123,47 +123,67 @@ FINAL, 加密货币与兜底
 # Remote Rule (引用外部规则库)
 # =====================================
 [Remote Rule]
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/private.txt, policy=DIRECT, tag=私有网络, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
 # AI
-https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/rule/AI.list, policy=AI与Google, tag=AI分流, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Claude/Claude.list, policy=AI与Google, tag=Claude, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Copilot/Copilot.list, policy=AI与Google, tag=Copilot, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Gemini/Gemini.list, policy=AI与Google, tag=Gemini, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Google/Google.list, policy=AI与Google, tag=Google, enabled=true
-https://cdn.jsdelivr.net/gh/xpdigital/Apple-Rule@main/Apple-US.list, policy=AI与Google, tag=Apple_AI, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/ai/ai-other.lsr, policy=AI与Google, tag=AI分流, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
 # 社交流媒体
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/TikTok/TikTok.list, policy=TikTok, tag=TikTok, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Telegram/Telegram.list, policy=通讯与Github, tag=Telegram, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Twitter/Twitter.list, policy=通讯与Github, tag=Twitter, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Reddit/Reddit.list, policy=通讯与Github, tag=Reddit, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/YouTube/YouTube.list, policy=Emby流媒体, tag=YouTube, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Netflix/Netflix.list, policy=Emby流媒体, tag=Netflix, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Disney/Disney.list, policy=Emby流媒体, tag=Disney, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/HBO/HBO.list, policy=Emby流媒体, tag=HBO, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Spotify/Spotify.list, policy=Emby流媒体, tag=Spotify, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Amazon/Amazon.list, policy=Emby流媒体, tag=Amazon, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/GitHub/GitHub.list, policy=通讯与Github, tag=GitHub, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/reddit.lsr, policy=通讯与Github, tag=Reddit, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/discord.lsr, policy=通讯与Github, tag=Discord, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/facebook.lsr, policy=通讯与Github, tag=Facebook, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/instagram.lsr, policy=通讯与Github, tag=Instagram, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/threads.lsr, policy=通讯与Github, tag=Threads, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/linkedin.lsr, policy=通讯与Github, tag=LinkedIn, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/signal.lsr, policy=通讯与Github, tag=Signal, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/slack.lsr, policy=通讯与Github, tag=Slack, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/snapchat.lsr, policy=通讯与Github, tag=Snapchat, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/whatsapp.lsr, policy=通讯与Github, tag=WhatsApp, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/stackoverflow.lsr, policy=通讯与Github, tag=Stackoverflow, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/wikipedia.lsr, policy=通讯与Github, tag=Wikipedia, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/line.lsr, policy=通讯与Github, tag=Line, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/gitlab.lsr, policy=通讯与Github, tag=GitLab, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/youtube.lsr, policy=Emby流媒体, tag=YouTube, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/netflix.lsr, policy=Emby流媒体, tag=Netflix, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/disney.lsr, policy=Emby流媒体, tag=Disney, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/hbo.lsr, policy=Emby流媒体, tag=HBO, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/spotify.lsr, policy=Emby流媒体, tag=Spotify, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/amazon.lsr, policy=Emby流媒体, tag=Amazon, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/twitch.lsr, policy=Emby流媒体, tag=Twitch, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体, tag=AppleTV, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
 # 微软苹果Nvidia
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Microsoft/Microsoft.list, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Apple/Apple.list, policy=微软苹果Nvidia, tag=Apple, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nvidia/Nvidia.list, policy=微软苹果Nvidia, tag=Nvidia, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/apple-music.lsr, policy=微软苹果Nvidia, tag=AppleMusic, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/onedrive.lsr, policy=微软苹果Nvidia, tag=OneDrive, enabled=true
 # 游戏平台
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Steam/Steam.list, policy=游戏平台, tag=Steam, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Epic/Epic.list, policy=游戏平台, tag=Epic, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/EA/EA.list, policy=游戏平台, tag=EA, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Blizzard/Blizzard.list, policy=游戏平台, tag=Blizzard, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/UBI/UBI.list, policy=游戏平台, tag=UBI, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/PlayStation/PlayStation.list, policy=游戏平台, tag=PlayStation, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Nintendo/Nintendo.list, policy=游戏平台, tag=Nintendo, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/epic.lsr, policy=游戏平台, tag=Epic, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/blizzard.lsr, policy=游戏平台, tag=Blizzard, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/playstation.lsr, policy=游戏平台, tag=PlayStation, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/nintendo.lsr, policy=游戏平台, tag=Nintendo, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/xbox.lsr, policy=游戏平台, tag=Xbox, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/riot.lsr, policy=游戏平台, tag=Riot, enabled=true
 # 加密货币
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/OKX/OKX.list, policy=加密货币与兜底, tag=OKX, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Binance/Binance.list, policy=加密货币与兜底, tag=Binance, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/DonRule@main/CloudflareTurnstile.list, policy=加密货币与兜底, tag=Turnstile, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Proxy/Proxy.list, policy=加密货币与兜底, tag=Proxy, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/ios_rule_script@master/rule/Loon/Global/Global.list, policy=加密货币与兜底, tag=Global, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/okx.lsr, policy=加密货币与兜底, tag=OKX, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/binance.lsr, policy=加密货币与兜底, tag=Binance, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/cloudflare.lsr, policy=加密货币与兜底, tag=Turnstile, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/proxy-list.lsr, policy=加密货币与兜底, tag=Proxy, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/gfw-list.lsr, policy=加密货币与兜底, tag=Global, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/paypal.lsr, policy=加密货币与兜底, tag=PayPal, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/docker.lsr, policy=加密货币与兜底, tag=Docker, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/notion.lsr, policy=加密货币与兜底, tag=Notion, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/speedtest.lsr, policy=加密货币与兜底, tag=Speedtest, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/proxy/protonmail.lsr, policy=加密货币与兜底, tag=ProtonMail, enabled=true
+# 广告拦截
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/reject/privacy.lsr, policy=广告拦截, tag=隐私追踪, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/reject/reject-list.lsr, policy=广告拦截, tag=额外拦截, enabled=true
 # 国内服务
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/direct.txt, policy=国内服务, tag=国内通用, enabled=true
-https://cdn.jsdelivr.net/gh/Loyalsoldier/surge-rules@release/ruleset/cncidr.txt, policy=国内服务, tag=国内IP, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
+https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
 
 
 # =====================================

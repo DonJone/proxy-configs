@@ -82,7 +82,7 @@
 
 ## 技术骨架（Mihomo 平台）
 
-配置文件共用 echs-top 的三系统联动设计，规则集同时驱动 DNS、分流、嗅探：
+配置文件共用 GinsRule-git 的三系统联动设计，规则集同时驱动 DNS、分流、嗅探：
 
 ### DNS — 四层架构
 
@@ -116,7 +116,7 @@ HTTP (80/8080-8880) / TLS (443/8443) / QUIC (443/8443)，按规则集三层跳�
 
 ### 27 套规则集
 
-全部 MRS 格式（`behavior: domain / ipcidr`），来源 [echs-top/proxy](https://github.com/echs-top/proxy)：
+全部 MRS 格式（`behavior: domain / ipcidr`），来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git)：
 
 ```
 域名: private, AWAvenue-Ads, fcm, captcha, ai, telegram, media, google-cn,
@@ -205,7 +205,7 @@ proxy-configs/
 
 ## 参考
 
-- [echs-top/proxy](https://github.com/echs-top/proxy) — 规则集 / DNS / 嗅探骨架
+- [GinsRule-git](https://github.com/DonJone/GinsRule-git) — 规则集 / DNS / 嗅探骨架
 - [Koolson/Qure](https://github.com/Koolson/Qure) — 策略组图标
 - [fmz200/wool_scripts](https://github.com/fmz200/wool_scripts) — AI 规则合集
 - [DonJone/ios_rule_script](https://github.com/DonJone/ios_rule_script) — 应用分流规则

@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。规则骨架来自 [echs-top/proxy](https://github.com/echs-top/proxy)，策略组架构自建。
+为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。规则来自 [GinsRule-git](https://github.com/DonJone/GinsRule-git)，策略组架构自建。
 
 ## 文件命名约定
 
@@ -60,7 +60,7 @@ Loon 和 Shadowrocket 的文件（`.lcf` / `.conf`）遵循相同命名规则。
 
 ## 规则路由映射
 
-echs-top 的 27 套 MRS 规则集通过 SUB-RULE 分发：
+GinsRule-git 规则集通过 SUB-RULE 分发：
 
 | 规则集 | SUB-RULE | MATCH 出口 |
 |---|---|---|
@@ -112,8 +112,7 @@ echs-top 的 27 套 MRS 规则集通过 SUB-RULE 分发：
 ## 外部参考
 
 ```
-echs-top rules:    https://github.com/echs-top/proxy/tree/main/rules/mrs
-echs-top configs:  /home/don/code-git/third-party/MIHOMO_YAMLS/THEYAMLS/
+GinsRule-git rules: https://github.com/DonJone/GinsRule-git
 Qure icons:        https://github.com/Koolson/Qure
 Loon rules:        https://github.com/DonJone/ios_rule_script
 AI rule bundle:    https://github.com/fmz200/wool_scripts
@@ -129,4 +128,4 @@ AI rule bundle:    https://github.com/fmz200/wool_scripts
 | 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 |
 | SUB-RULE | 支持 | 不支持 | 不支持 |
 
-Loon 和 Shadowrocket 不支持 echs-top 的三系统联动（规则集驱动 DNS/嗅探）。它们的规则通过远程 URL 列表逐个引用，组名必须与 mihomo 版保持一致。
+Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。它们的规则通过远程 URL 列表逐个引用，组名必须与 mihomo 版保持一致。
