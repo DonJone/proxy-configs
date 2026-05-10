@@ -20,16 +20,24 @@
 
 ### 业务入口与规则路由
 
-七个业务入口组将 echs-top 的 27 套规则集分发到不同区域：
+七个业务入口组将 GinsRule-git 的 66 套规则集分发到不同区域：
 
-| 规则集                                                                    | 出口               | 覆盖范围                                                        |
-| ------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------- |
-| `ai` `google` `google-cn`                                                 | **AI与Google**     | ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity, Google 全系 |
-| `media` `emby`                                                            | **Emby流媒体**     | YouTube, Netflix, Disney+, HBO, Spotify, Emby/Jellyfin          |
-| `telegram` `telegram_ip` `github`                                         | **通讯与Github**   | Telegram, Twitter, Reddit, GitHub                               |
-| `private` `cn` `apple-cn` `microsoft-cn` `games-cn` `direct_domain` | **DIRECT**         | 私有网络、国内域名/CDN                                |
-| `AWAvenue-Ads`                                                            | **广告拦截**       | 广告/跟踪域名（DNS 层 NXDOMAIN + 规则层 REJECT）                |
-| `proxy` `proxy_domain` `captcha` `trackerslist`                           | **加密货币与兜底** | 其余代理流量 + MATCH 全局兜底                                   |
+| 规则集 | SUB-RULE | 出口 | 覆盖范围 |
+| ------ | -------- | ---- | -------- |
+| `ai` | ai_rules | **AI与Google** | ChatGPT, Claude, Gemini, Copilot, Grok, Perplexity |
+| `google` | google_rules | **AI与Google** | Google 全系（搜索、YouTube、Gmail、Drive 等） |
+| `youtube` `netflix` `disney` `hbo` `spotify` `primevideo` `amazon` `twitch` `appletv` | media_rules | **Emby流媒体** | 海外流媒体全系 |
+| `tiktok` | tiktok_rules | **TikTok** | TikTok 全系 |
+| `telegram` `telegram_ip` `twitter` `reddit` `discord` `facebook` `instagram` `threads` `linkedin` `signal` `slack` `snapchat` `whatsapp` `stackoverflow` `wikipedia` `gitlab` `line` | telegram_rules | **通讯与Github** | 海外通讯/社交/社区 |
+| `github` | — (直连规则) | **通讯与Github** | GitHub |
+| `steam` `epic` `blizzard` `playstation` `nintendo` `xbox` `riot` | gaming_rules | **游戏平台** | 游戏商店/联机 |
+| `apple` `apple-music` `microsoft` `onedrive` | applems_rules | **微软苹果Nvidia** | 海外云服务/商店 |
+| `docker` `notion` `npm` `vercel` `speedtest` `okx` `binance` `paypal` `cloudflare` `proxy_domain` `proxy` | proxy_rules | **加密货币与兜底** | 其余代理流量 |
+| `trackerslist` | trackerslist_rules | **加密货币与兜底** | BT/跟踪器 |
+| `fcm` | — (直连规则) | **国内服务** | Google FCM 推送 |
+| `private` `private_ip` `cn` `cn-cdn` `cn_ip` `apple-cn` `microsoft-cn` `direct_domain` | — (直连规则) | **DIRECT** | 本地网络、国内域名/CDN |
+| `direct_ip` | — (直连规则) | **DIRECT** | 非中国 IP 直连 |
+| `AWAvenue-Ads` `reject_privacy` `reject_list` | — (直连规则) | **广告拦截** | 广告/隐私跟踪（DNS NXDOMAIN + 规则 REJECT） |
 
 业务入口组的可选出口：
 
@@ -92,13 +100,13 @@ hosts (DNS 引导 IP 绑定)
       → nameserver (兜底)
 ```
 
-- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: blacklist`（国内规则集 real-ip，其余 fake-ip）
+- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: rule`（国内规则集 `real-ip`，其余 `fake-ip`，`MATCH,fake-ip` 兜底）
 - `nameserver-policy`：国外规则集 → `dns.google`/`quad9`（走代理），国内规则集 → `alidns`/`doh.pub`（直连），广告规则集 → `rcode://name_error`（NXDOMAIN）
 - DoH 代理链：`dns.google/dns-query#代理DNS`，DNS 查询经策略组路由
 
 ### 规则引擎 — 三层递进
 
-31 条主规则 + 8 个 SUB-RULE 子规则，按端口 → 域名 → IP 三层递进匹配：
+71 条主规则 + 8 个 SUB-RULE 子规则，按端口 → 域名 → IP 三层递进匹配：
 
 ```
 端口层  → DST-PORT 5228-5230 (FCM), 1337-7777 (BT)
@@ -113,16 +121,28 @@ IP 层   → RULE-SET (cn_ip, telegram_ip, google_ip...)
 
 HTTP (80/8080-8880) / TLS (443/8443) / QUIC (443/8443)，按规则集三层跳过（skip-domain / skip-src-address / skip-dst-address），HTTP 开启 override-destination。
 
-### 27 套规则集
+### 66 套规则集
 
-全部 MRS 格式（`behavior: domain / ipcidr`），来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git)：
+全部 MRS 格式（`behavior: domain / ipcidr`），来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git)，全细分——每个服务/平台独立一个规则集：
 
 ```
-域名: private, AWAvenue-Ads, fcm, captcha, ai, telegram, media, google-cn,
-      google, trackerslist, apple-cn, microsoft-cn, games-cn, proxy_domain,
-      direct_domain, github, proxy, cn, dnsmasq-china-add
-IP:   private_ip, telegram_ip, media_ip, google_ip, proxy_ip,
-      enhanced-FaaS-in-China_ip, direct_ip, cn_ip
+私有/本地:   private, private_ip
+广告/隐私:   AWAvenue-Ads, trackerslist, reject_privacy, reject_list
+AI 服务:     ai
+通讯/社交:   telegram, twitter, reddit, discord, facebook, instagram, threads,
+            linkedin, signal, slack, snapchat, whatsapp, stackoverflow,
+            wikipedia, gitlab, line
+流媒体:      youtube, netflix, disney, hbo, spotify, primevideo, amazon,
+            twitch, appletv, tiktok
+游戏:        steam, epic, blizzard, playstation, nintendo, xbox, riot
+云服务:      apple, apple-music, microsoft, onedrive
+金融:        okx, binance, paypal, cloudflare
+Google:      google, fcm
+开发者:      github, docker, notion, npm, vercel, speedtest
+代理兜底:    proxy_domain, proxy
+国内直连:    apple-cn, microsoft-cn, direct_domain, cn, cn-cdn
+IP 直连:     cn_ip, direct_ip
+IP 代理:     telegram_ip
 ```
 
 ---
