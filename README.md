@@ -100,7 +100,7 @@ hosts (DNS 引导 IP 绑定)
       → nameserver (兜底)
 ```
 
-- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: rule`（国内规则集 `real-ip`，其余 `fake-ip`，`MATCH,fake-ip` 兜底）
+- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: whitelist`（国内规则集 `real-ip`，其余默认 `fake-ip`）
 - `nameserver-policy`：国外规则集 → `dns.google`/`quad9`（走代理），国内规则集 → `alidns`/`doh.pub`（直连），广告规则集 → `rcode://name_error`（NXDOMAIN）
 - DoH 代理链：`dns.google/dns-query#代理DNS`，DNS 查询经策略组路由
 

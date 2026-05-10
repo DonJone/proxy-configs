@@ -781,71 +781,15 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-range6: fd00:bada:55ed::1/64
-  fake-ip-filter-mode: rule
+  fake-ip-filter-mode: whitelist
   fake-ip-filter:
-    - RULE-SET,private,real-ip
-    - RULE-SET,AWAvenue-Ads,fake-ip
-    - RULE-SET,reject_privacy,fake-ip
-    - RULE-SET,reject_list,fake-ip
-    - RULE-SET,ai,fake-ip
-    - RULE-SET,telegram,fake-ip
-    - RULE-SET,twitter,fake-ip
-    - RULE-SET,reddit,fake-ip
-    - RULE-SET,discord,fake-ip
-    - RULE-SET,facebook,fake-ip
-    - RULE-SET,instagram,fake-ip
-    - RULE-SET,threads,fake-ip
-    - RULE-SET,linkedin,fake-ip
-    - RULE-SET,signal,fake-ip
-    - RULE-SET,slack,fake-ip
-    - RULE-SET,snapchat,fake-ip
-    - RULE-SET,whatsapp,fake-ip
-    - RULE-SET,stackoverflow,fake-ip
-    - RULE-SET,wikipedia,fake-ip
-    - RULE-SET,gitlab,fake-ip
-    - RULE-SET,line,fake-ip
-    - RULE-SET,youtube,fake-ip
-    - RULE-SET,netflix,fake-ip
-    - RULE-SET,disney,fake-ip
-    - RULE-SET,hbo,fake-ip
-    - RULE-SET,spotify,fake-ip
-    - RULE-SET,primevideo,fake-ip
-    - RULE-SET,amazon,fake-ip
-    - RULE-SET,twitch,fake-ip
-    - RULE-SET,appletv,fake-ip
-    - RULE-SET,tiktok,fake-ip
-    - RULE-SET,steam,fake-ip
-    - RULE-SET,epic,fake-ip
-    - RULE-SET,blizzard,fake-ip
-    - RULE-SET,playstation,fake-ip
-    - RULE-SET,nintendo,fake-ip
-    - RULE-SET,xbox,fake-ip
-    - RULE-SET,riot,fake-ip
-    - RULE-SET,apple,fake-ip
-    - RULE-SET,apple-music,fake-ip
-    - RULE-SET,microsoft,fake-ip
-    - RULE-SET,onedrive,fake-ip
-    - RULE-SET,okx,fake-ip
-    - RULE-SET,binance,fake-ip
-    - RULE-SET,paypal,fake-ip
-    - RULE-SET,cloudflare,fake-ip
-    - RULE-SET,google,fake-ip
-    - RULE-SET,github,fake-ip
-    - RULE-SET,docker,fake-ip
-    - RULE-SET,notion,fake-ip
-    - RULE-SET,npm,fake-ip
-    - RULE-SET,vercel,fake-ip
-    - RULE-SET,speedtest,fake-ip
-    - RULE-SET,trackerslist,fake-ip
-    - RULE-SET,proxy_domain,fake-ip
-    - RULE-SET,proxy,fake-ip
-    - RULE-SET,apple-cn,real-ip
-    - RULE-SET,microsoft-cn,real-ip
-    - RULE-SET,direct_domain,real-ip
-    - RULE-SET,cn,real-ip
-    - RULE-SET,cn-cdn,real-ip
-    - RULE-SET,fcm,real-ip
-    - MATCH,fake-ip
+    - rule-set:private
+    - rule-set:apple-cn
+    - rule-set:microsoft-cn
+    - rule-set:direct_domain
+    - rule-set:cn
+    - rule-set:cn-cdn
+    - rule-set:fcm
   proxy-server-nameserver: *direct-doh
   nameserver-policy:
     "rule-set:private": *direct-dns
