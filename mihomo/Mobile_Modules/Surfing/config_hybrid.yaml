@@ -636,6 +636,10 @@ rules:
   - DST-PORT,5228-5230,DIRECT
   - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
 
+  # --- 私有地址/关键词优先 ---
+  - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN-KEYWORD,uhdnow,Emby流媒体
+
   # --- 域名级分流（SUB-RULE 嵌套） ---
   - SUB-RULE,(RULE-SET,ai),ai_rules
   - SUB-RULE,(RULE-SET,telegram),telegram_rules
