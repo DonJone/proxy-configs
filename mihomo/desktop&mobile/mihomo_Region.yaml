@@ -257,8 +257,6 @@ rules:
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
   - RULE-SET,fcm,国内服务
-  - RULE-SET,direct_ip,DIRECT
-  - RULE-SET,cn_ip,DIRECT
 
   # --- QUIC 全局拦截 (仅海外流量到达此处) ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
@@ -335,8 +333,10 @@ rules:
   - RULE-SET,proxy_domain,加密货币与兜底
   - RULE-SET,proxy,加密货币与兜底
 
-  # --- IP 级分流 ---
+  # --- IP 级分流 (no-resolve 避免域名误匹配) ---
   - RULE-SET,telegram_ip,通讯与Github,no-resolve
+  - RULE-SET,direct_ip,DIRECT,no-resolve
+  - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # --- 高位端口 + 全局兜底 ---
   - DST-PORT,10000-65535,加密货币与兜底
