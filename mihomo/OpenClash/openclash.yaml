@@ -348,12 +348,17 @@ rules:
   - RULE-SET,direct_ip,DIRECT,no-resolve
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
+  # --- GeoIP/GeoSite 兜底 (覆盖规则集遗漏的域名/IP) ---
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT,no-resolve
+
   # --- 高位端口 + 全局兜底 ---
   - DST-PORT,10000-65535,加密货币与兜底
   - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (respect-rules 自动继承 + OpenClash 监听端口)
+# DNS (respect-rules + proxy-doh 代理链 + OpenClash listen)
+# 注意: proxy-doh 经 #代理DNS 组路由, 该组必须选择有效节点否则全部海外 DNS 失败
 # ============================================================
 dns:
   enable: true
@@ -399,6 +404,9 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
+    - "+.ntp.org"
+    - "time.*.com"
+    - "time.*.apple.com"
   skip-dst-address:
     - 91.105.192.0/23
     - 91.108.4.0/22

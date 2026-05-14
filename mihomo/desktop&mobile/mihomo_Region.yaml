@@ -36,6 +36,14 @@ tun:
   disable-icmp-forwarding: true
   dns-hijack: [any:53, tcp://any:53]
 
+# === Geodata (GeoIP/GeoSite 兜底) ===
+geodata-mode: true
+geox-url:
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+geo-auto-update: true
+geo-update-interval: 24
+
 # === Hosts DNS 引导 ===
 hosts:
   dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
@@ -338,12 +346,17 @@ rules:
   - RULE-SET,direct_ip,DIRECT,no-resolve
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
+  # --- GeoIP/GeoSite 兜底 (覆盖规则集遗漏的域名/IP) ---
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT,no-resolve
+
   # --- 高位端口 + 全局兜底 ---
   - DST-PORT,10000-65535,加密货币与兜底
   - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (respect-rules 自动继承 + 广告 name_error)
+# DNS (respect-rules + proxy-doh 代理链)
+# 注意: proxy-doh 经 #代理DNS 组路由, 该组必须选择有效节点否则全部海外 DNS 失败
 # ============================================================
 dns:
   enable: true
@@ -383,6 +396,9 @@ sniffer:
   skip-domain:
     - "Mijia Cloud"
     - "+.push.apple.com"
+    - "+.ntp.org"
+    - "time.*.com"
+    - "time.*.apple.com"
   skip-src-address:
     - 192.168.0.0/16
     - 10.0.0.0/8
