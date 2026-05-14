@@ -197,7 +197,6 @@ rules:
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
   - RULE-SET,dnsmasq-china-add,DIRECT
-  - RULE-SET,fcm,国内服务
   - RULE-SET,enhanced-FaaS-in-China_ip,DIRECT,no-resolve
 
   # --- QUIC 全局拦截 (仅海外流量到达此处) ---
@@ -208,6 +207,7 @@ rules:
 
   # --- 通讯 ---
   - RULE-SET,telegram,通讯与Github
+  - RULE-SET,fcm,通讯与Github
 
   # --- 流媒体 ---
   - RULE-SET,media,Emby流媒体
