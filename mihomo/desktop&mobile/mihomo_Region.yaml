@@ -101,6 +101,7 @@ rule-providers:
   captcha: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs", path: ./rules/captcha.mrs }
   ai: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs", path: ./rules/ai.mrs }
   telegram: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram.mrs", path: ./rules/telegram.mrs }
+  x: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/x.mrs", path: ./rules/x.mrs }
   media: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media.mrs", path: ./rules/media.mrs }
   google-cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google-cn_domain.mrs", path: ./rules/google-cn.mrs }
   google: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google.mrs", path: ./rules/google.mrs }
@@ -202,6 +203,7 @@ rules:
 
   # --- 通讯 ---
   - RULE-SET,telegram,通讯与Github
+  - RULE-SET,x,通讯与Github
   - RULE-SET,fcm,通讯与Github
 
   # --- 流媒体 ---
