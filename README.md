@@ -46,9 +46,11 @@ Emby流媒体:        [DIRECT, 亚太, 低倍, 欧美]
 
 ## 规则映射
 
-规则来源 [echs-top/proxy](https://github.com/echs-top/proxy)（27 个 MRS 规则集），平铺规则无 SUB-RULE：
+**Mihomo**: 规则来源 [echs-top/proxy](https://github.com/echs-top/proxy)（27 个 MRS 规则集）+ [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat)（x.mrs），平铺规则无 SUB-RULE。
 
-| 规则集 | 目标组 |
+**Loon / Shadowrocket**: 规则来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git)（.lsr / .list 格式），内核不支持 MRS，沿用 GinsRule-git 细分远程规则。
+
+| 规则集 (Mihomo) | 目标组 |
 |--------|--------|
 | `ai`, `google`, `google-cn`, `google_ip` | **AI与Google** |
 | `media`, `media_ip` | **Emby流媒体** |
@@ -136,7 +138,8 @@ proxy-configs/
 
 ## 参考
 
-- [echs-top/proxy](https://github.com/echs-top/proxy) — 规则集来源
+- [echs-top/proxy](https://github.com/echs-top/proxy) — Mihomo 规则集来源 (MRS)
+- [GinsRule-git](https://github.com/DonJone/GinsRule-git) — Loon/Shadowrocket 规则来源 (.lsr/.list)
 - [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) — GeoIP 数据库 + x.mrs
 - [Koolson/Qure](https://github.com/Koolson/Qure) — 策略组图标
 - [fmz200/wool_scripts](https://github.com/fmz200/wool_scripts) — AI 规则合集 / Loon 插件
