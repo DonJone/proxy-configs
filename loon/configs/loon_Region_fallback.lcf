@@ -1,0 +1,205 @@
+[General]
+ip-mode=v4-only
+ipv6-vif=off
+dns-server=system
+sni-sniffing=true
+disable-stun=true
+dns-reject-mode=LoopbackIP
+domain-reject-mode=DNS
+udp-fallback-mode=REJECT
+wifi-access-http-port=7222
+wifi-access-socks5-port=7221
+allow-wifi-access=false
+interface-mode=auto
+test-timeout=5
+disconnect-on-policy-change=false
+internet-test-url=http://connectivitycheck.platform.hicloud.com/generate_204
+proxy-test-url=http://www.gstatic.com/generate_204
+resource-parser=https://cdn.jsdelivr.net/gh/sub-store-org/Sub-Store@release/sub-store-parser.loon.min.js
+geoip-url=https://geodata.kelee.one/Country-Masaiki.mmdb
+ipasn-url=https://geodata.kelee.one/GeoLite2-ASN-P3TERX.mmdb
+skip-proxy=192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, localhost, *.local, e.crashlynatics.com
+bypass-tun=10.0.0.0/8, 100.64.0.0/10, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.0.0.0/24, 192.0.2.0/24, 192.88.99.0/24, 192.168.0.0/16, 198.51.100.0/24, 203.0.113.0/24, 224.0.0.0/4, 255.255.255.255/32
+
+ssid-trigger = "default":rule, "cellular":rule,"你的软路由wifi名":direct
+
+# =====================================
+# Host
+# =====================================
+[Host]
+iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
+
+# =====================================
+# Proxy / Remote Proxy
+# =====================================
+[Proxy]
+
+[Remote Proxy]
+
+# =====================================
+# Proxy Group (规范语法版)
+# =====================================
+[Proxy Group]
+# 1. 基础手选组：直接调用 Remote Filter 中的过滤器名
+亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+低倍 = select, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+
+# 2. 备用自动组：直接调用过滤器名进行 url-test
+亚太备用 = url-test, 亚太节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+欧美备用 = url-test, 欧美节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+低倍备用 = url-test, 低倍节点, url = http://cp.cloudflare.com/generate_204, interval = 30, tolerance = 50, hidden = true
+
+# 3. 故障转移架构：手选 -> 自动
+亚太区 = fallback, 亚太, 亚太备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+欧美区 = fallback, 欧美, 欧美备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+低倍率 = fallback, 低倍, 低倍备用, url = http://cp.cloudflare.com/generate_204, interval = 30
+
+# 4. 业务分配分流
+AI与Google = select, 欧美区, 亚太区, 低倍率, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
+TikTok = select, 亚太区, 欧美区, 低倍率, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
+Emby = select, DIRECT, 亚太区, 低倍率, 欧美区, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+通讯与Github = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+游戏平台 = select, DIRECT, 亚太区, 欧美区, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+微软苹果Nvidia = select, DIRECT, 亚太区, 欧美区, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
+加密货币与兜底 = select, 亚太区, 欧美区, 低倍率, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
+
+# 5. 静默拦截与国内服务
+国内服务 = select, DIRECT, 亚太区, hidden = true
+广告拦截 = select, REJECT, hidden = true
+
+# =====================================
+# Remote Filter (定义过滤逻辑)
+# =====================================
+[Remote Filter]
+全部节点 = NameRegex, FilterKey = ".*"
+除拨号外 = NameRegex, FilterKey = "^(?i)(?!.*dialer).*"
+
+# 【修复】：亚太与欧美排除了被误杀的高倍率节点 (引入负向后顾断言 ?<![0-9.])
+亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
+欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
+
+# 【修复】：真正的低倍率捕获规则，杜绝 4.0x
+低倍节点 = NameRegex, FilterKey = "(?i)((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)"
+
+# =====================================
+# Rule
+# =====================================
+[Rule]
+# 抖音与 Emby 特殊分流
+DOMAIN-KEYWORD, douyin, 国内服务
+DOMAIN-KEYWORD, emby, Emby
+DOMAIN-KEYWORD, uhdnow, Emby
+# 拦截
+IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
+DOMAIN-KEYWORD, libvio, DIRECT
+URL-REGEX, "\.log\.", 广告拦截
+# 国内与兜底
+GEOIP, CN, 国内服务
+FINAL, 加密货币与兜底
+
+# =====================================
+# Remote Rule (引用外部规则库)
+# =====================================
+[Remote Rule]
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
+# AI
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ai/ai-other.lsr, policy=AI与Google, tag=AI分流, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
+# 社交流媒体
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/reddit.lsr, policy=通讯与Github, tag=Reddit, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/discord.lsr, policy=通讯与Github, tag=Discord, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/facebook.lsr, policy=通讯与Github, tag=Facebook, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/instagram.lsr, policy=通讯与Github, tag=Instagram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/threads.lsr, policy=通讯与Github, tag=Threads, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/linkedin.lsr, policy=通讯与Github, tag=LinkedIn, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/signal.lsr, policy=通讯与Github, tag=Signal, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/slack.lsr, policy=通讯与Github, tag=Slack, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/snapchat.lsr, policy=通讯与Github, tag=Snapchat, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/whatsapp.lsr, policy=通讯与Github, tag=WhatsApp, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/stackoverflow.lsr, policy=通讯与Github, tag=Stackoverflow, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/wikipedia.lsr, policy=通讯与Github, tag=Wikipedia, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/line.lsr, policy=通讯与Github, tag=Line, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gitlab.lsr, policy=通讯与Github, tag=GitLab, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/youtube.lsr, policy=Emby流媒体, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/netflix.lsr, policy=Emby流媒体, tag=Netflix, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/disney.lsr, policy=Emby流媒体, tag=Disney, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/hbo.lsr, policy=Emby流媒体, tag=HBO, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/spotify.lsr, policy=Emby流媒体, tag=Spotify, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/amazon.lsr, policy=Emby流媒体, tag=Amazon, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitch.lsr, policy=Emby流媒体, tag=Twitch, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体, tag=AppleTV, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
+# 微软苹果Nvidia
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple-music.lsr, policy=微软苹果Nvidia, tag=AppleMusic, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/onedrive.lsr, policy=微软苹果Nvidia, tag=OneDrive, enabled=true
+# 游戏平台
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/epic.lsr, policy=游戏平台, tag=Epic, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/blizzard.lsr, policy=游戏平台, tag=Blizzard, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/playstation.lsr, policy=游戏平台, tag=PlayStation, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/nintendo.lsr, policy=游戏平台, tag=Nintendo, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/xbox.lsr, policy=游戏平台, tag=Xbox, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/riot.lsr, policy=游戏平台, tag=Riot, enabled=true
+# 加密货币
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/okx.lsr, policy=加密货币与兜底, tag=OKX, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/binance.lsr, policy=加密货币与兜底, tag=Binance, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudflare.lsr, policy=加密货币与兜底, tag=Turnstile, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/proxy-list.lsr, policy=加密货币与兜底, tag=Proxy, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gfw-list.lsr, policy=加密货币与兜底, tag=Global, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/paypal.lsr, policy=加密货币与兜底, tag=PayPal, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/docker.lsr, policy=加密货币与兜底, tag=Docker, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/notion.lsr, policy=加密货币与兜底, tag=Notion, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/speedtest.lsr, policy=加密货币与兜底, tag=Speedtest, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/protonmail.lsr, policy=加密货币与兜底, tag=ProtonMail, enabled=true
+# 广告拦截
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/reject/privacy.lsr, policy=广告拦截, tag=隐私追踪, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/reject/reject-list.lsr, policy=广告拦截, tag=额外拦截, enabled=true
+# 国内服务
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=国内服务, tag=GoogleFCM, enabled=true
+
+
+# =====================================
+# Script / Remote Script / Plugin / Mitm
+# =====================================
+[Script]
+
+[Remote Script]
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/script/tasks.scripts, tag=定时任务合集@fmz200, enabled=true
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/script/tools.scripts, tag=脚本工具合集@fmz200, enabled=true
+
+[Plugin]
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/JD_Price.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/JD_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/deezertidal/private@master/plugallery/ptj.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Bilibili_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Tieba_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Taobao_remove_ads.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/CoolApk_remove_ads.plugin, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/YouTube_remove_ads.lpx, pin=true, enabled=true
+https://kelee.one/Tool/Loon/Lpx/YouTubeSubtitlesTranslation.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/QQMusic_remove_ads.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Google.lpx, enabled=true
+https://kelee.one/Tool/Loon/Lpx/AppleWeatherEnhancer.lpx, enabled=true
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/weibo.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/WeChatMiniAds.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/001ProMax/Surge@main/Loon/Spotify.plugin, img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/spotify.png, enabled=true
+https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/Auto_Join_TF.plugin, policy=加密货币与兜底, enabled=false
+https://cdn.jsdelivr.net/gh/Tartarus2014/Loon-Script@master/Plugin/skip-proxy.lpx, img-url=https://cdn.jsdelivr.net/gh/Orz-3/mini@master/Alpha/Imm.png, enabled=true
+https://cdn.jsdelivr.net/gh/VirgilClyne/GetSomeFries@main/plugin/HTTPDNS.Block.plugin, enabled=true
+https://cdn.jsdelivr.net/gh/chavyleung/scripts@master/box/rewrite/boxjs.rewrite.loon.plugin, policy=加密货币与兜底, enabled=true
+https://cdn.jsdelivr.net/gh/sub-store-org/Sub-Store@master/config/Loon.plugin, policy=加密货币与兜底, enabled=true
+https://cdn.jsdelivr.net/gh/Script-Hub-Org/Script-Hub@main/modules/script-hub.loon.plugin, policy=加密货币与兜底, enabled=true
+
+[Mitm]
+hostname = -www.google.com, *.google.cn, *.facebook.com, *.perplexity.ai
+skip-server-cert-verify = true
