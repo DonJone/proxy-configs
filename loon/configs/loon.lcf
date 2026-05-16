@@ -48,7 +48,7 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 # 2. 业务组: 直指手选池
 AI与Google = select, 欧美, 亚太, 低倍, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
 TikTok = select, 亚太, 欧美, 低倍, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
-Emby = select, DIRECT, 亚太, 低倍, 欧美, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+Emby = select, 低倍, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 通讯与Github = select, 亚太, 欧美, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
 游戏平台 = select, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
 微软苹果Nvidia = select, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png

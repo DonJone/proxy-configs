@@ -142,7 +142,7 @@ proxy-groups:
   # --- 业务组 (7 个, 直接引用手选池) ---
   - { name: AI与Google, type: select, proxies: [欧美, 亚太, 低倍] }
   - { name: TikTok, type: select, proxies: [亚太, 欧美, 低倍] }
-  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太, 低倍, 欧美] }
+  - { name: Emby流媒体, type: select, proxies: [低倍, DIRECT, 亚太, 欧美] }
   - { name: 通讯与Github, type: select, proxies: [亚太, 欧美, 低倍, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太, 欧美, 低倍] }
   - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太, 欧美, 低倍] }

@@ -156,7 +156,7 @@ proxy-groups:
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
   - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
-  - { name: Emby流媒体, type: select, proxies: [DIRECT, 亚太区, 低倍率, 欧美区] }
+  - { name: Emby流媒体, type: select, proxies: [低倍率, DIRECT, 亚太区, 欧美区] }
   - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
   - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
