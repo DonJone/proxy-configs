@@ -67,8 +67,8 @@ ip: &ip {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ip
 domain_text: &domain_text {type: http, interval: 86400, behavior: domain, format: text}
 
 Select: &Select {type: select, disable-udp: false, include-all: true}
-UrlTest: &UrlTest {type: url-test, url: "http://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, tolerance: 50, timeout: 2000, max-failed-times: 3}
-FallBack: &FallBack {type: fallback, url: "http://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, timeout: 2000, max-failed-times: 3}
+UrlTest: &UrlTest {type: url-test, url: "https://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, tolerance: 50, timeout: 2000, max-failed-times: 3}
+FallBack: &FallBack {type: fallback, url: "https://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, timeout: 2000, max-failed-times: 3}
 
 FilterAsiaPacific: &FilterAsiaPacific '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)'
 FilterEuAm: &FilterEuAm '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'
