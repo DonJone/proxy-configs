@@ -101,7 +101,10 @@ rule-providers:
   ai: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs", path: ./rules/ai.mrs }
   telegram: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/telegram.mrs", path: ./rules/telegram.mrs }
   x: { <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/x.mrs", path: ./rules/x.mrs }
+  tiktok: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/tiktok.mrs", path: ./rules/tiktok.mrs }
   media: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/media.mrs", path: ./rules/media.mrs }
+  apple: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/apple.mrs", path: ./rules/apple.mrs }
+  microsoft: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/microsoft.mrs", path: ./rules/microsoft.mrs }
   google-cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google-cn_domain.mrs", path: ./rules/google-cn.mrs }
   google: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/google.mrs", path: ./rules/google.mrs }
   trackerslist: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/trackerslist.mrs", path: ./rules/trackerslist.mrs }
@@ -182,9 +185,6 @@ rules:
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
 
   # --- 国内直连 (QUIC 之前, 确保国内 UDP 443 不被拦截) ---
-  - RULE-SET,apple-cn,DIRECT
-  - RULE-SET,microsoft-cn,DIRECT
-  - RULE-SET,games-cn,DIRECT
   - RULE-SET,direct_domain,DIRECT
   - RULE-SET,cn,DIRECT
   - RULE-SET,dnsmasq-china-add,DIRECT
@@ -203,6 +203,18 @@ rules:
 
   # --- 流媒体 ---
   - RULE-SET,media,Emby流媒体
+
+  # --- TikTok ---
+  - RULE-SET,tiktok,TikTok
+
+  # --- 微软苹果Nvidia ---
+  - RULE-SET,apple,微软苹果Nvidia
+  - RULE-SET,microsoft,微软苹果Nvidia
+  - RULE-SET,apple-cn,微软苹果Nvidia
+  - RULE-SET,microsoft-cn,微软苹果Nvidia
+
+  # --- 游戏平台 ---
+  - RULE-SET,games-cn,游戏平台
 
   # --- Captcha ---
   - RULE-SET,captcha,加密货币与兜底
