@@ -103,7 +103,6 @@ proxy-providers:
 rule-providers:
   private_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private_ip.mrs", path: ./rules/private_ip.mrs }
   private: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/private.mrs", path: ./rules/private.mrs }
-  AWAvenue-Ads: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/AWAvenue-Ads_domain.mrs", path: ./rules/AWAvenue-Ads.mrs }
   fcm: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/googlefcm.mrs", path: ./rules/fcm.mrs }
   captcha: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs", path: ./rules/captcha.mrs }
   ai: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/ai.mrs", path: ./rules/ai.mrs }
@@ -164,7 +163,6 @@ proxy-groups:
 
   # --- 静默组 (2 个) ---
   - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
-  - { name: 广告拦截, type: select, proxies: [REJECT], hidden: true }
 
   # --- 基础设施组 (2 个) ---
   - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
@@ -187,9 +185,6 @@ rules:
   - RULE-SET,private,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
-
-  # --- 广告拦截 ---
-  - RULE-SET,AWAvenue-Ads,广告拦截
 
   # --- 国内直连 (QUIC 之前, 确保国内 UDP 443 不被拦截) ---
   - RULE-SET,apple-cn,DIRECT
@@ -271,7 +266,6 @@ dns:
   direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: true
   nameserver-policy:
-    "rule-set:AWAvenue-Ads": [rcode://name_error]
 
 # ============================================================
 # 嗅探器 (OpenClash 流媒体强制嗅探)

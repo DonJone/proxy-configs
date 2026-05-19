@@ -56,7 +56,6 @@ Emby = select, 低倍, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.ne
 
 # 3. 静默组
 国内服务 = select, DIRECT, 亚太, hidden = true
-广告拦截 = select, REJECT, hidden = true
 
 # =====================================
 # Remote Filter (定义过滤逻辑)
@@ -80,7 +79,6 @@ DOMAIN-KEYWORD, uhdnow, Emby
 # 拦截
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
-URL-REGEX, "\.log\.", 广告拦截
 # 国内与兜底
 GEOIP, CN, 国内服务
 FINAL, 加密货币与兜底
@@ -116,8 +114,6 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.l
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/proxy-list.lsr, policy=加密货币与兜底, tag=Proxy, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gfw-list.lsr, policy=加密货币与兜底, tag=Global, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudflare.lsr, policy=加密货币与兜底, tag=Turnstile, enabled=true
-# 广告拦截
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/reject/ads.lsr, policy=广告拦截, tag=广告拦截, enabled=true
 # 国内服务
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
