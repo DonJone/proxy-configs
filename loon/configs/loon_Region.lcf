@@ -102,6 +102,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
+DOMAIN-KEYWORD,github,通讯与Github
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=通讯与Github, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true

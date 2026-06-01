@@ -121,7 +121,7 @@ rule-providers:
   games-cn: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games@cn.mrs", path: ./rules/games-cn.mrs }
   google-cn: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google@cn.mrs", path: ./rules/google-cn.mrs }
   proxy_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", path: ./rules/proxy_domain.mrs }
-  github: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs", path: ./rules/github.mrs }
+  github: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/github.mrs", path: ./rules/github.mrs }
 
   # --- MetaCubeX geoip ---
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs", path: ./rules/google_ip.mrs }
@@ -234,6 +234,7 @@ rules:
 
   # --- 开发者 ---
   - RULE-SET,github,通讯与Github
+  - DOMAIN-KEYWORD,github,通讯与Github
 
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底

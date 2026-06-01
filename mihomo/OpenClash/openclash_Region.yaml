@@ -206,6 +206,7 @@ rules:
 
   # --- 开发者 (微软苹果之前, microsoft.mrs 可能含 github 域名) ---
   - RULE-SET,github,通讯与Github
+  - DOMAIN-KEYWORD,github,通讯与Github
 
   # --- 微软苹果Nvidia ---
   - RULE-SET,apple,微软苹果Nvidia
