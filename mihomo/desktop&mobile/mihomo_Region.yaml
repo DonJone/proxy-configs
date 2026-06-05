@@ -175,6 +175,107 @@ rules:
   - RULE-SET,private,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
+  - DOMAIN-SUFFIX,bb.111848.xyz,Emby流媒体
+  - DOMAIN-KEYWORD,023168,Emby流媒体
+  - DOMAIN-KEYWORD,1024,Emby流媒体
+  - DOMAIN-KEYWORD,123456,Emby流媒体
+  - DOMAIN-KEYWORD,20120714,Emby流媒体
+  - DOMAIN-KEYWORD,285286,Emby流媒体
+  - DOMAIN-KEYWORD,4545,Emby流媒体
+  - DOMAIN-KEYWORD,581658,Emby流媒体
+  - DOMAIN-KEYWORD,669998,Emby流媒体
+  - DOMAIN-KEYWORD,9191001,Emby流媒体
+  - DOMAIN-KEYWORD,9521732,Emby流媒体
+  - DOMAIN-KEYWORD,abcj,Emby流媒体
+  - DOMAIN-KEYWORD,acemby,Emby流媒体
+  - DOMAIN-KEYWORD,agon,Emby流媒体
+  - DOMAIN-KEYWORD,aiyowei,Emby流媒体
+  - DOMAIN-KEYWORD,alist7,Emby流媒体
+  - DOMAIN-KEYWORD,as174,Emby流媒体
+  - DOMAIN-KEYWORD,bddup,Emby流媒体
+  - DOMAIN-KEYWORD,carlos,Emby流媒体
+  - DOMAIN-KEYWORD,carryz,Emby流媒体
+  - DOMAIN-KEYWORD,catlinks,Emby流媒体
+  - DOMAIN-KEYWORD,ccemby,Emby流媒体
+  - DOMAIN-KEYWORD,cfprefer3,Emby流媒体
+  - DOMAIN-KEYWORD,charontv,Emby流媒体
+  - DOMAIN-KEYWORD,cjpc,Emby流媒体
+  - DOMAIN-KEYWORD,cn2gias,Emby流媒体
+  - DOMAIN-KEYWORD,deja-vu,Emby流媒体
+  - DOMAIN-KEYWORD,dicarerhome,Emby流媒体
+  - DOMAIN-KEYWORD,ednovas,Emby流媒体
+  - DOMAIN-KEYWORD,emby77,Emby流媒体
+  - DOMAIN-KEYWORD,embyclub,Emby流媒体
+  - DOMAIN-KEYWORD,embymv,Emby流媒体
+  - DOMAIN-KEYWORD,embyplus,Emby流媒体
+  - DOMAIN-KEYWORD,embyserver,Emby流媒体
+  - DOMAIN-KEYWORD,embytv,Emby流媒体
+  - DOMAIN-KEYWORD,favoritewife,Emby流媒体
+  - DOMAIN-KEYWORD,flowercloud,Emby流媒体
+  - DOMAIN-KEYWORD,freetz,Emby流媒体
+  - DOMAIN-KEYWORD,gfwemby,Emby流媒体
+  - DOMAIN-KEYWORD,ggtt,Emby流媒体
+  - DOMAIN-KEYWORD,goodisp,Emby流媒体
+  - DOMAIN-KEYWORD,gtlx,Emby流媒体
+  - DOMAIN-KEYWORD,gugumedia,Emby流媒体
+  - DOMAIN-KEYWORD,happyav,Emby流媒体
+  - DOMAIN-KEYWORD,imetyou,Emby流媒体
+  - DOMAIN-KEYWORD,immtel,Emby流媒体
+  - DOMAIN-KEYWORD,infinityfly,Emby流媒体
+  - DOMAIN-KEYWORD,itsmyduty,Emby流媒体
+  - DOMAIN-KEYWORD,jmsooo,Emby流媒体
+  - DOMAIN-KEYWORD,jmsuper,Emby流媒体
+  - DOMAIN-KEYWORD,loseremby,Emby流媒体
+  - DOMAIN-KEYWORD,lucasmedia,Emby流媒体
+  - DOMAIN-KEYWORD,magpie,Emby流媒体
+  - DOMAIN-KEYWORD,magpiecdn,Emby流媒体
+  - DOMAIN-KEYWORD,maying,Emby流媒体
+  - DOMAIN-KEYWORD,mdss,Emby流媒体
+  - DOMAIN-KEYWORD,micu,Emby流媒体
+  - DOMAIN-KEYWORD,mikuu,Emby流媒体
+  - DOMAIN-KEYWORD,misakaf,Emby流媒体
+  - DOMAIN-KEYWORD,misty,Emby流媒体
+  - DOMAIN-KEYWORD,mius,Emby流媒体
+  - DOMAIN-KEYWORD,mjjemby,Emby流媒体
+  - DOMAIN-KEYWORD,mobaiemby,Emby流媒体
+  - DOMAIN-KEYWORD,mulgore,Emby流媒体
+  - DOMAIN-KEYWORD,nanflix,Emby流媒体
+  - DOMAIN-KEYWORD,nebula-emby,Emby流媒体
+  - DOMAIN-KEYWORD,nebula-media,Emby流媒体
+  - DOMAIN-KEYWORD,newpppp,Emby流媒体
+  - DOMAIN-KEYWORD,newwan,Emby流媒体
+  - DOMAIN-KEYWORD,nexitally,Emby流媒体
+  - DOMAIN-KEYWORD,niceduck,Emby流媒体
+  - DOMAIN-KEYWORD,nijigem,Emby流媒体
+  - DOMAIN-KEYWORD,nivod4,Emby流媒体
+  - DOMAIN-KEYWORD,ntrrr,Emby流媒体
+  - DOMAIN-KEYWORD,nyancat,Emby流媒体
+  - DOMAIN-KEYWORD,odysseyplus,Emby流媒体
+  - DOMAIN-KEYWORD,ohhhh,Emby流媒体
+  - DOMAIN-KEYWORD,otakudrive,Emby流媒体
+  - DOMAIN-KEYWORD,peachmv,Emby流媒体
+  - DOMAIN-KEYWORD,pilipiliultra,Emby流媒体
+  - DOMAIN-KEYWORD,plusmedia,Emby流媒体
+  - DOMAIN-KEYWORD,poloemby,Emby流媒体
+  - DOMAIN-KEYWORD,pololine,Emby流媒体
+  - DOMAIN-KEYWORD,pornemby,Emby流媒体
+  - DOMAIN-KEYWORD,prprcloud,Emby流媒体
+  - DOMAIN-KEYWORD,sfcj,Emby流媒体
+  - DOMAIN-KEYWORD,shuipo,Emby流媒体
+  - DOMAIN-KEYWORD,speedx,Emby流媒体
+  - DOMAIN-KEYWORD,starcat,Emby流媒体
+  - DOMAIN-KEYWORD,studyfun,Emby流媒体
+  - DOMAIN-KEYWORD,the98,Emby流媒体
+  - DOMAIN-KEYWORD,vfing,Emby流媒体
+  - DOMAIN-KEYWORD,wiri,Emby流媒体
+  - DOMAIN-KEYWORD,xeton,Emby流媒体
+  - DOMAIN-KEYWORD,xiaoyi,Emby流媒体
+  - DOMAIN-KEYWORD,xmsl,Emby流媒体
+  - DOMAIN-KEYWORD,ycxdy,Emby流媒体
+  - DOMAIN-KEYWORD,younoyes,Emby流媒体
+  - DOMAIN-KEYWORD,ytoo,Emby流媒体
+  - DOMAIN-KEYWORD,zi0,Emby流媒体
+  - DOMAIN-KEYWORD,zox,Emby流媒体
 
   # --- 国内直连 (QUIC 之前, 确保国内 UDP 443 不被拦截) ---
   - RULE-SET,cn,DIRECT
@@ -225,6 +326,13 @@ rules:
   # --- IP 级分流 (no-resolve 避免域名误匹配) ---
   - RULE-SET,telegram_ip,通讯与Github,no-resolve
   - RULE-SET,media_ip,Emby流媒体,no-resolve
+  - IP-CIDR,188.172.228.49/32,Emby流媒体,no-resolve
+  - IP-CIDR,202.61.255.248/32,Emby流媒体,no-resolve
+  - IP-CIDR,102.223.180.108/32,Emby流媒体,no-resolve
+  - IP-CIDR,141.147.166.107/32,Emby流媒体,no-resolve
+  - IP-CIDR,193.123.232.141/32,Emby流媒体,no-resolve
+  - IP-CIDR,188.172.228.65/32,Emby流媒体,no-resolve
+  - IP-CIDR,188.253.5.84/32,Emby流媒体,no-resolve
   - RULE-SET,google_ip,AI与Google,no-resolve
   - RULE-SET,proxy_ip,加密货币与兜底,no-resolve
   - RULE-SET,cn_ip,DIRECT,no-resolve
