@@ -70,6 +70,7 @@ Select: &Select {type: select, disable-udp: false, include-all: true}
 
 FilterAsiaPacific: &FilterAsiaPacific '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)'
 FilterEuAm: &FilterEuAm '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'
+FilterAI: &FilterAI '(?i)(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|欧洲|EU|Europe)'
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
@@ -148,13 +149,14 @@ proxies:
 # 策略组 (Region 3 区纯手选 + 基础设施组)
 # ============================================================
 proxy-groups:
-  # --- 手选池 (3 个) ---
+  # --- 手选池 (4 个) ---
   - { name: 亚太, <<: *Select, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
+  - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
   - { name: 低倍, <<: *Select, filter: *FilterLowRate }
 
   # --- 业务组 (7 个) ---
-  - { name: AI与Google, type: select, proxies: [欧美, 亚太, 低倍] }
+  - { name: AI与Google, type: select, proxies: [AI, 欧美, 亚太, 低倍] }
   - { name: TikTok, type: select, proxies: [亚太, 欧美, 低倍] }
   - { name: Emby流媒体, type: select, proxies: [低倍, DIRECT, 亚太, 欧美] }
   - { name: 通讯与Github, type: select, proxies: [亚太, 欧美, 低倍, DIRECT] }
