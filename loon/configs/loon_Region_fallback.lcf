@@ -43,6 +43,7 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 # 1. 基础手选组：直接调用 Remote Filter 中的过滤器名
 亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 低倍 = select, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 
 # 2. 备用自动组：直接调用过滤器名进行 url-test
@@ -77,6 +78,7 @@ Emby = select, 低倍率, DIRECT, 亚太区, 欧美区, img-url = https://cdn.js
 # 【修复】：亚太与欧美排除了被误杀的高倍率节点 (引入负向后顾断言 ?<![0-9.])
 亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
 欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
+AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|欧洲|EU|Europe)"
 
 # 【修复】：真正的低倍率捕获规则，杜绝 4.0x
 低倍节点 = NameRegex, FilterKey = "(?i)((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)"

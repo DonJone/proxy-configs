@@ -43,10 +43,11 @@ iosapps.itunes.apple.com = iosapps.itunes.apple.com.download.ks-cdn.com
 # 1. 手选池: 调用 Remote Filter 过滤器
 亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 低倍 = select, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 
 # 2. 业务组: 直指手选池
-AI与Google = select, 欧美, 亚太, 低倍, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
+AI与Google = select, AI, 欧美, 亚太, 低倍, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
 TikTok = select, 亚太, 欧美, 低倍, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
 Emby = select, 低倍, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 通讯与Github = select, 亚太, 欧美, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
@@ -66,6 +67,7 @@ Emby = select, 低倍, DIRECT, 亚太, 欧美, img-url = https://cdn.jsdelivr.ne
 
 亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
 欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
+AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|欧洲|EU|Europe)"
 低倍节点 = NameRegex, FilterKey = "(?i)((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)"
 
 # =====================================
