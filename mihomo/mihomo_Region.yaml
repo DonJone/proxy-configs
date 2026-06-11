@@ -126,13 +126,12 @@ rule-providers:
 
   # --- echs-top ---
   ads: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/ads.mrs", path: ./rules/ads.mrs }
-  captcha: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/captcha.mrs", path: ./rules/captcha.mrs }
-  google: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/google.mrs", path: ./rules/google.mrs }
-  proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-lite.mrs", path: ./rules/proxy-lite.mrs }
+  google: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/google.mrs", path: ./rules/google.mrs }
+  proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-ltsc.mrs", path: ./rules/proxy-ltsc.mrs }
   cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/cn.mrs", path: ./rules/cn.mrs }
   dnsmasq-china-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/dnsmasq-china-lite.mrs", path: ./rules/dnsmasq-china-lite.mrs }
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/telegram.mrs", path: ./rules/telegram_ip.mrs }
-  proxy_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/proxy.mrs", path: ./rules/proxy_ip.mrs }
+  proxy_ip: { <<: *ip, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/ip/proxy_ip.mrs", path: ./rules/proxy_ip.mrs }
   cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/cn.mrs", path: ./rules/cn_ip.mrs }
 
   # --- ShellCrash ---
@@ -319,7 +318,7 @@ rules:
   - RULE-SET,games-cn,游戏平台
 
   # --- Captcha ---
-  - RULE-SET,captcha,加密货币与兜底
+  # (规则已移除，由兜底组接管)
 
   # --- Google ---
   - RULE-SET,google,AI与Google
