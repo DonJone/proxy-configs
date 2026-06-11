@@ -67,11 +67,10 @@ ip: &ip {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ip
 domain_text: &domain_text {type: http, interval: 86400, behavior: domain, format: text}
 
 Select: &Select {type: select, disable-udp: false, include-all: true}
-UrlTest: &UrlTest {type: url-test, url: "https://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, tolerance: 50, timeout: 2000, max-failed-times: 3}
-FallBack: &FallBack {type: fallback, url: "https://cp.cloudflare.com/generate_204", disable-udp: false, hidden: true, include-all: true, interval: 300, lazy: true, timeout: 2000, max-failed-times: 3}
 
 FilterAsiaPacific: &FilterAsiaPacific '(?i)(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)'
 FilterEuAm: &FilterEuAm '(?i)(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)'
+FilterAI: &FilterAI '(?i)(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|欧洲|EU|Europe)'
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
@@ -128,13 +127,12 @@ rule-providers:
 
   # --- echs-top ---
   ads: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/ads.mrs", path: ./rules/ads.mrs }
-  captcha: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/captcha.mrs", path: ./rules/captcha.mrs }
-  google: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/google.mrs", path: ./rules/google.mrs }
-  proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-lite.mrs", path: ./rules/proxy-lite.mrs }
+  google: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/google.mrs", path: ./rules/google.mrs }
+  proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-ltsc.mrs", path: ./rules/proxy-ltsc.mrs }
   cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/cn.mrs", path: ./rules/cn.mrs }
   dnsmasq-china-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/dnsmasq-china-lite.mrs", path: ./rules/dnsmasq-china-lite.mrs }
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/telegram.mrs", path: ./rules/telegram_ip.mrs }
-  proxy_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/proxy.mrs", path: ./rules/proxy_ip.mrs }
+  proxy_ip: { <<: *ip, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/ip/proxy_ip.mrs", path: ./rules/proxy_ip.mrs }
   cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/cn.mrs", path: ./rules/cn_ip.mrs }
 
   # --- ShellCrash ---
@@ -151,36 +149,27 @@ proxies:
 # 策略组 (Region 3 区纯手选 + 基础设施组)
 # ============================================================
 proxy-groups:
-  # --- 手选池 (3 个) ---
+  # --- 手选池 (4 个) ---
   - { name: 亚太, <<: *Select, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
+  - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
   - { name: 低倍, <<: *Select, filter: *FilterLowRate }
 
-  # --- 备用自动测速池 (3 个, 隐藏) ---
-  - { name: 亚太备用, <<: *UrlTest, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
-  - { name: 欧美备用, <<: *UrlTest, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
-  - { name: 低倍备用, <<: *UrlTest, filter: *FilterLowRate }
-
-  # --- 业务组 (7 个, 引用 fallback 区) ---
-  - { name: AI与Google, type: select, proxies: [欧美区, 亚太区, 低倍率] }
-  - { name: TikTok, type: select, proxies: [亚太区, 欧美区, 低倍率] }
-  - { name: Emby流媒体, type: select, proxies: [低倍率, DIRECT, 亚太区, 欧美区] }
-  - { name: 通讯与Github, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
-  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
-  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太区, 欧美区] }
-  - { name: 加密货币与兜底, type: select, proxies: [亚太区, 欧美区, 低倍率, DIRECT] }
+  # --- 业务组 (7 个) ---
+  - { name: AI与Google, type: select, proxies: [AI, 欧美, 亚太, 低倍] }
+  - { name: TikTok, type: select, proxies: [亚太, 欧美, 低倍] }
+  - { name: Emby流媒体, type: select, proxies: [低倍, DIRECT, 亚太, 欧美] }
+  - { name: 通讯与Github, type: select, proxies: [亚太, 欧美, 低倍, DIRECT] }
+  - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太, 欧美] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太, 欧美] }
+  - { name: 加密货币与兜底, type: select, proxies: [亚太, 欧美, 低倍, DIRECT] }
 
   # --- 静默组 (1 个) ---
-  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太区], hidden: true }
+  - { name: 国内服务, type: select, proxies: [DIRECT, 亚太], hidden: true }
 
   # --- 基础设施组 (2 个) ---
-  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美区, 亚太区], hidden: true }
+  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美, 亚太], hidden: true }
   - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
-
-  # --- 故障转移区 (3 个, 置底) ---
-  - { name: 亚太区, <<: *FallBack, proxies: [亚太, 亚太备用] }
-  - { name: 欧美区, <<: *FallBack, proxies: [欧美, 欧美备用] }
-  - { name: 低倍率, <<: *FallBack, proxies: [低倍, 低倍备用] }
 
 # ============================================================
 # 规则引擎 (平铺规则, 无 SUB-RULE)
@@ -317,6 +306,10 @@ rules:
   # --- TikTok ---
   - RULE-SET,tiktok,TikTok
 
+  # --- 开发者 (微软苹果之前, microsoft.mrs 可能含 github 域名) ---
+  - RULE-SET,github,通讯与Github
+  - DOMAIN-KEYWORD,github,通讯与Github
+
   # --- 微软苹果Nvidia ---
   - RULE-SET,apple,微软苹果Nvidia
   - RULE-SET,microsoft,微软苹果Nvidia
@@ -327,15 +320,11 @@ rules:
   - RULE-SET,games-cn,游戏平台
 
   # --- Captcha ---
-  - RULE-SET,captcha,加密货币与兜底
+  # (规则已移除，由兜底组接管)
 
   # --- Google ---
   - RULE-SET,google,AI与Google
   - RULE-SET,google-cn,AI与Google
-
-  # --- 开发者 ---
-  - RULE-SET,github,通讯与Github
-  - DOMAIN-KEYWORD,github,通讯与Github
 
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底

@@ -42,10 +42,10 @@ tun:
   enable: true
   stack: system
   device: utun
-  auto-route: false
+  auto-route: true
   auto-redirect: false
-  auto-detect-interface: false
-  strict-route: false
+  auto-detect-interface: true
+  strict-route: true
   dns-hijack:
     - 0.0.0.0:53
   endpoint-independent-nat: true
