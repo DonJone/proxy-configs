@@ -13,7 +13,7 @@ redir-port: 7892
 tproxy-port: 7895
 
 # === 全局设置 ===
-ipv6: true
+ipv6: false
 allow-lan: true
 bind-address: "*"
 mode: rule
@@ -132,7 +132,7 @@ rule-providers:
   cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/cn.mrs", path: ./rules/cn.mrs }
   dnsmasq-china-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/dnsmasq-china-lite.mrs", path: ./rules/dnsmasq-china-lite.mrs }
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/telegram.mrs", path: ./rules/telegram_ip.mrs }
-  proxy_ip: { <<: *ip, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/ip/proxy_ip.mrs", path: ./rules/proxy_ip.mrs }
+
   cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/cn.mrs", path: ./rules/cn_ip.mrs }
 
   # --- ShellCrash ---
@@ -342,7 +342,7 @@ rules:
   - IP-CIDR,188.172.228.65/32,Emby流媒体,no-resolve
   - IP-CIDR,188.253.5.84/32,Emby流媒体,no-resolve
   - RULE-SET,google_ip,AI与Google,no-resolve
-  - RULE-SET,proxy_ip,加密货币与兜底,no-resolve
+
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # --- 端口级识别 (域名规则之后, 仅匹配纯 IP 连接) ---
@@ -362,7 +362,7 @@ rules:
 dns:
   enable: true
   cache-algorithm: arc
-  ipv6: true
+  ipv6: false
   prefer-h3: true
   use-hosts: true
   use-system-hosts: false
