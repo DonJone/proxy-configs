@@ -203,6 +203,7 @@ IP-CIDR, 188.253.5.84/32, Emby, no-resolve
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
 # 国内与兜底
+DOMAIN-KEYWORD, github, 通讯与Github
 GEOIP, CN, 国内服务
 FINAL, 加密货币与兜底
 
@@ -220,7 +221,6 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/youtube
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
-DOMAIN-KEYWORD,github,通讯与Github
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=通讯与Github, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
@@ -236,8 +236,6 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/spotify
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/amazon.lsr, policy=Emby流媒体, tag=Amazon, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitch.lsr, policy=Emby流媒体, tag=Twitch, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体, tag=AppleTV, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
-DOMAIN-KEYWORD,github,通讯与Github
 # 微软苹果Nvidia
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
