@@ -9,6 +9,7 @@
 | 架构 | 策略组 | 适用场景 |
 |------|--------|----------|
 | **Region** | 3 区手选池 → 7 业务组 | 推荐，极简稳定 |
+| **Region SSID** | 业务组嵌套 SSID 策略 | 推荐软路由局域网环境下使用 (Loon 专用) |
 | **Region Fallback** | 3 区手选 + url-test 备胎 + fallback 自动切换 | 需要自动故障转移 |
 | **Country** | 9 区手选 + url-test 备胎 + fallback 自动切换 | 偏好特定国家/地区节点 |
 | **ABC** | 3 线路手选 + 全局测速 + fallback 自动切换 | 全节点不分区域 |
@@ -111,6 +112,7 @@ proxy-configs/
 │       └── Surfing/config_hybrid.yaml
 ├── loon/configs/
 │   ├── loon_Region.lcf                   # Region 纯手选 (推荐)
+│   ├── loon_Region_ssid.lcf              # Region 纯手选 + SSID 软路由直连
 │   ├── loon_Region_fallback.lcf          # Region fallback 备选
 │   ├── loon_country.lcf                  # Country
 │   └── loon.lcf                          # 默认入口
@@ -146,6 +148,7 @@ proxy-configs/
 | 架构 | 链接 |
 |------|------|
 | Region (推荐) | [loon_Region.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf) |
+| Region SSID (软路由) | [loon_Region_ssid.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/loon_Region_ssid.lcf) |
 | Region Fallback | [loon_Region_fallback.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region_fallback.lcf) |
 | Country | [loon_country.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_country.lcf) |
 
