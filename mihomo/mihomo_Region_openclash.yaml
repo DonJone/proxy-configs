@@ -182,6 +182,7 @@ rules:
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
   - DOMAIN-KEYWORD,libvio,DIRECT
+  - DOMAIN,train.suuwu.de,DIRECT
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
   - DOMAIN-SUFFIX,bb.111848.xyz,Emby流媒体
   - DOMAIN-KEYWORD,023168,Emby流媒体

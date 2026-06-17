@@ -197,6 +197,7 @@ IP-CIDR, 188.253.5.84/32, Emby 流媒体, no-resolve
 # 拦截
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
+DOMAIN, train.suuwu.de, DIRECT
 # 国内与兜底
 DOMAIN-KEYWORD, github, 通讯与Github
 GEOIP, CN, 国内服务
