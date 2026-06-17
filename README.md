@@ -4,19 +4,16 @@
 
 ## 架构概览
 
-三种策略组架构，共享同一套规则源和 DNS 设计：
+目前本仓库主推 **Region (按地区/节点手选)** 策略组架构，共享同一套规则源和 DNS 设计：
 
-| 架构 | 策略组 | 适用场景 |
-|------|--------|----------|
-| **Region** | 3 区手选池 → 7 业务组 | 推荐，极简稳定 |
-| **Region SSID** | 业务组嵌套 SSID 策略 | 推荐软路由局域网环境下使用 (Loon 专用) |
-| **Region Fallback** | 3 区手选 + url-test 备胎 + fallback 自动切换 | 需要自动故障转移 |
-| **Country** | 9 区手选 + url-test 备胎 + fallback 自动切换 | 偏好特定国家/地区节点 |
-| **ABC** | 3 线路手选 + 全局测速 + fallback 自动切换 | 全节点不分区域 |
+| 架构 | 策略组 | 适用场景 | 平台支持 |
+|------|--------|----------|----------|
+| **Region** | 3 区手选池 → 7 业务组 | 极简稳定，掌控感强，无自动测速开销 | Mihomo, Shadowrocket |
+| **Region SSID** | 业务组嵌套 SSID 策略 | 推荐软路由局域网环境下使用 | Loon 专用 |
 
-### Region 纯手选 (推荐)
+### Region 纯手选
 
-```
+```text
 亚太 (FilterAsiaPacific + exclude 低倍)
 欧美 (FilterEuAm + exclude 低倍)
 低倍 (FilterLowRate)
@@ -24,17 +21,7 @@
 AI与Google / TikTok / Emby流媒体 / 通讯与Github / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
 ```
 
-14 个策略组，无 url-test、无 fallback。手选池按 Filter 过滤节点，业务组直接引用。
-
-### Fallback 备选
-
-```
-亚太 → 亚太备用 (url-test) → 亚太区 (fallback)
-欧美 → 欧美备用 (url-test) → 欧美区 (fallback)
-低倍 → 低倍备用 (url-test) → 低倍率 (fallback)
-```
-
-20 个策略组，手选池优先，故障自动切测速池，恢复后切回。
+核心理念：无 `url-test`、无 `fallback`，极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【低倍】三大手选节点池，上层具体业务组直接引用对应的手选池。此方案没有自动测速负担，适合机场稳定、清楚自身节点分布的用户。
 
 ## 规则来源
 
@@ -66,7 +53,7 @@ AI与Google / TikTok / Emby流媒体 / 通讯与Github / 游戏平台 / 微软�
 
 规则匹配顺序：
 
-```
+```text
 预留地址 → 私有地址 → 国内直连域名 → QUIC 拦截
 → AI / 通讯 / 流媒体 / TikTok / 开发者 / 微软苹果 / 游戏 / Google (域名层)
 → IP 级分流 (no-resolve) → 端口识别 → GeoIP CN → MATCH
@@ -74,9 +61,9 @@ AI与Google / TikTok / Emby流媒体 / 通讯与Github / 游戏平台 / 微软�
 
 > **关键顺序**: AI/YouTube 必须在 Google 之前 (google.mrs 含 youtube 域名)，GitHub 必须在 Microsoft 之前 (microsoft.mrs 含 github 域名)。
 
-## DNS
+## DNS 设计
 
-- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: blacklist`（ShellCrash 列表）
+- `enhanced-mode: fake-ip`，`fake-ip-filter-mode: blacklist`（使用 ShellCrash 列表）
 - `respect-rules: true` — 规则匹配结果自动选择 DNS 服务器（代理域名走 proxy-doh，直连域名走 direct-doh）
 - `nameserver-policy: {}` — 无额外策略，完全依赖 respect-rules
 - `hosts` 硬编码 DNS 服务器 IP，避免冷启动死锁
@@ -95,70 +82,42 @@ Loon 和 Shadowrocket 不支持 mihomo 的规则集联动 DNS/嗅探，架构相
 
 ## 目录结构
 
-```
+```text
 proxy-configs/
 ├── mihomo/
-│   ├── desktop&mobile/
-│   │   ├── mihomo_Region.yaml            # Region 纯手选 (推荐)
-│   │   ├── mihomo_Region_fallback.yaml   # Region fallback 备选
-│   │   ├── mihomo_country.yaml           # Country 9 区 fallback
-│   │   └── mihomodeskmob.yaml            # ABC 线路 fallback
-│   ├── OpenClash/
-│   │   ├── openclash_Region.yaml         # = mihomo_Region (OpenClash 适配)
-│   │   ├── openclash_Region_fallback.yaml
-│   │   ├── openclash_country.yaml        # = mihomo_country (OpenClash 适配)
-│   │   └── openclash.yaml                # = Region (默认入口)
-│   └── Mobile_Modules/
-│       └── Surfing/config_hybrid.yaml
-├── loon/configs/
-│   ├── loon_Region.lcf                   # Region 纯手选 (推荐)
-│   ├── loon_Region_ssid.lcf              # Region 纯手选 + SSID 软路由直连
-│   ├── loon_Region_fallback.lcf          # Region fallback 备选
-│   ├── loon_country.lcf                  # Country
-│   └── loon.lcf                          # 默认入口
-├── Shadowrocket/configs/
-│   ├── Shadowrocket_Region.conf          # Region 纯手选 (推荐)
-│   ├── Shadowrocket_Region_fallback.conf # Region fallback 备选
-│   ├── Shadowrocket_country.conf         # Country
-│   └── Shadowrocket.conf                 # 默认入口
+│   ├── mihomo_Region.yaml            # Region 纯手选 (推荐)
+│   └── mihomo_Region_openclash.yaml  # Region (OpenClash 适配)
+├── loon/
+│   └── loon_Region_ssid.lcf          # Region 纯手选 + SSID 软路由直连
+├── Shadowrocket/
+│   └── Shadowrocket_Region.conf      # Region 纯手选 (推荐)
 └── README.md
 ```
 
 ## 下载链接
 
-### Mihomo Desktop
+基于 jsDelivr CDN 加速的远程配置文件链接：
 
-| 架构 | 链接 |
-|------|------|
-| Region (推荐) | [mihomo_Region.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region.yaml) |
-| Region Fallback | [mihomo_Region_fallback.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_Region_fallback.yaml) |
-| Country | [mihomo_country.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomo_country.yaml) |
-| ABC | [mihomodeskmob.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/desktop%26mobile/mihomodeskmob.yaml) |
+### Mihomo / OpenClash
 
-### Mihomo OpenClash
-
-| 架构 | 链接 |
-|------|------|
-| Region (推荐) | [openclash_Region.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region.yaml) |
-| Region Fallback | [openclash_Region_fallback.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_Region_fallback.yaml) |
-| Country | [openclash_country.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/OpenClash/openclash_country.yaml) |
+| 适用环境 | 架构 | 链接 |
+|----------|------|------|
+| 通用 (Desktop/Mobile) | Region | [mihomo_Region.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region.yaml) |
+| OpenClash 路由 | Region | [mihomo_Region_openclash.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_openclash.yaml) |
 
 ### Loon
 
 | 架构 | 链接 |
 |------|------|
-| Region (推荐) | [loon_Region.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region.lcf) |
-| Region SSID (软路由) | [loon_Region_ssid.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/loon_Region_ssid.lcf) |
-| Region Fallback | [loon_Region_fallback.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_Region_fallback.lcf) |
-| Country | [loon_country.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/configs/loon_country.lcf) |
+| Region SSID | [loon_Region_ssid.lcf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/loon/loon_Region_ssid.lcf) |
+
+> 注：Loon 相关的其他配置备份及其 Fallback 等版本在本仓库的 `minor` 分支中维护。
 
 ### Shadowrocket
 
 | 架构 | 链接 |
 |------|------|
-| Region (推荐) | [Shadowrocket_Region.conf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region.conf) |
-| Region Fallback | [Shadowrocket_Region_fallback.conf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_Region_fallback.conf) |
-| Country | [Shadowrocket_country.conf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/configs/Shadowrocket_country.conf) |
+| Region | [Shadowrocket_Region.conf](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/Shadowrocket/Shadowrocket_Region.conf) |
 
 ## 参考
 
