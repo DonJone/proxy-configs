@@ -74,7 +74,7 @@ FilterAI: &FilterAI '(?i)(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
-direct-doh: &direct-doh ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query&h3=false"]
+direct-doh: &direct-doh ["system"]
 proxy-doh: &proxy-doh ["https://dns.google/dns-query#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
 
 # === 机场节点订阅 ===
@@ -181,8 +181,35 @@ rules:
   # --- 私有地址 ---
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
+  # Google 广告/数据分析 -> AI与Google
+  - DOMAIN,ep1.adtrafficquality.google,通讯与Github
+  - DOMAIN-SUFFIX,adtrafficquality.google,AI与Google
+  - DOMAIN-SUFFIX,fcmatch.google.com,AI与Google
+  - DOMAIN-SUFFIX,googleanalytics.com,AI与Google
+  - DOMAIN-SUFFIX,google-analytics.com,AI与Google
+  - DOMAIN-SUFFIX,app-measurement.com,AI与Google
+  - DOMAIN-SUFFIX,googlesyndication.com,AI与Google
+  - DOMAIN-SUFFIX,doubleclick.net,AI与Google
+  - DOMAIN-SUFFIX,2mdn.net,AI与Google
+  - DOMAIN-SUFFIX,googleadservices.com,AI与Google
+  - DOMAIN-SUFFIX,adservice.google.com,AI与Google
+  - DOMAIN-SUFFIX,googlesyndication-cn.com,AI与Google
+  - DOMAIN-SUFFIX,doubleclick-cn.net,AI与Google
+  - DOMAIN-SUFFIX,googleadservices-cn.com,AI与Google
+  - DOMAIN-SUFFIX,googletagmanager-cn.com,AI与Google
+  # Google 相册/云盘 -> Emby流媒体
+  - DOMAIN-SUFFIX,photos.google.com,Emby流媒体
+  - DOMAIN-SUFFIX,photos.googleapis.com,Emby流媒体
+  - DOMAIN-SUFFIX,drive.google.com,Emby流媒体
+  - DOMAIN-SUFFIX,docs.google.com,Emby流媒体
+  - DOMAIN-SUFFIX,drive.usercontent.google.com,Emby流媒体
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN,train.suuwu.de,DIRECT
+  - DOMAIN,smart.uhdnow.com,DIRECT
+  - DOMAIN,mlc.once.im,DIRECT
+  - DOMAIN,valuecdn.uhdnow.online,DIRECT
+  - DOMAIN-KEYWORD,smart-vod,DIRECT
+  - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体
   - DOMAIN-KEYWORD,uhdnow,Emby流媒体
   - DOMAIN-SUFFIX,bb.111848.xyz,Emby流媒体
   - DOMAIN-KEYWORD,023168,Emby流媒体
@@ -324,8 +351,8 @@ rules:
   # (规则已移除，由兜底组接管)
 
   # --- Google ---
-  - RULE-SET,google,AI与Google
-  - RULE-SET,google-cn,AI与Google
+  - RULE-SET,google,通讯与Github
+  - RULE-SET,google-cn,通讯与Github
 
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底
@@ -342,7 +369,7 @@ rules:
   - IP-CIDR,193.123.232.141/32,Emby流媒体,no-resolve
   - IP-CIDR,188.172.228.65/32,Emby流媒体,no-resolve
   - IP-CIDR,188.253.5.84/32,Emby流媒体,no-resolve
-  - RULE-SET,google_ip,AI与Google,no-resolve
+  - RULE-SET,google_ip,通讯与Github,no-resolve
 
   - RULE-SET,cn_ip,DIRECT,no-resolve
 

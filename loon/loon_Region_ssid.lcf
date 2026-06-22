@@ -82,9 +82,37 @@ AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX�
 # Rule
 # =====================================
 [Rule]
+# Google 广告/数据分析 -> AI与Google
+DOMAIN, ep1.adtrafficquality.google, 通讯与Github
+DOMAIN-SUFFIX, adtrafficquality.google, AI与Google
+DOMAIN-SUFFIX, fcmatch.google.com, AI与Google
+DOMAIN-SUFFIX, googleanalytics.com, AI与Google
+DOMAIN-SUFFIX, google-analytics.com, AI与Google
+DOMAIN-SUFFIX, app-measurement.com, AI与Google
+DOMAIN-SUFFIX, googlesyndication.com, AI与Google
+DOMAIN-SUFFIX, doubleclick.net, AI与Google
+DOMAIN-SUFFIX, 2mdn.net, AI与Google
+DOMAIN-SUFFIX, googleadservices.com, AI与Google
+DOMAIN-SUFFIX, adservice.google.com, AI与Google
+DOMAIN-SUFFIX, googlesyndication-cn.com, AI与Google
+DOMAIN-SUFFIX, doubleclick-cn.net, AI与Google
+DOMAIN-SUFFIX, googleadservices-cn.com, AI与Google
+DOMAIN-SUFFIX, googletagmanager-cn.com, AI与Google
+# Google 相册/云盘 -> Emby 流媒体
+DOMAIN-SUFFIX, photos.google.com, Emby 流媒体
+DOMAIN-SUFFIX, photos.googleapis.com, Emby 流媒体
+DOMAIN-SUFFIX, drive.google.com, Emby 流媒体
+DOMAIN-SUFFIX, docs.google.com, Emby 流媒体
+DOMAIN-SUFFIX, drive.usercontent.google.com, Emby 流媒体
+# 优先直连
+DOMAIN, smart.uhdnow.com, DIRECT
+DOMAIN, valuecdn.uhdnow.online, DIRECT
+DOMAIN-KEYWORD, smart-vod, DIRECT
+DOMAIN, mlc.once.im, DIRECT
 # 抖音与 Emby 特殊分流
 DOMAIN-KEYWORD, douyin, 国内服务
 DOMAIN-KEYWORD, emby, Emby 流媒体
+DOMAIN, v1-vod1.uhdnow.com, Emby 流媒体
 DOMAIN-KEYWORD, uhdnow, Emby 流媒体
 DOMAIN-SUFFIX, bb.111848.xyz, Emby 流媒体
 DOMAIN-KEYWORD, 023168, Emby 流媒体
@@ -229,7 +257,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
 # Google (最后, 避免拦截 YouTube/AI 域名)
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=通讯与Github, tag=Google, enabled=true
 # 游戏平台
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
 # 加密货币与兜底
