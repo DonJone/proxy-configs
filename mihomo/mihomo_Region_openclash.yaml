@@ -183,6 +183,7 @@ rules:
   - RULE-SET,private,DIRECT
   # Google 广告/数据分析 -> AI与Google
   - DOMAIN,ep1.adtrafficquality.google,通讯与Github
+  - DOMAIN-KEYWORD,antigravity,AI与Google
   - DOMAIN-SUFFIX,adtrafficquality.google,AI与Google
   - DOMAIN-SUFFIX,fcmatch.google.com,AI与Google
   - DOMAIN-SUFFIX,googleanalytics.com,AI与Google
