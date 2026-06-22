@@ -83,7 +83,6 @@ AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX�
 # =====================================
 [Rule]
 # Google 广告/数据分析 -> AI与Google
-DOMAIN, ep1.adtrafficquality.google, 通讯与Github
 DOMAIN-KEYWORD, antigravity, AI与Google
 DOMAIN-SUFFIX, adtrafficquality.google, AI与Google
 DOMAIN-SUFFIX, fcmatch.google.com, AI与Google
@@ -251,14 +250,14 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=通讯与Github, tag=GoogleFCM, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=AI与Google, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
 # 微软苹果Nvidia (Microsoft 可能含 GitHub 域名)
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/apple.lsr, policy=微软苹果Nvidia, tag=Apple, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/microsoft.lsr, policy=微软苹果Nvidia, tag=Microsoft, enabled=true
 # Google (最后, 避免拦截 YouTube/AI 域名)
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=通讯与Github, tag=Google, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
 # 游戏平台
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
 # 加密货币与兜底

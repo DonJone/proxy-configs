@@ -182,7 +182,6 @@ rules:
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
   # Google 广告/数据分析 -> AI与Google
-  - DOMAIN,ep1.adtrafficquality.google,通讯与Github
   - DOMAIN-KEYWORD,antigravity,AI与Google
   - DOMAIN-SUFFIX,adtrafficquality.google,AI与Google
   - DOMAIN-SUFFIX,fcmatch.google.com,AI与Google
@@ -327,7 +326,7 @@ rules:
   # --- 通讯 ---
   - RULE-SET,telegram,通讯与Github
   - RULE-SET,x,通讯与Github
-  - RULE-SET,fcm,通讯与Github
+  - RULE-SET,fcm,AI与Google
 
   # --- 流媒体 ---
   - RULE-SET,media,Emby流媒体
@@ -352,8 +351,8 @@ rules:
   # (规则已移除，由兜底组接管)
 
   # --- Google ---
-  - RULE-SET,google,通讯与Github
-  - RULE-SET,google-cn,通讯与Github
+  - RULE-SET,google,AI与Google
+  - RULE-SET,google-cn,AI与Google
 
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底
@@ -370,7 +369,7 @@ rules:
   - IP-CIDR,193.123.232.141/32,Emby流媒体,no-resolve
   - IP-CIDR,188.172.228.65/32,Emby流媒体,no-resolve
   - IP-CIDR,188.253.5.84/32,Emby流媒体,no-resolve
-  - RULE-SET,google_ip,通讯与Github,no-resolve
+  - RULE-SET,google_ip,AI与Google,no-resolve
 
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
