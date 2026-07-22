@@ -25,8 +25,8 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 | 组名 | 职责 |
 |------|------|
 | `AI与Google` | ai + google + google-cn + google_ip 规则集 |
-| `Emby流媒体` | media + media_ip 规则集 |
-| `通讯与Github` | telegram + telegram_ip + x + fcm + github |
+| `Emby流媒体Github` | media + media_ip 规则集 |
+| `通讯` | telegram + telegram_ip + x + fcm + github |
 | `加密货币与兜底` | Region 架构 MATCH 兜底 |
 | `漏网之鱼` | ABC 线路 MATCH 兜底 |
 | `代理DNS` | DoH 代理链 (proxy-doh 经此组路由) |
@@ -42,7 +42,7 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 3 hand-select pools (亚太/欧美/低倍) → 7 business groups → 直接引用手选池
 ```
 
-无 url-test 备胎、无 fallback 中转。手选池按 Filter 过滤节点，业务组直指 `[欧美, 亚太, 低倍]`。
+无 url-test 备胎、无 fallback 中转。手选池按 Filter 过滤节点，业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
 
 ### Region — Fallback 备选 (20 个策略组)
 
@@ -62,8 +62,8 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 | 规则集 | 目标组 | 平台 |
 |--------|--------|------|
 | `ai`, `google`, `google-cn`, `google_ip` | **AI与Google** | Mihomo |
-| `media`, `media_ip` | **Emby流媒体** | Mihomo |
-| `telegram`, `telegram_ip`, `x`, `fcm`, `github` | **通讯与Github** | Mihomo |
+| `media`, `media_ip` | **Emby流媒体Github** | Mihomo |
+| `telegram`, `telegram_ip`, `x`, `fcm`, `github` | **通讯** | Mihomo |
 | `captcha`, `trackerslist`, `proxy_domain`, `proxy`, `proxy_ip` | **加密货币与兜底** | Mihomo |
 | `AWAvenue-Ads` | **广告拦截** | Mihomo |
 | `apple-cn`, `microsoft-cn`, `games-cn`, `direct_domain`, `cn`, `dnsmasq-china-add` | **DIRECT** | Mihomo |
@@ -97,6 +97,9 @@ Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 
 Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。
 
 ## 修改指南
+
+### 同步要求
+- **每次对配置进行任何修改完成后，都必须同步推送（Push）到 GitHub (gh) 仓库。**
 
 ### 添加/删除策略组
 1. 修改 `mihomo_Region.yaml`（主文件）的 `proxy-groups` 节

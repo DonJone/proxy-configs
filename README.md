@@ -18,7 +18,7 @@
 欧美 (FilterEuAm + exclude 低倍)
 低倍 (FilterLowRate)
   ↓
-AI与Google / TikTok / Emby流媒体 / 通讯与Github / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
+AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
 ```
 
 核心理念：无 `url-test`、无 `fallback`，极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【低倍】三大手选节点池，上层具体业务组直接引用对应的手选池。此方案没有自动测速负担，适合机场稳定、清楚自身节点分布的用户。
@@ -37,10 +37,10 @@ AI与Google / TikTok / Emby流媒体 / 通讯与Github / 游戏平台 / 微软�
 |--------|------|--------|
 | `ai` | DustinWin | **AI与Google** |
 | `google`, `google-cn`, `google_ip` | echs-top / MetaCubeX | **AI与Google** |
-| `media`, `media_ip` | DustinWin | **Emby流媒体** |
-| `telegram`, `telegram_ip` | MetaCubeX / echs-top | **通讯与Github** |
-| `x`, `fcm` | MetaCubeX | **通讯与Github** |
-| `github` + `DOMAIN-KEYWORD,github` | GinsRule-git | **通讯与Github** |
+| `media`, `media_ip` | DustinWin | **Emby流媒体Github** |
+| `telegram`, `telegram_ip` | MetaCubeX / echs-top | **通讯** |
+| `x`, `fcm` | MetaCubeX | **通讯** |
+| `github` + `DOMAIN-KEYWORD,github` | GinsRule-git | **通讯** |
 | `tiktok` | MetaCubeX | **TikTok** |
 | `apple`, `microsoft` | MetaCubeX | **微软苹果Nvidia** |
 | `apple-cn`, `microsoft-cn` | MetaCubeX | **微软苹果Nvidia** |

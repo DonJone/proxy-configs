@@ -46,19 +46,19 @@ AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master
 低倍 = select, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 
 # 2. 业务组策略 (原业务组变为内部策略，供 SSID 场景调用)
-AI与Google策略 = select, AI, 欧美, 亚太, 低倍
-TikTok策略 = select, 亚太, 欧美, 低倍
-Emby流媒体策略 = select, 低倍, DIRECT, 亚太, 欧美
-通讯与Github策略 = select, 亚太, 欧美, 低倍, DIRECT
-游戏平台策略 = select, DIRECT, 亚太, 欧美
-微软苹果Nvidia策略 = select, DIRECT, 亚太, 欧美
-加密货币与兜底策略 = select, 亚太, 欧美, 低倍, DIRECT
+AI与Google策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+TikTok策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+Emby流媒体Github策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+微软苹果Nvidia策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
 
 # 3. 业务场景组 (SSID 机制，接管软路由下的直连)
 AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
 TikTok = ssid, default=TikTok策略, cellular=TikTok策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
-Emby 流媒体 = ssid, default=Emby流媒体策略, cellular=Emby流媒体策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
-通讯与Github = ssid, default=通讯与Github策略, cellular=通讯与Github策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流媒体Github策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
+通讯 = ssid, default=通讯策略, cellular=通讯策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
 游戏平台 = ssid, default=游戏平台策略, cellular=游戏平台策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
 微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, cellular=微软苹果Nvidia策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
 加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
@@ -73,9 +73,9 @@ Emby 流媒体 = ssid, default=Emby流媒体策略, cellular=Emby流媒体策略
 全部节点 = NameRegex, FilterKey = ".*"
 除拨号外 = NameRegex, FilterKey = "^(?i)(?!.*dialer).*"
 
-亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|HK|Hong|Kong|台|TW|Tai|Wan|日|JP|Japan|新加坡|狮城|SG|Singapore|韩|KR|Korea|马|MY|Malaysia|印度|IN|India|澳|AU|Australia|澳门|Macau)"
-欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|CA|Canada|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|俄|RU|Russia|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|阿根廷|AR|Argentina|巴西|BR|Brazil|墨西哥|MX|Mexico)"
-AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|JP|Japan|美|US|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|UK|Kingdom|Britain|伦敦|德|DE|Germany|法|FR|France|荷兰|NL|Netherlands|意|IT|Italy|瑞士|CH|Switzerland|瑞典|SE|Sweden|欧洲|EU|Europe)"
+亚太节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(港|Hong|Kong|台|Tai|Wan|日|Japan|新加坡|狮城|Singapore|韩|Korea|马|Malaysia|印度|India|澳|Australia|澳门|Macau|(?:^|[^a-zA-Z])(HK|TW|JP|SG|KR|MY|IN|AU)(?:[^a-zA-Z]|$))"
+欧美节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|Canada|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|俄|Russia|意|Italy|瑞士|Switzerland|瑞典|Sweden|阿根廷|Argentina|巴西|Brazil|墨西哥|Mexico|(?:^|[^a-zA-Z])(US|CA|UK|DE|FR|NL|RU|IT|CH|SE|AR|BR|MX)(?:[^a-zA-Z]|$))"
+AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))"
 低倍节点 = NameRegex, FilterKey = "(?i)((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)"
 
 # =====================================
@@ -98,136 +98,133 @@ DOMAIN-SUFFIX, googlesyndication-cn.com, AI与Google
 DOMAIN-SUFFIX, doubleclick-cn.net, AI与Google
 DOMAIN-SUFFIX, googleadservices-cn.com, AI与Google
 DOMAIN-SUFFIX, googletagmanager-cn.com, AI与Google
-# Google 相册/云盘 -> Emby 流媒体
-DOMAIN-SUFFIX, photos.google.com, Emby 流媒体
-DOMAIN-SUFFIX, photos.googleapis.com, Emby 流媒体
-DOMAIN-SUFFIX, drive.google.com, Emby 流媒体
-DOMAIN-SUFFIX, docs.google.com, Emby 流媒体
-DOMAIN-SUFFIX, drive.usercontent.google.com, Emby 流媒体
+# Google 相册/云盘 -> Emby流媒体Github
+DOMAIN-SUFFIX, photos.google.com, Emby流媒体Github
+DOMAIN-SUFFIX, photos.googleapis.com, Emby流媒体Github
+DOMAIN-SUFFIX, drive.google.com, Emby流媒体Github
+DOMAIN-SUFFIX, docs.google.com, Emby流媒体Github
+DOMAIN-SUFFIX, drive.usercontent.google.com, Emby流媒体Github
 # 优先直连
-DOMAIN, smart.uhdnow.com, DIRECT
-DOMAIN, valuecdn.uhdnow.online, DIRECT
 DOMAIN-KEYWORD, smart-vod, DIRECT
 DOMAIN, mlc.once.im, DIRECT
 # 抖音与 Emby 特殊分流
 DOMAIN-KEYWORD, douyin, 国内服务
-DOMAIN-KEYWORD, emby, Emby 流媒体
-DOMAIN, v1-vod1.uhdnow.com, Emby 流媒体
-DOMAIN-KEYWORD, uhdnow, Emby 流媒体
-DOMAIN-SUFFIX, bb.111848.xyz, Emby 流媒体
-DOMAIN-KEYWORD, 023168, Emby 流媒体
-DOMAIN-KEYWORD, 1024, Emby 流媒体
-DOMAIN-KEYWORD, 123456, Emby 流媒体
-DOMAIN-KEYWORD, 20120714, Emby 流媒体
-DOMAIN-KEYWORD, 285286, Emby 流媒体
-DOMAIN-KEYWORD, 4545, Emby 流媒体
-DOMAIN-KEYWORD, 581658, Emby 流媒体
-DOMAIN-KEYWORD, 669998, Emby 流媒体
-DOMAIN-KEYWORD, 9191001, Emby 流媒体
-DOMAIN-KEYWORD, 9521732, Emby 流媒体
-DOMAIN-KEYWORD, abcj, Emby 流媒体
-DOMAIN-KEYWORD, acemby, Emby 流媒体
-DOMAIN-KEYWORD, agon, Emby 流媒体
-DOMAIN-KEYWORD, aiyowei, Emby 流媒体
-DOMAIN-KEYWORD, alist7, Emby 流媒体
-DOMAIN-KEYWORD, as174, Emby 流媒体
-DOMAIN-KEYWORD, bddup, Emby 流媒体
-DOMAIN-KEYWORD, carlos, Emby 流媒体
-DOMAIN-KEYWORD, carryz, Emby 流媒体
-DOMAIN-KEYWORD, catlinks, Emby 流媒体
-DOMAIN-KEYWORD, ccemby, Emby 流媒体
-DOMAIN-KEYWORD, cfprefer3, Emby 流媒体
-DOMAIN-KEYWORD, charontv, Emby 流媒体
-DOMAIN-KEYWORD, cjpc, Emby 流媒体
-DOMAIN-KEYWORD, cn2gias, Emby 流媒体
-DOMAIN-KEYWORD, deja-vu, Emby 流媒体
-DOMAIN-KEYWORD, dicarerhome, Emby 流媒体
-DOMAIN-KEYWORD, ednovas, Emby 流媒体
-DOMAIN-KEYWORD, emby77, Emby 流媒体
-DOMAIN-KEYWORD, embyclub, Emby 流媒体
-DOMAIN-KEYWORD, embymv, Emby 流媒体
-DOMAIN-KEYWORD, embyplus, Emby 流媒体
-DOMAIN-KEYWORD, embyserver, Emby 流媒体
-DOMAIN-KEYWORD, embytv, Emby 流媒体
-DOMAIN-KEYWORD, favoritewife, Emby 流媒体
-DOMAIN-KEYWORD, flowercloud, Emby 流媒体
-DOMAIN-KEYWORD, freetz, Emby 流媒体
-DOMAIN-KEYWORD, gfwemby, Emby 流媒体
-DOMAIN-KEYWORD, ggtt, Emby 流媒体
-DOMAIN-KEYWORD, goodisp, Emby 流媒体
-DOMAIN-KEYWORD, gtlx, Emby 流媒体
-DOMAIN-KEYWORD, gugumedia, Emby 流媒体
-DOMAIN-KEYWORD, happyav, Emby 流媒体
-DOMAIN-KEYWORD, imetyou, Emby 流媒体
-DOMAIN-KEYWORD, immtel, Emby 流媒体
-DOMAIN-KEYWORD, infinityfly, Emby 流媒体
-DOMAIN-KEYWORD, itsmyduty, Emby 流媒体
-DOMAIN-KEYWORD, jmsooo, Emby 流媒体
-DOMAIN-KEYWORD, jmsuper, Emby 流媒体
-DOMAIN-KEYWORD, loseremby, Emby 流媒体
-DOMAIN-KEYWORD, lucasmedia, Emby 流媒体
-DOMAIN-KEYWORD, magpie, Emby 流媒体
-DOMAIN-KEYWORD, magpiecdn, Emby 流媒体
-DOMAIN-KEYWORD, maying, Emby 流媒体
-DOMAIN-KEYWORD, mdss, Emby 流媒体
-DOMAIN-KEYWORD, micu, Emby 流媒体
-DOMAIN-KEYWORD, mikuu, Emby 流媒体
-DOMAIN-KEYWORD, misakaf, Emby 流媒体
-DOMAIN-KEYWORD, misty, Emby 流媒体
-DOMAIN-KEYWORD, mius, Emby 流媒体
-DOMAIN-KEYWORD, mjjemby, Emby 流媒体
-DOMAIN-KEYWORD, mobaiemby, Emby 流媒体
-DOMAIN-KEYWORD, mulgore, Emby 流媒体
-DOMAIN-KEYWORD, nanflix, Emby 流媒体
-DOMAIN-KEYWORD, nebula-emby, Emby 流媒体
-DOMAIN-KEYWORD, nebula-media, Emby 流媒体
-DOMAIN-KEYWORD, newpppp, Emby 流媒体
-DOMAIN-KEYWORD, newwan, Emby 流媒体
-DOMAIN-KEYWORD, nexitally, Emby 流媒体
-DOMAIN-KEYWORD, niceduck, Emby 流媒体
-DOMAIN-KEYWORD, nijigem, Emby 流媒体
-DOMAIN-KEYWORD, nivod4, Emby 流媒体
-DOMAIN-KEYWORD, ntrrr, Emby 流媒体
-DOMAIN-KEYWORD, nyancat, Emby 流媒体
-DOMAIN-KEYWORD, odysseyplus, Emby 流媒体
-DOMAIN-KEYWORD, ohhhh, Emby 流媒体
-DOMAIN-KEYWORD, otakudrive, Emby 流媒体
-DOMAIN-KEYWORD, peachmv, Emby 流媒体
-DOMAIN-KEYWORD, pilipiliultra, Emby 流媒体
-DOMAIN-KEYWORD, plusmedia, Emby 流媒体
-DOMAIN-KEYWORD, poloemby, Emby 流媒体
-DOMAIN-KEYWORD, pololine, Emby 流媒体
-DOMAIN-KEYWORD, pornemby, Emby 流媒体
-DOMAIN-KEYWORD, prprcloud, Emby 流媒体
-DOMAIN-KEYWORD, sfcj, Emby 流媒体
-DOMAIN-KEYWORD, shuipo, Emby 流媒体
-DOMAIN-KEYWORD, speedx, Emby 流媒体
-DOMAIN-KEYWORD, starcat, Emby 流媒体
-DOMAIN-KEYWORD, studyfun, Emby 流媒体
-DOMAIN-KEYWORD, the98, Emby 流媒体
-DOMAIN-KEYWORD, vfing, Emby 流媒体
-DOMAIN-KEYWORD, wiri, Emby 流媒体
-DOMAIN-KEYWORD, xeton, Emby 流媒体
-DOMAIN-KEYWORD, xiaoyi, Emby 流媒体
-DOMAIN-KEYWORD, xmsl, Emby 流媒体
-DOMAIN-KEYWORD, ycxdy, Emby 流媒体
-DOMAIN-KEYWORD, younoyes, Emby 流媒体
-DOMAIN-KEYWORD, ytoo, Emby 流媒体
-DOMAIN-KEYWORD, zi0, Emby 流媒体
-DOMAIN-KEYWORD, zox, Emby 流媒体
-IP-CIDR, 188.172.228.49/32, Emby 流媒体, no-resolve
-IP-CIDR, 202.61.255.248/32, Emby 流媒体, no-resolve
-IP-CIDR, 102.223.180.108/32, Emby 流媒体, no-resolve
-IP-CIDR, 141.147.166.107/32, Emby 流媒体, no-resolve
-IP-CIDR, 193.123.232.141/32, Emby 流媒体, no-resolve
-IP-CIDR, 188.172.228.65/32, Emby 流媒体, no-resolve
-IP-CIDR, 188.253.5.84/32, Emby 流媒体, no-resolve
+DOMAIN-KEYWORD, emby, Emby流媒体Github
+DOMAIN-KEYWORD, uhdnow, Emby流媒体Github
+DOMAIN-SUFFIX, bb.111848.xyz, Emby流媒体Github
+DOMAIN-KEYWORD, 023168, Emby流媒体Github
+DOMAIN-KEYWORD, 1024, Emby流媒体Github
+DOMAIN-KEYWORD, 123456, Emby流媒体Github
+DOMAIN-KEYWORD, 20120714, Emby流媒体Github
+DOMAIN-KEYWORD, 285286, Emby流媒体Github
+DOMAIN-KEYWORD, 4545, Emby流媒体Github
+DOMAIN-KEYWORD, 581658, Emby流媒体Github
+DOMAIN-KEYWORD, 669998, Emby流媒体Github
+DOMAIN-KEYWORD, 9191001, Emby流媒体Github
+DOMAIN-KEYWORD, 9521732, Emby流媒体Github
+DOMAIN-KEYWORD, abcj, Emby流媒体Github
+DOMAIN-KEYWORD, acemby, Emby流媒体Github
+DOMAIN-KEYWORD, agon, Emby流媒体Github
+DOMAIN-KEYWORD, aiyowei, Emby流媒体Github
+DOMAIN-KEYWORD, alist7, Emby流媒体Github
+DOMAIN-KEYWORD, as174, Emby流媒体Github
+DOMAIN-KEYWORD, bddup, Emby流媒体Github
+DOMAIN-KEYWORD, carlos, Emby流媒体Github
+DOMAIN-KEYWORD, carryz, Emby流媒体Github
+DOMAIN-KEYWORD, catlinks, Emby流媒体Github
+DOMAIN-KEYWORD, ccemby, Emby流媒体Github
+DOMAIN-KEYWORD, cfprefer3, Emby流媒体Github
+DOMAIN-KEYWORD, charontv, Emby流媒体Github
+DOMAIN-KEYWORD, cjpc, Emby流媒体Github
+DOMAIN-KEYWORD, cn2gias, Emby流媒体Github
+DOMAIN-KEYWORD, deja-vu, Emby流媒体Github
+DOMAIN-KEYWORD, dicarerhome, Emby流媒体Github
+DOMAIN-KEYWORD, ednovas, Emby流媒体Github
+DOMAIN-KEYWORD, emby77, Emby流媒体Github
+DOMAIN-KEYWORD, embyclub, Emby流媒体Github
+DOMAIN-KEYWORD, embymv, Emby流媒体Github
+DOMAIN-KEYWORD, embyplus, Emby流媒体Github
+DOMAIN-KEYWORD, embyserver, Emby流媒体Github
+DOMAIN-KEYWORD, embytv, Emby流媒体Github
+DOMAIN-KEYWORD, favoritewife, Emby流媒体Github
+DOMAIN-KEYWORD, flowercloud, Emby流媒体Github
+DOMAIN-KEYWORD, freetz, Emby流媒体Github
+DOMAIN-KEYWORD, gfwemby, Emby流媒体Github
+DOMAIN-KEYWORD, ggtt, Emby流媒体Github
+DOMAIN-KEYWORD, goodisp, Emby流媒体Github
+DOMAIN-KEYWORD, gtlx, Emby流媒体Github
+DOMAIN-KEYWORD, gugumedia, Emby流媒体Github
+DOMAIN-KEYWORD, happyav, Emby流媒体Github
+DOMAIN-KEYWORD, imetyou, Emby流媒体Github
+DOMAIN-KEYWORD, immtel, Emby流媒体Github
+DOMAIN-KEYWORD, infinityfly, Emby流媒体Github
+DOMAIN-KEYWORD, itsmyduty, Emby流媒体Github
+DOMAIN-KEYWORD, jmsooo, Emby流媒体Github
+DOMAIN-KEYWORD, jmsuper, Emby流媒体Github
+DOMAIN-KEYWORD, loseremby, Emby流媒体Github
+DOMAIN-KEYWORD, lucasmedia, Emby流媒体Github
+DOMAIN-KEYWORD, magpie, Emby流媒体Github
+DOMAIN-KEYWORD, magpiecdn, Emby流媒体Github
+DOMAIN-KEYWORD, maying, Emby流媒体Github
+DOMAIN-KEYWORD, mdss, Emby流媒体Github
+DOMAIN-KEYWORD, micu, Emby流媒体Github
+DOMAIN-KEYWORD, mikuu, Emby流媒体Github
+DOMAIN-KEYWORD, misakaf, Emby流媒体Github
+DOMAIN-KEYWORD, misty, Emby流媒体Github
+DOMAIN-KEYWORD, mius, Emby流媒体Github
+DOMAIN-KEYWORD, mjjemby, Emby流媒体Github
+DOMAIN-KEYWORD, mobaiemby, Emby流媒体Github
+DOMAIN-KEYWORD, mulgore, Emby流媒体Github
+DOMAIN-KEYWORD, nanflix, Emby流媒体Github
+DOMAIN-KEYWORD, nebula-emby, Emby流媒体Github
+DOMAIN-KEYWORD, nebula-media, Emby流媒体Github
+DOMAIN-KEYWORD, newpppp, Emby流媒体Github
+DOMAIN-KEYWORD, newwan, Emby流媒体Github
+DOMAIN-KEYWORD, nexitally, Emby流媒体Github
+DOMAIN-KEYWORD, niceduck, Emby流媒体Github
+DOMAIN-KEYWORD, nijigem, Emby流媒体Github
+DOMAIN-KEYWORD, nivod4, Emby流媒体Github
+DOMAIN-KEYWORD, ntrrr, Emby流媒体Github
+DOMAIN-KEYWORD, nyancat, Emby流媒体Github
+DOMAIN-KEYWORD, odysseyplus, Emby流媒体Github
+DOMAIN-KEYWORD, ohhhh, Emby流媒体Github
+DOMAIN-KEYWORD, otakudrive, Emby流媒体Github
+DOMAIN-KEYWORD, peachmv, Emby流媒体Github
+DOMAIN-KEYWORD, pilipiliultra, Emby流媒体Github
+DOMAIN-KEYWORD, plusmedia, Emby流媒体Github
+DOMAIN-KEYWORD, poloemby, Emby流媒体Github
+DOMAIN-KEYWORD, pololine, Emby流媒体Github
+DOMAIN-KEYWORD, pornemby, Emby流媒体Github
+DOMAIN-KEYWORD, prprcloud, Emby流媒体Github
+DOMAIN-KEYWORD, sfcj, Emby流媒体Github
+DOMAIN-KEYWORD, shuipo, Emby流媒体Github
+DOMAIN-KEYWORD, speedx, Emby流媒体Github
+DOMAIN-KEYWORD, starcat, Emby流媒体Github
+DOMAIN-KEYWORD, studyfun, Emby流媒体Github
+DOMAIN-KEYWORD, the98, Emby流媒体Github
+DOMAIN-KEYWORD, vfing, Emby流媒体Github
+DOMAIN-KEYWORD, wiri, Emby流媒体Github
+DOMAIN-KEYWORD, xeton, Emby流媒体Github
+DOMAIN-KEYWORD, xiaoyi, Emby流媒体Github
+DOMAIN-KEYWORD, xmsl, Emby流媒体Github
+DOMAIN-KEYWORD, ycxdy, Emby流媒体Github
+DOMAIN-KEYWORD, younoyes, Emby流媒体Github
+DOMAIN-KEYWORD, ytoo, Emby流媒体Github
+DOMAIN-KEYWORD, zi0, Emby流媒体Github
+DOMAIN-KEYWORD, zox, Emby流媒体Github
+IP-CIDR, 188.172.228.49/32, Emby流媒体Github, no-resolve
+IP-CIDR, 202.61.255.248/32, Emby流媒体Github, no-resolve
+IP-CIDR, 102.223.180.108/32, Emby流媒体Github, no-resolve
+IP-CIDR, 141.147.166.107/32, Emby流媒体Github, no-resolve
+IP-CIDR, 193.123.232.141/32, Emby流媒体Github, no-resolve
+IP-CIDR, 188.172.228.65/32, Emby流媒体Github, no-resolve
+IP-CIDR, 188.253.5.84/32, Emby流媒体Github, no-resolve
 # 拦截
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
 DOMAIN, train.suuwu.de, DIRECT
 # 国内与兜底
-DOMAIN-KEYWORD, github, 通讯与Github
+DOMAIN-KEYWORD, github, Emby流媒体Github
 GEOIP, CN, 国内服务
 FINAL, 加密货币与兜底
 
@@ -240,16 +237,16 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/bypass
 # AI (Google 域名会匹配 YouTube, AI 必须在 Google 之前)
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ai/ai-other.lsr, policy=AI与Google, tag=AI分流, enabled=true
 # 流媒体 (YouTube 必须在 Google 之前, 否则被 google.mrs 截走)
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/youtube.lsr, policy=Emby 流媒体, tag=YouTube, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/netflix.lsr, policy=Emby 流媒体, tag=Netflix, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/disney.lsr, policy=Emby 流媒体, tag=Disney, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/hbo.lsr, policy=Emby 流媒体, tag=HBO, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/spotify.lsr, policy=Emby 流媒体, tag=Spotify, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv.lsr, policy=Emby 流媒体, tag=AppleTV, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/youtube.lsr, policy=Emby流媒体Github, tag=YouTube, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/netflix.lsr, policy=Emby流媒体Github, tag=Netflix, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/disney.lsr, policy=Emby流媒体Github, tag=Disney, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/hbo.lsr, policy=Emby流媒体Github, tag=HBO, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/spotify.lsr, policy=Emby流媒体Github, tag=Spotify, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv.lsr, policy=Emby流媒体Github, tag=AppleTV, enabled=true
 # 社交通讯 (GitHub 必须在 Microsoft 之前)
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯与Github, tag=Telegram, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯与Github, tag=Twitter, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯与Github, tag=GitHub, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯, tag=Telegram, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯, tag=Twitter, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯, tag=GitHub, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=AI与Google, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
