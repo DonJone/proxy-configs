@@ -1,8 +1,8 @@
 # ============================================================
-# OpenClash Hybrid Config: 多源规则 + 自建区域纯手选架构
-# 规则来源: DustinWin + MetaCubeX + echs-top
-# 策略组架构: Region (3 区纯手选), 平铺规则 (无 SUB-RULE)
-# 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
+# Mihomo Region Config: 多源规则 + 自建区域手选/测速架构
+# 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
+# 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
+# 环境适配: ShellCrash / Desktop (TUN模式)
 # ============================================================
 
 # === 端口 (OpenClash 多端口) ===
@@ -126,7 +126,6 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs", path: ./rules/google_ip.mrs }
 
   # --- echs-top ---
-  ads: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/ads.mrs", path: ./rules/ads.mrs }
   google: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/google.mrs", path: ./rules/google.mrs }
   proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-ltsc.mrs", path: ./rules/proxy-ltsc.mrs }
   cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/cn.mrs", path: ./rules/cn.mrs }
@@ -153,7 +152,7 @@ proxy-groups:
   - { name: 亚太, <<: *Select, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
   - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
-  - { name: 低倍, type: url-test, include-all: true, filter: *FilterLowRate, interval: 180, tolerance: 30, url: "https://cp.cloudflare.com/generate_204" }
+  - { name: 低倍, type: url-test, include-all: true, filter: *FilterLowRate, interval: 180, tolerance: 30, lazy: true, url: "https://cp.cloudflare.com/generate_204" }
 
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
@@ -332,8 +331,7 @@ rules:
   - RULE-SET,tiktok,TikTok
 
   # --- 开发者 (微软苹果之前, microsoft.mrs 可能含 github 域名) ---
-  - RULE-SET,github,Emby流媒体Github
-  - DOMAIN-KEYWORD,github,Emby流媒体Github
+  - RULE-SET,github,通讯
 
   # --- 微软苹果Nvidia ---
   - RULE-SET,apple,微软苹果Nvidia
@@ -366,6 +364,7 @@ rules:
   - IP-CIDR,193.123.232.141/32,Emby流媒体Github,no-resolve
   - IP-CIDR,188.172.228.65/32,Emby流媒体Github,no-resolve
   - IP-CIDR,188.253.5.84/32,Emby流媒体Github,no-resolve
+  - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
   - RULE-SET,google_ip,AI与Google,no-resolve
 
   - RULE-SET,cn_ip,DIRECT,no-resolve

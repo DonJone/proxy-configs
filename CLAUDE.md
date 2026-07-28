@@ -22,17 +22,22 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 
 以下组名跨越所有文件和平台，修改时需全部同步：
 
-| 组名 | 职责 |
-|------|------|
-| `AI与Google` | ai + google + google-cn + google_ip 规则集 |
-| `Emby流媒体Github` | media + media_ip 规则集 |
-| `通讯` | telegram + telegram_ip + x + fcm + github |
-| `加密货币与兜底` | Region 架构 MATCH 兜底 |
-| `漏网之鱼` | ABC 线路 MATCH 兜底 |
-| `代理DNS` | DoH 代理链 (proxy-doh 经此组路由) |
-| `代理QUIC` | UDP 443 控制 (REJECT 强制 TCP 回退) |
-| `广告拦截` | AWAvenue-Ads 出口 |
-| `国内服务` | 国内流量手动兜底 (默认 DIRECT) |
+| 组名 | 类型 | 职责 |
+|------|------|------|
+| `亚太` | select (手选池) | FilterAsiaPacific, exclude 低倍 |
+| `欧美` | select (手选池) | FilterEuAm, exclude 低倍 |
+| `AI` | select (手选池) | FilterAI, exclude 低倍 |
+| `低倍` | url-test (测速池) | FilterLowRate, interval=180, tolerance=30, lazy |
+| `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |
+| `TikTok` | select (业务组) | tiktok 规则集 |
+| `Emby流媒体Github` | select (业务组) | media + media_ip 规则集 |
+| `通讯` | select (业务组) | telegram + telegram_ip + x + github |
+| `游戏平台` | select (业务组) | games-cn + steam 规则集 |
+| `微软苹果Nvidia` | select (业务组) | apple + microsoft + apple-cn + microsoft-cn |
+| `加密货币与兜底` | select (业务组) | trackerslist + proxy_domain + proxy-lite, MATCH 兜底 |
+| `国内服务` | select (静默组) | 国内流量手动兜底 (默认 DIRECT), hidden |
+| `代理DNS` | select (基础设施) | DoH 代理链 (proxy-doh 经此组路由), hidden |
+| `代理QUIC` | select (基础设施) | UDP 443 控制 (REJECT 强制 TCP 回退), hidden |
 
 ## 架构
 
@@ -44,16 +49,7 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 
 亚太/欧美/AI 保持手选，低倍改为 url-test (interval=180, tolerance=30) 自动测速。无 fallback 中转。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
 
-### Region — Fallback 备选 (20 个策略组)
-
-```
-亚太 → 亚太备用 (url-test) → 亚太区 (fallback)
-欧美 → 欧美备用 (url-test) → 欧美区 (fallback)
-低倍 → 低倍备用 (url-test) → 低倍率 (fallback)
-  ↓ 业务组引用 fallback 区
-```
-
-`_fallback` 后缀文件。手选池优先，故障自动切测速池，恢复后切回。
+> **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
 
 ## 规则路由映射
 

@@ -223,10 +223,6 @@ IP-CIDR, 188.253.5.84/32, Emby流媒体Github, no-resolve
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 DOMAIN-KEYWORD, libvio, DIRECT
 DOMAIN, train.suuwu.de, DIRECT
-# 国内与兜底
-DOMAIN-KEYWORD, github, Emby流媒体Github
-GEOIP, CN, 国内服务
-FINAL, 加密货币与兜底
 
 # =====================================
 # Remote Rule (引用外部规则库)
@@ -247,7 +243,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯, tag=Twitter, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯, tag=GitHub, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=AI与Google, tag=GoogleFCM, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.lsr, policy=AI与Google, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
 # 微软苹果Nvidia (Microsoft 可能含 GitHub 域名)
@@ -264,6 +260,10 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudfl
 # 国内服务
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
+
+# 国内与兜底
+GEOIP, CN, 国内服务
+FINAL, 加密货币与兜底
 
 
 # =====================================
