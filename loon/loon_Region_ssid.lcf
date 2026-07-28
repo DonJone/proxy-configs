@@ -43,7 +43,7 @@ ssid: 你的软路由wifi名=server: 192.168.1.1
 亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
-低倍 = url-test, 低倍节点, url = https://www.gstatic.com/generate_204, interval = 180, tolerance = 30, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+低倍 = url-test, 低倍节点, url = https://cp.cloudflare.com/generate_204, interval = 180, tolerance = 30, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
 
 # 2. 业务组策略 (原业务组变为内部策略，供 SSID 场景调用)
 AI与Google策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
