@@ -30,8 +30,8 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 | `低倍` | url-test (测速池) | FilterLowRate, interval=180, tolerance=30, lazy |
 | `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |
 | `TikTok` | select (业务组) | tiktok 规则集 |
-| `Emby流媒体Github` | select (业务组) | media + media_ip 规则集 |
-| `通讯` | select (业务组) | telegram + telegram_ip + x + github |
+| `Emby流媒体Github` | select (业务组) | media + media_ip + github 规则集 |
+| `通讯` | select (业务组) | telegram + telegram_ip + x |
 | `游戏平台` | select (业务组) | games-cn + steam 规则集 |
 | `微软苹果Nvidia` | select (业务组) | apple + microsoft + apple-cn + microsoft-cn |
 | `加密货币与兜底` | select (业务组) | trackerslist + proxy_domain + proxy-lite, MATCH 兜底 |

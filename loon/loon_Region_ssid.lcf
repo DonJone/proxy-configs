@@ -242,7 +242,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv
 # 社交通讯 (GitHub 必须在 Microsoft 之前)
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯, tag=Twitter, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=通讯, tag=GitHub, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=Emby流媒体Github, tag=GitHub, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.lsr, policy=AI与Google, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
