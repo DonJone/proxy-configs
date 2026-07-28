@@ -146,14 +146,14 @@ proxies:
   - { name: 仅IPV6, type: direct, udp: true, ip-version: ipv6 }
 
 # ============================================================
-# 策略组 (Region 3 区纯手选 + 基础设施组)
+# 策略组 (Region 3 区: 亚太/欧美/AI 手选 + 低倍自动测速 + 基础设施组)
 # ============================================================
 proxy-groups:
   # --- 手选池 (4 个) ---
   - { name: 亚太, <<: *Select, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
   - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
-  - { name: 低倍, <<: *Select, filter: *FilterLowRate }
+  - { name: 低倍, type: url-test, include-all: true, filter: *FilterLowRate, interval: 180, tolerance: 30, url: "https://www.gstatic.com/generate_204" }
 
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }

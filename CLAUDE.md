@@ -39,10 +39,10 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 ### Region — 纯手选 (主力, 14 个策略组)
 
 ```
-3 hand-select pools (亚太/欧美/低倍) → 7 business groups → 直接引用手选池
+2 hand-select pools (亚太/欧美) + 1 url-test pool (低倍) → 7 business groups → 直接引用池
 ```
 
-无 url-test 备胎、无 fallback 中转。手选池按 Filter 过滤节点，业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
+亚太/欧美/AI 保持手选，低倍改为 url-test (interval=180, tolerance=30) 自动测速。无 fallback 中转。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
 
 ### Region — Fallback 备选 (20 个策略组)
 
