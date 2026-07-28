@@ -40,28 +40,28 @@ ssid: 你的软路由wifi名=server: 192.168.1.1
 # =====================================
 [Proxy Group]
 # 1. 手选池: 调用 Remote Filter 过滤器
-亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
-欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
-AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
-低倍 = url-test, 低倍节点, url = https://cp.cloudflare.com/generate_204, interval = 180, tolerance = 30, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png
+亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Asia_Map.png
+欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/World_Map.png
+AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png
+低倍 = url-test, 低倍节点, url = https://cp.cloudflare.com/generate_204, interval = 180, tolerance = 30, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png
 
 # 2. 业务组策略 (原业务组变为内部策略，供 SSID 场景调用)
-AI与Google策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-TikTok策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-Emby流媒体Github策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-微软苹果Nvidia策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
-加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT
+AI与Google策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
+TikTok策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
+Emby流媒体Github策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
+通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+微软苹果Nvidia策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
+加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
 
 # 3. 业务场景组 (SSID 机制，接管软路由下的直连)
-AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
-TikTok = ssid, default=TikTok策略, cellular=TikTok策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
-Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流媒体Github策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
-通讯 = ssid, default=通讯策略, cellular=通讯策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
-游戏平台 = ssid, default=游戏平台策略, cellular=游戏平台策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
-微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, cellular=微软苹果Nvidia策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
-加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
+AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+TikTok = ssid, default=TikTok策略, cellular=TikTok策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流媒体Github策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+通讯 = ssid, default=通讯策略, cellular=通讯策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+游戏平台 = ssid, default=游戏平台策略, cellular=游戏平台策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, cellular=微软苹果Nvidia策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 
 # 4. 静默组
 国内服务 = select, DIRECT, 亚太, hidden = true
