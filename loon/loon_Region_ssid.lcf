@@ -108,6 +108,9 @@ DOMAIN-SUFFIX, drive.usercontent.google.com, Emby流媒体Github
 # 优先直连
 DOMAIN-KEYWORD, smart-vod, DIRECT
 DOMAIN, mlc.once.im, DIRECT
+DOMAIN, smart.uhdnow.com, DIRECT
+DOMAIN, speed.uhdnow.com, DIRECT
+DOMAIN-SUFFIX, uhdnow.online, DIRECT
 # 抖音与 Emby 特殊分流
 DOMAIN-KEYWORD, douyin, 国内服务
 DOMAIN-KEYWORD, emby, Emby流媒体Github

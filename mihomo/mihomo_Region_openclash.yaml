@@ -207,6 +207,9 @@ rules:
   - DOMAIN,train.suuwu.de,DIRECT
   - DOMAIN,mlc.once.im,DIRECT
   - DOMAIN-KEYWORD,smart-vod,DIRECT
+  - DOMAIN,smart.uhdnow.com,DIRECT
+  - DOMAIN,speed.uhdnow.com,DIRECT
+  - DOMAIN-SUFFIX,uhdnow.online,DIRECT
   - DOMAIN,v1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod2.uhdnow.com,Emby流媒体Github
