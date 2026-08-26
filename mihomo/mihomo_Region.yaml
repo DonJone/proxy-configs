@@ -152,7 +152,8 @@ proxy-groups:
   - { name: 亚太, <<: *Select, filter: *FilterAsiaPacific, exclude-filter: *FilterExcludeLowRate }
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
   - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
-  - { name: 低倍, type: url-test, include-all: true, filter: *FilterLowRate, interval: 180, tolerance: 30, lazy: true, url: "https://cp.cloudflare.com/generate_204" }
+  - { name: 低倍自动, type: fallback, include-all: true, filter: *FilterLowRate, interval: 180, lazy: true, url: "https://cp.cloudflare.com/generate_204" }
+  - { name: 低倍, type: select, proxies: [低倍自动], include-all: true, filter: *FilterLowRate }
 
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
@@ -206,7 +207,9 @@ rules:
   - DOMAIN,train.suuwu.de,DIRECT
   - DOMAIN,mlc.once.im,DIRECT
   - DOMAIN-KEYWORD,smart-vod,DIRECT
-  - DOMAIN-KEYWORD,uhdnow,Emby流媒体Github
+  - DOMAIN,v1.uhdnow.com,Emby流媒体Github
+  - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github
+  - DOMAIN,v1-vod2.uhdnow.com,Emby流媒体Github
   - DOMAIN-SUFFIX,bb.111848.xyz,Emby流媒体Github
   - DOMAIN-KEYWORD,023168,Emby流媒体Github
   - DOMAIN-KEYWORD,1024,Emby流媒体Github

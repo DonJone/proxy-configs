@@ -27,7 +27,8 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 | `亚太` | select (手选池) | FilterAsiaPacific, exclude 低倍 |
 | `欧美` | select (手选池) | FilterEuAm, exclude 低倍 |
 | `AI` | select (手选池) | FilterAI, exclude 低倍 |
-| `低倍` | url-test (测速池) | FilterLowRate, interval=180, tolerance=30, lazy |
+| `低倍自动` | fallback (自动池) | FilterLowRate, interval=180 |
+| `低倍` | select (手选池) | 包含 低倍自动 + FilterLowRate |
 | `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |
 | `TikTok` | select (业务组) | tiktok 规则集 |
 | `Emby流媒体Github` | select (业务组) | media + media_ip + github 规则集 |
@@ -44,10 +45,10 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 ### Region — 纯手选 (主力, 14 个策略组)
 
 ```
-2 hand-select pools (亚太/欧美) + 1 url-test pool (低倍) → 7 business groups → 直接引用池
+2 hand-select pools (亚太/欧美) + 1 select-fallback pool (低倍) → 7 business groups → 直接引用池
 ```
 
-亚太/欧美/AI 保持手选，低倍改为 url-test (interval=180, tolerance=30) 自动测速。无 fallback 中转。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
+亚太/欧美/AI 保持手选，低倍改为手选并默认包含低倍自动 fallback 组。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
 
 > **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
 
