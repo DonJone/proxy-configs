@@ -36,11 +36,10 @@ AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹�
 | 规则集 | 来源 | 目标组 |
 |--------|------|--------|
 | `ai` | DustinWin | **AI与Google** |
-| `google`, `google-cn`, `google_ip` | echs-top / MetaCubeX | **AI与Google** |
+| `google`, `google-cn`, `google_ip`, `fcm` | echs-top / MetaCubeX | **AI与Google** |
 | `media`, `media_ip` | DustinWin | **Emby流媒体Github** |
-| `telegram`, `telegram_ip` | MetaCubeX / echs-top | **通讯** |
-| `x`, `fcm` | MetaCubeX | **通讯** |
-| `github` + `DOMAIN-KEYWORD,github` | GinsRule-git | **通讯** |
+| `github` + `DOMAIN-KEYWORD,github` | GinsRule-git | **Emby流媒体Github** |
+| `telegram`, `telegram_ip`, `x` | MetaCubeX / echs-top | **通讯** |
 | `tiktok` | MetaCubeX | **TikTok** |
 | `apple`, `microsoft` | MetaCubeX | **微软苹果Nvidia** |
 | `apple-cn`, `microsoft-cn` | MetaCubeX | **微软苹果Nvidia** |

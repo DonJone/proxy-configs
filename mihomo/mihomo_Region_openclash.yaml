@@ -1,7 +1,7 @@
 # ============================================================
-# OpenClash Hybrid Config: 多源规则 + 自建区域纯手选架构
-# 规则来源: DustinWin + MetaCubeX + echs-top
-# 策略组架构: Region (3 区纯手选), 平铺规则 (无 SUB-RULE)
+# OpenClash Region Config: 多源规则 + 自建区域手选/测速架构
+# 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
+# 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
 # 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
 # ============================================================
 
@@ -210,6 +210,8 @@ rules:
   - DOMAIN,smart.uhdnow.com,DIRECT
   - DOMAIN,speed.uhdnow.com,DIRECT
   - DOMAIN-SUFFIX,uhdnow.online,DIRECT
+  - DOMAIN-KEYWORD,douyin,DIRECT
+  - DOMAIN-KEYWORD,emby,Emby流媒体Github
   - DOMAIN,v1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod2.uhdnow.com,Emby流媒体Github

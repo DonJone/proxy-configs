@@ -210,6 +210,8 @@ rules:
   - DOMAIN,smart.uhdnow.com,DIRECT
   - DOMAIN,speed.uhdnow.com,DIRECT
   - DOMAIN-SUFFIX,uhdnow.online,DIRECT
+  - DOMAIN-KEYWORD,douyin,DIRECT
+  - DOMAIN-KEYWORD,emby,Emby流媒体Github
   - DOMAIN,v1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod2.uhdnow.com,Emby流媒体Github

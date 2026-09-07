@@ -106,6 +106,8 @@ DOMAIN-SUFFIX, drive.google.com, Emby流媒体Github
 DOMAIN-SUFFIX, docs.google.com, Emby流媒体Github
 DOMAIN-SUFFIX, drive.usercontent.google.com, Emby流媒体Github
 # 优先直连
+DOMAIN-KEYWORD, libvio, DIRECT
+DOMAIN, train.suuwu.de, DIRECT
 DOMAIN-KEYWORD, smart-vod, DIRECT
 DOMAIN, mlc.once.im, DIRECT
 DOMAIN, smart.uhdnow.com, DIRECT
@@ -227,8 +229,6 @@ IP-CIDR, 188.172.228.65/32, Emby流媒体Github, no-resolve
 IP-CIDR, 188.253.5.84/32, Emby流媒体Github, no-resolve
 # 拦截
 IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
-DOMAIN-KEYWORD, libvio, DIRECT
-DOMAIN, train.suuwu.de, DIRECT
 
 # =====================================
 # Remote Rule (引用外部规则库)
@@ -249,7 +249,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/appletv
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/telegram.lsr, policy=通讯, tag=Telegram, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/twitter.lsr, policy=通讯, tag=Twitter, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/github.lsr, policy=Emby流媒体Github, tag=GitHub, enabled=true
-https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.lsr, policy=AI与Google, tag=GoogleFCM, enabled=true
+https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/googlefcm.list, policy=AI与Google, tag=GoogleFCM, enabled=true
 # TikTok
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/tiktok.lsr, policy=TikTok, tag=TikTok, enabled=true
 # 微软苹果Nvidia (Microsoft 可能含 GitHub 域名)
@@ -292,7 +292,7 @@ https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/Taobao_re
 https://cdn.jsdelivr.net/gh/ajune0527/vpn_tool@master/Tool/Loon/Plugin/CoolApk_remove_ads.plugin, enabled=true
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/weibo.plugin, enabled=true
 https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/Loon/plugin/WeChatMiniAds.plugin, enabled=true
-https://cdn.jsdelivr.net/gh/001ProMax/Surge@main/Loon/Spotify.plugin, img-url=https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/spotify.png, enabled=true
+https://cdn.jsdelivr.net/gh/001ProMax/Surge@main/Loon/Spotify.plugin, img-url=https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png, enabled=true
 
 # -- 引入 kelee.one 防泄漏、去广告、工具插件 --
 https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true

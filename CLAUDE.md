@@ -58,9 +58,9 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 
 | 规则集 | 目标组 | 平台 |
 |--------|--------|------|
-| `ai`, `google`, `google-cn`, `google_ip` | **AI与Google** | Mihomo |
-| `media`, `media_ip` | **Emby流媒体Github** | Mihomo |
-| `telegram`, `telegram_ip`, `x`, `fcm`, `github` | **通讯** | Mihomo |
+| `ai`, `google`, `google-cn`, `google_ip`, `fcm` | **AI与Google** | Mihomo |
+| `media`, `media_ip`, `github` | **Emby流媒体Github** | Mihomo |
+| `telegram`, `telegram_ip`, `x` | **通讯** | Mihomo |
 | `captcha`, `trackerslist`, `proxy_domain`, `proxy`, `proxy_ip` | **加密货币与兜底** | Mihomo |
 | `AWAvenue-Ads` | **广告拦截** | Mihomo |
 | `apple-cn`, `microsoft-cn`, `games-cn`, `direct_domain`, `cn`, `dnsmasq-china-add` | **DIRECT** | Mihomo |
