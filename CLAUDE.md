@@ -98,6 +98,10 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 ### 同步要求
 - **每次对配置进行任何修改完成后，都必须同步推送（Push）到 GitHub (gh) 仓库。**
 
+### 检修与检修报告规范
+- 定期周检与巡检报告统一归档在 `reports/` 专用目录下（命名格式：`weekly_inspection_report_YYYY-MM-DD.md`）。
+- 检修发现的配置缺陷在全平台修复后，报告同步归档至 `reports/` 并一同推送至 GitHub 仓库。
+
 ### 添加/删除策略组
 1. 修改 `mihomo_Region.yaml`（主文件）的 `proxy-groups` 节
 2. 同步到 OpenClash、Loon、Shadowrocket 对应文件

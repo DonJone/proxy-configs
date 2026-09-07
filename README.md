@@ -90,6 +90,8 @@ proxy-configs/
 │   └── loon_Region_ssid.lcf          # Region 纯手选 + SSID 软路由直连
 ├── Shadowrocket/
 │   └── Shadowrocket_Region.conf      # Region 纯手选 (推荐)
+├── reports/                          # 检修与检修报告专用文件夹
+│   └── weekly_inspection_report_2026-09-07.md
 └── README.md
 ```
 
