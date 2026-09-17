@@ -74,7 +74,7 @@ FilterAI: &FilterAI '(?i)(日|Japan|美|America|纽约|洛杉矶|圣何塞|芝�
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
-direct-doh: &direct-doh ["system"]
+direct-doh: &direct-doh ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query", "223.5.5.5", "119.29.29.29", "system"]
 proxy-doh: &proxy-doh ["https://dns.google/dns-query#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
 
 # === 机场节点订阅 ===
@@ -211,6 +211,14 @@ rules:
   - DOMAIN,speed.uhdnow.com,DIRECT
   - DOMAIN-SUFFIX,uhdnow.online,DIRECT
   - DOMAIN-KEYWORD,douyin,DIRECT
+  # 字节系国内核心服务直连保护（防止 Fake-IP 模式下未收录域名穿透至海外代理）
+  - DOMAIN-SUFFIX,bytedance.com,DIRECT
+  - DOMAIN-SUFFIX,snssdk.com,DIRECT
+  - DOMAIN-SUFFIX,zijieapi.com,DIRECT
+  - DOMAIN-SUFFIX,byteimg.com,DIRECT
+  - DOMAIN-SUFFIX,bytetos.com,DIRECT
+  - DOMAIN-SUFFIX,ibytedtos.com,DIRECT
+  - DOMAIN-SUFFIX,ibytedapm.com,DIRECT
   - DOMAIN-KEYWORD,emby,Emby流媒体Github
   - DOMAIN,v1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github

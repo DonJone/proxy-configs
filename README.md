@@ -73,7 +73,7 @@ AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹�
 |------|--------|------|-------------|
 | 规则来源 | DustinWin + MetaCubeX + echs-top (.mrs) | GinsRule-git (.lsr) | GinsRule-git (.list) |
 | 策略组过滤 | `filter` / `exclude-filter` | Remote Filter NameRegex | `policy-regex-filter` |
-| DNS | fake-ip + respect-rules | `dns-server=system` | `dns-server` + `fallback-dns-server` |
+| DNS | fake-ip + respect-rules | `dns-server` (阿里/腾讯/system) | `dns-server` + `fallback-dns-server` |
 | 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 |
 | QUIC | AND 规则 → 代理QUIC | — | `block-quic=all-proxy` |
 
@@ -91,7 +91,8 @@ proxy-configs/
 ├── Shadowrocket/
 │   └── Shadowrocket_Region.conf      # Region 纯手选 (推荐)
 ├── reports/                          # 检修与检修报告专用文件夹
-│   └── weekly_inspection_report_2026-09-07.md
+│   ├── weekly_inspection_report_2026-09-07.md
+│   └── bytedance_latency_inspection_report_2026-09-17.md
 └── README.md
 ```
 

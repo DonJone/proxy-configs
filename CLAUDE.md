@@ -87,7 +87,7 @@ Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 
 |------|--------|------|-------------|
 | 规则来源 | echs-top/proxy (MRS) | GinsRule-git (.lsr) | GinsRule-git (.list) |
 | 策略组过滤 | `filter` / `exclude-filter` | Remote Filter NameRegex | `policy-regex-filter` |
-| DNS | fake-ip + nameserver-policy | `dns-server=system` | `dns-server` + `fallback-dns-server` |
+| DNS | fake-ip + nameserver-policy | `dns-server` (阿里/腾讯/system) | `dns-server` + `fallback-dns-server` |
 | 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 |
 | QUIC | AND 规则 → 代理QUIC | — | `block-quic=all-proxy` |
 

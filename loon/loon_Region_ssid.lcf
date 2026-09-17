@@ -1,7 +1,7 @@
 [General]
 ip-mode=v4-only
 ipv6-vif=off
-dns-server=system
+dns-server = 223.5.5.5, 119.29.29.29, system
 sni-sniffing=true
 disable-stun=true
 dns-reject-mode=LoopbackIP
@@ -115,6 +115,14 @@ DOMAIN, speed.uhdnow.com, DIRECT
 DOMAIN-SUFFIX, uhdnow.online, DIRECT
 # 抖音与 Emby 特殊分流
 DOMAIN-KEYWORD, douyin, 国内服务
+# 字节系国内核心服务直连保护（防止被 TikTok 外部规则集误分流至海外节点）
+DOMAIN-SUFFIX, bytedance.com, 国内服务
+DOMAIN-SUFFIX, snssdk.com, 国内服务
+DOMAIN-SUFFIX, zijieapi.com, 国内服务
+DOMAIN-SUFFIX, byteimg.com, 国内服务
+DOMAIN-SUFFIX, bytetos.com, 国内服务
+DOMAIN-SUFFIX, ibytedtos.com, 国内服务
+DOMAIN-SUFFIX, ibytedapm.com, 国内服务
 DOMAIN-KEYWORD, emby, Emby流媒体Github
 DOMAIN, v1.uhdnow.com, Emby流媒体Github
 DOMAIN, v1-vod1.uhdnow.com, Emby流媒体Github
@@ -268,7 +276,7 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
 
 # 国内与兜底
-GEOIP, CN, 国内服务
+GEOIP, CN, 国内服务, no-resolve
 FINAL, 加密货币与兜底
 
 
