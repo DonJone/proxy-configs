@@ -8,7 +8,7 @@
 
 | 架构 | 策略组 | 适用场景 | 平台支持 |
 |------|--------|----------|----------|
-| **Region** | 3 区手选池 + 低倍手选兼自动 fallback → 7 业务组 | 极简稳定，低倍节点自动容灾或手动指定 | Mihomo, Shadowrocket |
+| **Region** | 3 区手选池 + 低倍 fallback 容灾 (含 url-test 自动选优) → 7 业务组 | 极简稳定，低倍节点自动测速与容灾 | Mihomo, Shadowrocket |
 | **Region SSID** | 业务组嵌套 SSID 策略 | 推荐软路由局域网环境下使用 | Loon 专用 |
 
 ### Region 纯手选
@@ -17,12 +17,12 @@
 亚太 (FilterAsiaPacific + exclude 低倍)
 欧美 (FilterEuAm + exclude 低倍)
 AI (FilterAI + exclude 低倍)
-低倍 (FilterLowRate, 手选 + fallback 自动故障转移)
+低倍 (FilterLowRate, fallback 容灾，优先走 低倍自动 url-test)
   ↓
 AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
 ```
 
-核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】三大手选节点池 + 【低倍】手选及自动池（默认 fallback，180s），上层具体业务组直接引用对应池。亚太/欧美/AI/低倍全部保持手选掌控感，同时低倍默认通过自动故障转移确保高可用。
+核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】三大手选节点池 + 【低倍】fallback 容灾池（优先走【低倍自动】url-test 测速优选，180s），上层具体业务组直接引用对应池。亚太/欧美/AI 保持手选掌控感，低倍全自动故障转移与测速保障高可用。
 
 ## 规则来源
 

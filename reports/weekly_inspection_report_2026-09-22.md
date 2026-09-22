@@ -99,14 +99,25 @@
 
 ---
 
-## 五、维护文件变更清单
+## 五、低倍与低倍自动策略组类型架构修正
+
+针对项目中低倍池与自动池的历史配置倒挂缺陷进行深度订正：
+
+| 策略组名 | 修正前类型 | 修正后类型 | 职责与架构逻辑 |
+| :--- | :--- | :--- | :--- |
+| **`低倍自动`** | `fallback` (错误) | **`url-test`** (测速自动池) | 负责对全量低倍节点（0.7x 及以下）定期进行 204 延迟测试，动态优选当前延迟最低的节点（tolerance=30ms, lazy=true） |
+| **`低倍`** | `select` (手选池) | **`fallback`** (故障转移容灾池) | 业务组直接引用的兜底池。内层将 `低倍自动` 置于首位，默认享受自动测速最优节点；当自动池节点故障时自动向后顺延转移至其余低倍节点 |
+
+---
+
+## 六、维护文件变更清单
 
 | 文件路径 | 变更类型 | 变更内容说明 |
 | :--- | :--- | :--- |
-| `mihomo/mihomo_Region.yaml` | 修改 | `FilterAI` 锚点追加新加坡关键词与缩写（排除台湾） |
-| `mihomo/mihomo_Region_openclash.yaml` | 修改 | OpenClash 同步更新 `FilterAI` 锚点（排除台湾） |
-| `loon/loon_Region_ssid.lcf` | 修改 | `[Remote Filter]` 下 `AI节点` 正则追加新加坡（排除台湾） |
-| `Shadowrocket/Shadowrocket_Region.conf` | 修改 | `[Proxy Group]` 下 `AI` 策略组正则追加新加坡（排除台湾） |
-| `CLAUDE.md` | 修改 | 更新策略组命名字典中 AI 组描述及 15 组策略架构图 |
-| `README.md` | 修改 | 更新手选池架构说明（显式列出 3 大手选池并补齐 AI 说明） |
-| `reports/weekly_inspection_report_2026-09-22.md` | 新增 | 本次项目维护与规则审计周检报告 |
+| `mihomo/mihomo_Region.yaml` | 修改 | `FilterAI` 追加新加坡（排除台湾）；`低倍自动` 改为 `url-test`，`低倍` 改为 `fallback` |
+| `mihomo/mihomo_Region_openclash.yaml` | 修改 | OpenClash 同步更新 `FilterAI`；`低倍自动` 改为 `url-test`，`低倍` 改为 `fallback` |
+| `loon/loon_Region_ssid.lcf` | 修改 | Loon 同步更新 `AI节点` 正则；`低倍自动` 改为 `url-test`，`低倍` 改为 `fallback` |
+| `Shadowrocket/Shadowrocket_Region.conf` | 修改 | Shadowrocket 同步更新 `AI` 正则；`低倍自动` 改为 `url-test`，`低倍` 改为 `fallback` |
+| `CLAUDE.md` | 修改 | 更新策略组命名字典（低倍为 fallback，低倍自动为 url-test）及架构说明 |
+| `README.md` | 修改 | 同步修订手选与低倍容灾池架构描述 |
+| `reports/weekly_inspection_report_2026-09-22.md` | 新增 | 本次项目维护、节点扩容与策略组纠偏周检报告 |
