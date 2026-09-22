@@ -26,7 +26,7 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 |------|------|------|
 | `亚太` | select (手选池) | FilterAsiaPacific, exclude 低倍 |
 | `欧美` | select (手选池) | FilterEuAm, exclude 低倍 |
-| `AI` | select (手选池) | FilterAI (日/美/英/欧 + 新加坡/台湾), exclude 低倍 |
+| `AI` | select (手选池) | FilterAI (日/美/英/欧 + 新加坡), exclude 低倍 |
 | `低倍自动` | fallback (自动池) | FilterLowRate, interval=180 |
 | `低倍` | select (手选池) | 包含 低倍自动 + FilterLowRate |
 | `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |

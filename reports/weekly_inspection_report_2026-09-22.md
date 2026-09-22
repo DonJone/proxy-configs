@@ -3,18 +3,18 @@
 > **维护时间**：2026-09-22  
 > **检查范围**：`DonJone/proxy-configs` (master 分支)  
 > **覆盖平台**：Mihomo (Desktop/ShellCrash)、OpenClash、Loon (SSID)、Shadowrocket (Region)  
-> **维护目标**：AI 策略组扩容（引入新加坡与台湾低延迟节点池）、全平台远程规则源审计、正则有效性与低倍排除验证、跨平台一致性回测
+> **维护目标**：AI 策略组扩容（引入新加坡低延迟节点池，剔除台湾节点）、全平台远程规则源审计、正则有效性与低倍排除验证、跨平台一致性回测
 
 ---
 
 ## 一、维护与检查总体结论
 
-本次维护针对用户关于在 AI 筛选组中加入新加坡与台湾节点的需求，并在全平台配置文件中完成了深度审计、正则优化与跨平台配置同步：
+本次维护针对用户关于 AI 筛选组优化节点策略的需求（确认仅纳入新加坡节点、排除台湾节点），并在全平台配置文件中完成了深度审计、正则优化与跨平台配置同步：
 
 | 检查维度 | 检查项数 | 状态 | 核心发现与变更 |
 | :--- | :--- | :--- | :--- |
-| **策略组定义与正则过滤** | 4 份核心配置 | [完成] | 全平台同步在 `AI` / `AI节点` 策略组中加入新加坡（SG/Singapore/狮城）与台湾（TW/Taiwan/Tai/Wan）过滤模式 |
-| **低倍倍率排除安全** | 4 份核心配置 | [通过] | 验证 `FilterExcludeLowRate` 与负向预查逻辑，确保新加坡与台湾的低倍节点（如 0.5x、0.2x）仍正常被排除 |
+| **策略组定义与正则过滤** | 4 份核心配置 | [完成] | 全平台同步在 `AI` / `AI节点` 策略组中加入新加坡（SG/Singapore/狮城）过滤模式，精准排除台湾节点 |
+| **低倍倍率排除安全** | 4 份核心配置 | [通过] | 验证 `FilterExcludeLowRate` 与负向预查逻辑，确保新加坡的低倍节点（如 0.5x）仍正常被排除 |
 | **远端规则源健康度** | 141 个外部资源链接 | [通过] | DustinWin、MetaCubeX、echs-top、GinsRule-git 等全量规则文件均可稳定解析拉取（HTTP 200） |
 | **配置语法与架构校验** | 4 份核心配置 | [通过] | YAML 安全解析无误（15 个策略组），Loon / Shadowrocket 解析正常 |
 | **文档与架构一致性** | CLAUDE.md / README.md | [完成] | 同步更新架构说明中的手选池数量（3 大手选池: 亚太/欧美/AI）与对应过滤字典说明 |
@@ -28,41 +28,29 @@
 ## 二、AI 策略组扩容与正则变更详情
 
 ### 1. 扩容背景与需求
-原 `AI` 策略组仅收录日本、美国、英国及欧洲大陆等节点。随着主流大模型（如 ChatGPT、Claude、Gemini）在亚太成熟区域的开放支持，扩充新加坡（Singapore）与台湾（Taiwan）节点可显著降低亚太区网络往返延迟（RTT），提供更优质的 AI 响应体验。
+原 `AI` 策略组仅收录日本、美国、英国及欧洲大陆等节点。随着主流大模型在亚太成熟区域的开放支持，扩重新加坡（Singapore）节点可显著降低亚太区网络往返延迟（RTT），提供更优质的 AI 响应体验；同时依据实际分流策略，台湾节点保持排除，仅由通用亚太组调度。
 
 ### 2. 跨平台正则调整对比
 
 #### (1) Mihomo (Desktop & OpenClash)
 *   **锚点位置**：`mihomo/mihomo_Region.yaml` 与 `mihomo/mihomo_Region_openclash.yaml` 中的 `FilterAI` 锚点。
-*   **原正则**：
+*   **最终正则**：
     ```yaml
-    FilterAI: &FilterAI '(?i)(日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))'
-    ```
-*   **新正则**：
-    ```yaml
-    FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|台|Tai|Wan|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|TW|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))'
+    FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))'
     ```
 
 #### (2) Loon (Region SSID)
 *   **配置段落**：`loon/loon_Region_ssid.lcf` 中的 `[Remote Filter]` -> `AI节点`。
-*   **原配置**：
+*   **最终配置**：
     ```ini
-    AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))"
-    ```
-*   **新配置**：
-    ```ini
-    AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(新加坡|狮城|Singapore|台|Tai|Wan|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|TW|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))"
+    AI节点 = NameRegex, FilterKey = "^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(新加坡|狮城|Singapore|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))"
     ```
 
 #### (3) Shadowrocket (Region)
 *   **配置段落**：`Shadowrocket/Shadowrocket_Region.conf` 中的 `[Proxy Group]` -> `AI`。
-*   **原配置**：
+*   **最终配置**：
     ```ini
-    AI = select, policy-regex-filter=^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))
-    ```
-*   **新配置**：
-    ```ini
-    AI = select, policy-regex-filter=^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(新加坡|狮城|Singapore|台|Tai|Wan|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|TW|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))
+    AI = select, policy-regex-filter=^(?i)(?!.*((?<![0-9.])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)).*(新加坡|狮城|Singapore|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))
     ```
 
 ---
@@ -77,22 +65,23 @@
 | `Singapore 01 - BGP` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
 | `SG 02 [1.0x]` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
 | `狮城 01 专线` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
-| `台湾 01 [x1.0]` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
-| `Taiwan 02 [1.0x]` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
-| `TW 03 专线` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
-| `Taipei 04 节点` | 纳入 AI | 纳入 (True) | 纳入 (True) | [通过] |
+| `台湾 01 [x1.0]` | 排除 AI (未纳入 AI) | 排除 (False) | 排除 (False) | [通过] |
+| `Taiwan 02 [1.0x]` | 排除 AI (未纳入 AI) | 排除 (False) | 排除 (False) | [通过] |
+| `TW 03 专线` | 排除 AI (未纳入 AI) | 排除 (False) | 排除 (False) | [通过] |
+| `Taipei 04 节点` | 排除 AI (未纳入 AI) | 排除 (False) | 排除 (False) | [通过] |
 | `日本 01 [x1.0]` | 纳入 AI (保留原支持) | 纳入 (True) | 纳入 (True) | [通过] |
 | `美国 01 [x1.0]` | 纳入 AI (保留原支持) | 纳入 (True) | 纳入 (True) | [通过] |
 | `香港 01 [x1.0]` | 排除 AI (无大模型支持) | 排除 (False) | 排除 (False) | [通过] |
 | `韩国 01 [x1.0]` | 排除 AI | 排除 (False) | 排除 (False) | [通过] |
 | `新加坡 01 [0.5x]` | 排除 AI (低倍节点) | 排除 (False, 命中低倍排除) | 排除 (False, 命中负向预查) | [通过] |
-| `TW 01 [0.2x]` | 排除 AI (低倍节点) | 排除 (False, 命中低倍排除) | 排除 (False, 命中负向预查) | [通过] |
+| `TW 01 [0.2x]` | 排除 AI (低倍且非 AI) | 排除 (False) | 排除 (False) | [通过] |
 | `低倍 - 新加坡 01` | 排除 AI (低倍节点) | 排除 (False, 命中低倍排除) | 排除 (False, 命中负向预查) | [通过] |
 
 回测表明：
-1. 台湾与新加坡的主流命名（中英文、城市名、二字缩写）均能 100% 精确捕获并汇入 AI 候选池。
-2. 低倍（0.7x 及以下）节点即使属于新加坡或台湾，仍被精确排除并仅由低倍池接管，杜绝了低倍节点混入主力 AI 组带来的不稳定性。
-3. 原有的日/美/英/欧节点匹配逻辑完全不受影响，香港等非 AI 主流节点维持隔离。
+1. 新加坡主流命名（中英文、城市名、二字缩写 SG）均能 100% 精确捕获并汇入 AI 候选池。
+2. 台湾及香港等节点均被精准排除在 AI 组之外，仅由通用亚太组负责。
+3. 低倍（0.7x 及以下）节点即使属于新加坡，仍被精确排除并仅由低倍池接管，杜绝了低倍节点混入主力 AI 组带来的不稳定性。
+4. 原有的日/美/英/欧节点匹配逻辑完全不受影响。
 
 ---
 
@@ -114,10 +103,10 @@
 
 | 文件路径 | 变更类型 | 变更内容说明 |
 | :--- | :--- | :--- |
-| `mihomo/mihomo_Region.yaml` | 修改 | `FilterAI` 锚点追加新加坡与台湾关键词与缩写 |
-| `mihomo/mihomo_Region_openclash.yaml` | 修改 | OpenClash 同步更新 `FilterAI` 锚点 |
-| `loon/loon_Region_ssid.lcf` | 修改 | `[Remote Filter]` 下 `AI节点` 正则追加新加坡与台湾 |
-| `Shadowrocket/Shadowrocket_Region.conf` | 修改 | `[Proxy Group]` 下 `AI` 策略组正则追加新加坡与台湾 |
+| `mihomo/mihomo_Region.yaml` | 修改 | `FilterAI` 锚点追加新加坡关键词与缩写（排除台湾） |
+| `mihomo/mihomo_Region_openclash.yaml` | 修改 | OpenClash 同步更新 `FilterAI` 锚点（排除台湾） |
+| `loon/loon_Region_ssid.lcf` | 修改 | `[Remote Filter]` 下 `AI节点` 正则追加新加坡（排除台湾） |
+| `Shadowrocket/Shadowrocket_Region.conf` | 修改 | `[Proxy Group]` 下 `AI` 策略组正则追加新加坡（排除台湾） |
 | `CLAUDE.md` | 修改 | 更新策略组命名字典中 AI 组描述及 15 组策略架构图 |
 | `README.md` | 修改 | 更新手选池架构说明（显式列出 3 大手选池并补齐 AI 说明） |
 | `reports/weekly_inspection_report_2026-09-22.md` | 新增 | 本次项目维护与规则审计周检报告 |

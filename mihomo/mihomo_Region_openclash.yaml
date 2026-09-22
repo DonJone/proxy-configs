@@ -70,7 +70,7 @@ Select: &Select {type: select, disable-udp: false, include-all: true}
 
 FilterAsiaPacific: &FilterAsiaPacific '(?i)(港|Hong|Kong|台|Tai|Wan|日|Japan|新加坡|狮城|Singapore|韩|Korea|马|Malaysia|印度|India|澳|Australia|澳门|Macau|(?:^|[^a-zA-Z])(HK|TW|JP|SG|KR|MY|IN|AU)(?:[^a-zA-Z]|$))'
 FilterEuAm: &FilterEuAm '(?i)(美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|加拿大|Canada|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|俄|Russia|意|Italy|瑞士|Switzerland|瑞典|Sweden|阿根廷|Argentina|巴西|Brazil|墨西哥|Mexico|(?:^|[^a-zA-Z])(US|CA|UK|DE|FR|NL|RU|IT|CH|SE|AR|BR|MX)(?:[^a-zA-Z]|$))'
-FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|台|Tai|Wan|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|TW|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))'
+FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|日|Japan|美|America|纽约|洛杉矶|圣何塞|芝加哥|西雅图|英|Kingdom|Britain|伦敦|德|Germany|法|France|荷兰|Netherlands|意|Italy|瑞士|Switzerland|瑞典|Sweden|欧洲|Europe|(?:^|[^a-zA-Z])(SG|JP|US|UK|DE|FR|NL|IT|CH|SE|EU)(?:[^a-zA-Z]|$))'
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
