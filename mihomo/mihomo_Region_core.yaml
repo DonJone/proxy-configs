@@ -169,9 +169,9 @@ proxy-groups:
   - { name: 低倍, type: select, proxies: [低倍自动], include-all: true, filter: *FilterLowRate }
 
   # --- 业务组 (7 个) ---
-  - { name: AI与Google, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
-  - { name: TikTok, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
-  - { name: Emby流媒体Github, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
+  - { name: AI与Google, type: select, proxies: [AI, 亚太, 欧美, 低倍, DIRECT] }
+  - { name: TikTok, type: select, proxies: [AI, 亚太, 欧美, 低倍, DIRECT] }
+  - { name: Emby流媒体Github, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
   - { name: 通讯, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
   - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
