@@ -8,7 +8,7 @@
 
 | 架构 | 策略组 | 适用场景 | 平台支持 |
 |------|--------|----------|----------|
-| **Region** | 3 区手选池 + 低倍 fallback 容灾 (含 url-test 自动选优) → 7 业务组 | 极简稳定，低倍节点自动测速与容灾 | Mihomo, Shadowrocket |
+| **Region** | 4 区手选池 (含低倍自动选优) → 7 业务组 | 极简稳定，低倍节点支持手选与自动测速 | Mihomo, Shadowrocket |
 | **Region SSID** | 业务组嵌套 SSID 策略 | 推荐软路由局域网环境下使用 | Loon 专用 |
 
 ### Region 纯手选
@@ -17,12 +17,12 @@
 亚太 (FilterAsiaPacific + exclude 低倍)
 欧美 (FilterEuAm + exclude 低倍)
 AI (FilterAI + exclude 低倍)
-低倍 (FilterLowRate, fallback 容灾，优先走 低倍自动 url-test)
+低倍 (FilterLowRate, 手选池，包含 低倍自动 url-test)
   ↓
 AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
 ```
 
-核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】三大手选节点池 + 【低倍】fallback 容灾池（优先走【低倍自动】url-test 测速优选，180s），上层具体业务组直接引用对应池。亚太/欧美/AI 保持手选掌控感，低倍全自动故障转移与测速保障高可用。
+核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】、【低倍】四大手选节点池（低倍池内置【低倍自动】url-test 测速优选，180s），上层具体业务组直接引用对应池。全部区域与低倍保持手选掌控感，低倍内嵌自动测速保障可用性。
 
 ## 规则来源
 
@@ -86,7 +86,8 @@ Loon 和 Shadowrocket 不支持 mihomo 的规则集联动 DNS/嗅探，架构相
 proxy-configs/
 ├── mihomo/
 │   ├── mihomo_Region.yaml            # Region 纯手选 (推荐)
-│   └── mihomo_Region_openclash.yaml  # Region (OpenClash 适配)
+│   ├── mihomo_Region_openclash.yaml  # Region (OpenClash 适配)
+│   └── mihomo_Region_core.yaml       # Region 裸核专用 (Mihomo Standalone Core / OpenWrt 生产级)
 ├── loon/
 │   └── loon_Region_ssid.lcf          # Region 纯手选 + SSID 软路由直连
 ├── Shadowrocket/
@@ -107,6 +108,7 @@ proxy-configs/
 |----------|------|------|
 | 通用 (Desktop/Mobile) | Region | [mihomo_Region.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region.yaml) |
 | OpenClash 路由 | Region | [mihomo_Region_openclash.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_openclash.yaml) |
+| 嵌入式 Linux / OpenWrt 裸核 | Region Core | [mihomo_Region_core.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_core.yaml) |
 
 ### Loon
 

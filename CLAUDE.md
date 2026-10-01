@@ -11,7 +11,8 @@
 
 ```
 mihomo_Region.yaml            → Region 纯手选 (推荐)
-mihomo_Region_fallback.yaml   → Region fallback 备选
+mihomo_Region_openclash.yaml  → OpenClash 适配
+mihomo_Region_core.yaml       → 路由器 / 嵌入式 Linux 裸核专用 (零泄露纯密 DoH3 + 秒启 + 假死免疫)
 mihomo_country.yaml           → Country (待重建)
 mihomodeskmob.yaml            → ABC 线路 (待重建)
 ```
@@ -28,7 +29,7 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 | `欧美` | select (手选池) | FilterEuAm, exclude 低倍 |
 | `AI` | select (手选池) | FilterAI (日/美/英/欧 + 新加坡), exclude 低倍 |
 | `低倍自动` | url-test (自动池) | FilterLowRate, interval=180, tolerance=30, lazy |
-| `低倍` | fallback (容灾池) | 包含 低倍自动 (url-test) + FilterLowRate, interval=180 |
+| `低倍` | select (手选池) | 包含 低倍自动 (url-test) + FilterLowRate |
 | `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |
 | `TikTok` | select (业务组) | tiktok 规则集 |
 | `Emby流媒体Github` | select (业务组) | media + media_ip + github 规则集 |
@@ -45,10 +46,10 @@ Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
 ### Region — 纯手选 (主力, 15 个策略组)
 
 ```
-3 hand-select pools (亚太/欧美/AI) + 1 fallback pool (低倍) → 7 business groups → 直接引用池
+3 hand-select pools (亚太/欧美/AI) + 1 select pool (低倍) → 7 business groups → 直接引用池
 ```
 
-亚太/欧美/AI 保持手选，低倍为 fallback 容灾组（优先走低倍自动 url-test 测速池，故障时顺延转移至其余低倍节点）。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
+亚太/欧美/AI 保持手选，低倍为 select 手选组（包含低倍自动 url-test 测速池及低倍节点）。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
 
 > **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
 

@@ -2,10 +2,10 @@
 # Mihomo Region Config: 多源规则 + 自建区域手选/测速架构
 # 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
 # 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
-# 环境适配: ShellCrash / Desktop (TUN模式)
+# 环境适配: 普通客户端 (Desktop / Mobile / Clash Verge / Mihomo Party / ShellCrash)
 # ============================================================
 
-# === 端口 (OpenClash 多端口) ===
+# === 端口 (通用客户端标准端口) ===
 port: 7890
 socks-port: 7891
 mixed-port: 7893
@@ -23,21 +23,21 @@ tcp-concurrent: true
 find-process-mode: "off"
 disable-keep-alive: false
 keep-alive-interval: 15
-keep-alive-idle: 300
+keep-alive-idle: 60
 etag-support: true
 external-controller: 0.0.0.0:9090
 profile: { store-selected: true, store-fake-ip: true }
 
-# === Geodata (OpenClash 兼容, 仅 GeoIP) ===
+# === Geodata (官方完整全球 MMDB 离线库) ===
 geox-url:
-  mmdb: "https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/Country.mmdb"
-  geoip: "https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+  geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
   asn: "https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb"
-geo-auto-update: true
+geo-auto-update: false
 geo-update-interval: 24
-geodata-mode: true
+geodata-mode: false
 
-# === TUN (OpenClash 托管模式) ===
+# === TUN (通用客户端系统路由接管模式) ===
 tun:
   enable: true
   stack: system
@@ -65,6 +65,7 @@ hosts:
 domain: &domain {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs}
 ip: &ip {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs}
 domain_text: &domain_text {type: http, interval: 86400, behavior: domain, format: text}
+ip_text: &ip_text {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: text}
 
 Select: &Select {type: select, disable-udp: false, include-all: true}
 
@@ -74,26 +75,27 @@ FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|日|Japan|美|America|纽�
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
-direct-doh: &direct-doh ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query", "223.5.5.5", "119.29.29.29", "system"]
-proxy-doh: &proxy-doh ["https://dns.google/dns-query#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
+direct-doh: &direct-doh ["https://dns.alidns.com/dns-query#h3=true", "https://doh.pub/dns-query"]
+proxy-doh: &proxy-doh ["https://dns.google/dns-query#h3=true#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
 
 # === 机场节点订阅 ===
 proxy-providers:
   机场:
     url: "机场链接url"
     type: http
+    path: ./proxy_provider/机场.yaml
     interval: 86400
     proxy: DIRECT
     header: { User-Agent: ["clash-verge/v2.4.7"] }
     health-check:
       enable: true
-      url: "https://dns.google/generate_204"
+      url: "https://cp.cloudflare.com/generate_204"
       expected-status: 204
       interval: 300
-      timeout: 2000
+      timeout: 5000
       max-failed-times: 3
       lazy: true
-    override: { ip-version: dual }
+    override: { ip-version: ipv4-prefer }
     exclude-filter: "(?i)套餐|剩余|流量|到期|重置|频道|订阅|官网|禁止|客户端|有效|联系|测试|节点|日期|群组|加入|通知|维护|网址|地址|下载|更新|APP|登录|严禁|海外|恢复|处理|谢谢"
 
 # ============================================================
@@ -121,17 +123,18 @@ rule-providers:
   google-cn: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google@cn.mrs", path: ./rules/google-cn.mrs }
   proxy_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs", path: ./rules/proxy_domain.mrs }
   github: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/github.mrs", path: ./rules/github.mrs }
+  captcha: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hcaptcha.mrs", path: ./rules/captcha.mrs }
 
   # --- MetaCubeX geoip ---
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs", path: ./rules/google_ip.mrs }
 
-  # --- echs-top ---
-  google: { <<: *domain, url: "https://github.com/DonJone/GinsRule-git/raw/refs/heads/master/rules/mihomo/proxy/google.mrs", path: ./rules/google.mrs }
-  proxy-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy-ltsc.mrs", path: ./rules/proxy-ltsc.mrs }
+  # --- MetaCubeX / echs-top (完整非阉割版) & GinsRule ---
+  google: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs", path: ./rules/google.mrs }
+  proxy: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/proxy.mrs", path: ./rules/proxy.mrs }
   cn: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/cn.mrs", path: ./rules/cn.mrs }
-  dnsmasq-china-lite: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/dnsmasq-china-lite.mrs", path: ./rules/dnsmasq-china-lite.mrs }
+  dnsmasq-china: { <<: *domain, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/domain/dnsmasq-china.mrs", path: ./rules/dnsmasq-china.mrs }
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/telegram.mrs", path: ./rules/telegram_ip.mrs }
-
+  proxy_ip: { <<: *ip_text, url: "https://raw.githubusercontent.com/DonJone/GinsRule-git/master/rules/mihomo/proxy/proxy-ip.mrs", path: ./rules/proxy_ip.list }
   cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/echs-top/proxy/main/mrs/ip/cn.mrs", path: ./rules/cn_ip.mrs }
 
   # --- ShellCrash ---
@@ -153,7 +156,7 @@ proxy-groups:
   - { name: 欧美, <<: *Select, filter: *FilterEuAm, exclude-filter: *FilterExcludeLowRate }
   - { name: AI, <<: *Select, filter: *FilterAI, exclude-filter: *FilterExcludeLowRate }
   - { name: 低倍自动, type: url-test, include-all: true, filter: *FilterLowRate, interval: 180, tolerance: 30, lazy: true, url: "https://cp.cloudflare.com/generate_204" }
-  - { name: 低倍, type: fallback, proxies: [低倍自动], include-all: true, filter: *FilterLowRate, interval: 180, lazy: true, url: "https://cp.cloudflare.com/generate_204" }
+  - { name: 低倍, type: select, proxies: [低倍自动], include-all: true, filter: *FilterLowRate }
 
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
@@ -161,7 +164,7 @@ proxy-groups:
   - { name: Emby流媒体Github, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
   - { name: 通讯, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
-  - { name: 微软苹果Nvidia, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
+  - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
   - { name: 加密货币与兜底, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
 
   # --- 静默组 (1 个) ---
@@ -175,8 +178,12 @@ proxy-groups:
 # 规则引擎 (平铺规则, 无 SUB-RULE)
 # ============================================================
 rules:
-  # --- 预留地址 ---
+  # --- 基础地址与 NTP 时间保护 (杜绝时间偏移与证书失效) ---
   - IP-CIDR,169.254.169.254/32,REJECT,no-resolve
+  - DST-PORT,123,DIRECT
+  - DOMAIN-KEYWORD,ntp,DIRECT
+  - DOMAIN-SUFFIX,pool.ntp.org,DIRECT
+  - DOMAIN-SUFFIX,ntsc.ac.cn,DIRECT
 
   # --- 私有地址 ---
   - RULE-SET,private_ip,DIRECT,no-resolve
@@ -325,13 +332,6 @@ rules:
   - DOMAIN-KEYWORD,zi0,Emby流媒体Github
   - DOMAIN-KEYWORD,zox,Emby流媒体Github
 
-  # --- 国内直连 (QUIC 之前, 确保国内 UDP 443 不被拦截) ---
-  - RULE-SET,cn,DIRECT
-  - RULE-SET,dnsmasq-china-lite,DIRECT
-
-  # --- QUIC 全局拦截 (仅海外流量到达此处) ---
-  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
-
   # --- AI 服务 ---
   - RULE-SET,ai,AI与Google
 
@@ -340,36 +340,49 @@ rules:
   - RULE-SET,x,通讯
   - RULE-SET,fcm,AI与Google
 
-  # --- 流媒体 ---
-  - RULE-SET,media,Emby流媒体Github
-
   # --- TikTok ---
   - RULE-SET,tiktok,TikTok
+
+  # --- 流媒体 ---
+  - RULE-SET,media,Emby流媒体Github
 
   # --- 开发者 (微软苹果之前, microsoft.mrs 可能含 github 域名) ---
   - RULE-SET,github,Emby流媒体Github
   - DOMAIN-KEYWORD,github,Emby流媒体Github
 
-  # --- 微软苹果Nvidia ---
-  - RULE-SET,apple,微软苹果Nvidia
-  - RULE-SET,microsoft,微软苹果Nvidia
+  # --- 微软苹果Nvidia (映射至微软苹果Nvidia业务组) ---
   - RULE-SET,apple-cn,微软苹果Nvidia
   - RULE-SET,microsoft-cn,微软苹果Nvidia
+  - DOMAIN-SUFFIX,push.apple.com,DIRECT
+  - DOMAIN-SUFFIX,appleid.apple.com,DIRECT
+  - DOMAIN-SUFFIX,gsa.apple.com,DIRECT
+  - DOMAIN-SUFFIX,idmsa.apple.com,DIRECT
+  - DOMAIN-SUFFIX,icloud.com.cn,DIRECT
+  - DOMAIN-SUFFIX,itunes.apple.com,DIRECT
+  - RULE-SET,apple,微软苹果Nvidia
+  - RULE-SET,microsoft,微软苹果Nvidia
 
   # --- 游戏平台 ---
   - RULE-SET,games-cn,游戏平台
 
   # --- Captcha ---
-  # (规则已移除，由兜底组接管)
+  - RULE-SET,captcha,加密货币与兜底
 
   # --- Google ---
   - RULE-SET,google,AI与Google
   - RULE-SET,google-cn,AI与Google
 
+  # --- 国内大盘直连 (QUIC 拦截之前, 确保国内 UDP 443 不被拦截) ---
+  - RULE-SET,cn,DIRECT
+  - RULE-SET,dnsmasq-china,DIRECT
+
+  # --- QUIC 全局拦截 (仅海外流量到达此处) ---
+  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底
   - RULE-SET,proxy_domain,加密货币与兜底
-  - RULE-SET,proxy-lite,加密货币与兜底
+  - RULE-SET,proxy,加密货币与兜底
 
   # --- IP 级分流 (no-resolve 避免域名误匹配) ---
   - RULE-SET,telegram_ip,通讯,no-resolve
@@ -383,7 +396,7 @@ rules:
   - IP-CIDR,188.253.5.84/32,Emby流媒体Github,no-resolve
   - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
   - RULE-SET,google_ip,AI与Google,no-resolve
-
+  - RULE-SET,proxy_ip,加密货币与兜底,no-resolve
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # --- 端口级识别 (域名规则之后, 仅匹配纯 IP 连接) ---
@@ -397,8 +410,7 @@ rules:
   - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (respect-rules + proxy-doh 代理链 + OpenClash listen)
-# 注意: proxy-doh 经 #代理DNS 组路由, 该组必须选择有效节点否则全部海外 DNS 失败
+# DNS (纯密 DoH3 + Fake-IP + 通用客户端 DNS)
 # ============================================================
 dns:
   enable: true
@@ -415,14 +427,16 @@ dns:
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - rule-set:fakeipfilter
+    - "+.lan"
+    - "+.local"
   nameserver: *direct-doh
-  proxy-server-nameserver: *proxy-doh
+  proxy-server-nameserver: *direct-doh
   direct-nameserver: *direct-doh
-  direct-nameserver-follow-policy: true
+  direct-nameserver-follow-policy: false
   nameserver-policy: {}
 
 # ============================================================
-# 嗅探器 (OpenClash 流媒体强制嗅探)
+# 嗅探器 (通用客户端流媒体强制嗅探)
 # ============================================================
 sniffer:
   enable: true

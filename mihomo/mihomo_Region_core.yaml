@@ -1,11 +1,13 @@
 # ============================================================
-# OpenClash Region Config: 多源规则 + 自建区域手选/测速架构
+# Mihomo Region Core Config: 裸核专用 + 多源规则 + 自建区域手选/测速架构
 # 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
 # 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
-# 环境适配: OpenClash (TUN托管 / 多端口 / geodata / DNS监听)
+# 环境适配: 嵌入式 Linux / OpenWrt 裸核 (Mihomo Standalone Core / TUN 模式)
+# 面板集成: Zashboard / Yacd-meta (静态 UI 挂载)
+# 性能优化: 纯密 DoH3 零泄露、校园网/私有内网定向解析、keep-alive 60s 根除假死
 # ============================================================
 
-# === 端口 (OpenClash 多端口) ===
+# === 端口 (Mihomo 裸核标准生产端口) ===
 port: 7890
 socks-port: 7891
 mixed-port: 7893
@@ -26,6 +28,9 @@ keep-alive-interval: 15
 keep-alive-idle: 60
 etag-support: true
 external-controller: 0.0.0.0:9090
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
 profile: { store-selected: true, store-fake-ip: true }
 
 # === Geodata (官方完整全球 MMDB 离线库) ===
@@ -37,14 +42,19 @@ geo-auto-update: false
 geo-update-interval: 24
 geodata-mode: false
 
-# === TUN (OpenClash 托管模式) ===
+# === TUN (Mihomo 裸核托管模式) ===
 tun:
   enable: true
-  stack: system
+  stack: mixed
   device: utun
-  auto-route: false
+  auto-route: true
   auto-redirect: false
-  auto-detect-interface: false
+  auto-detect-interface: true
+  inet4-address:
+    - 198.18.0.1/16
+  inet4-route-address:
+    - 198.18.0.0/16
+  mtu: 9000
   strict-route: false
   dns-hijack:
     - 0.0.0.0:53
@@ -76,7 +86,7 @@ FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低�
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
 direct-doh: &direct-doh ["https://dns.alidns.com/dns-query#h3=true", "https://doh.pub/dns-query"]
-proxy-doh: &proxy-doh ["https://dns.google/dns-query#h3=true#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
+proxy-doh: &proxy-doh ["https://dns.google/dns-query#h3=true", "https://dns.quad9.net/dns-query"]
 
 # === 机场节点订阅 ===
 proxy-providers:
@@ -410,8 +420,7 @@ rules:
   - MATCH,加密货币与兜底
 
 # ============================================================
-# DNS (respect-rules + proxy-doh 代理链 + OpenClash listen)
-# 注意: proxy-doh 经 #代理DNS 组路由, 该组必须选择有效节点否则全部海外 DNS 失败
+# DNS (纯密 DoH3 + Fake-IP + 校园网/私有内网定向解析 + 裸核监听 7874)
 # ============================================================
 dns:
   enable: true
@@ -420,7 +429,7 @@ dns:
   prefer-h3: true
   use-hosts: true
   use-system-hosts: false
-  respect-rules: true
+  respect-rules: false
   listen: 0.0.0.0:7874
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
@@ -437,7 +446,7 @@ dns:
   nameserver-policy: {}
 
 # ============================================================
-# 嗅探器 (OpenClash 流媒体强制嗅探)
+# 嗅探器 (Mihomo 裸核流媒体强制嗅探)
 # ============================================================
 sniffer:
   enable: true
