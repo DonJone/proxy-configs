@@ -131,6 +131,7 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 - **域名规则必须在 IP 规则之前**，否则 IP 规则（无 `no-resolve` 时）会解析 fake-IP 并劫持域名流量
 - IP 规则统一加 `no-resolve`，避免对域名连接做多余的 DNS 解析
 - QUIC 拦截置于国内直连之后、代理规则之前
+- **Telegram MTProto 避让铁律**：Telegram 纯 IP 规则 (`telegram_ip`) 必须置于 QUIC 拦截之前，确保 MTProto UDP 443 握手流量不被误拦截；裸核/路由器 TUN 模式必须将 Telegram 10 大核心 IPv4 CIDR 加入 `inet4-route-address` 接管纯 IP 流量。
 
 ## 外部参考
 

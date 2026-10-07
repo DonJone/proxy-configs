@@ -54,6 +54,16 @@ tun:
     - 198.18.0.1/16
   inet4-route-address:
     - 198.18.0.0/16
+    - 91.105.192.0/23
+    - 91.108.4.0/22
+    - 91.108.8.0/21
+    - 91.108.16.0/21
+    - 91.108.36.0/23
+    - 91.108.38.0/23
+    - 91.108.56.0/22
+    - 95.161.64.0/20
+    - 149.154.160.0/20
+    - 185.76.151.0/24
   mtu: 9000
   strict-route: false
   dns-hijack:
@@ -345,8 +355,9 @@ rules:
   # --- AI 服务 ---
   - RULE-SET,ai,AI与Google
 
-  # --- 通讯 ---
+  # --- 通讯 (含 Telegram 域名与 IP 段，置于 QUIC 拦截前确保 UDP 443 畅通) ---
   - RULE-SET,telegram,通讯
+  - RULE-SET,telegram_ip,通讯,no-resolve
   - RULE-SET,x,通讯
   - RULE-SET,fcm,AI与Google
 
@@ -395,7 +406,6 @@ rules:
   - RULE-SET,proxy,加密货币与兜底
 
   # --- IP 级分流 (no-resolve 避免域名误匹配) ---
-  - RULE-SET,telegram_ip,通讯,no-resolve
   - RULE-SET,media_ip,Emby流媒体Github,no-resolve
   - IP-CIDR,188.172.228.49/32,Emby流媒体Github,no-resolve
   - IP-CIDR,202.61.255.248/32,Emby流媒体Github,no-resolve
