@@ -17,7 +17,12 @@ mihomo_country.yaml           → Country (待重建)
 mihomodeskmob.yaml            → ABC 线路 (待重建)
 ```
 
-Loon 和 Shadowrocket 文件（`.lcf` / `.conf`）遵循相同命名。
+Loon 文件命名约定：
+```
+loon_Region_ssid.lcf          → Loon iPhone / iOS 移动端全功能 (含移动去广告插件与任务脚本)
+loon_Region_mac.lcf           → Loon macOS 桌面端专属 (纯净网络栈，DoH 加密，零移动插件)
+```
+Shadowrocket 文件（`.conf`）遵循相同命名。
 
 ## 策略组命名字典
 
