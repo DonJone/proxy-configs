@@ -1,5 +1,5 @@
 # ============================================================
-# Mihomo Region Config: 多源规则 + 自建区域手选/测速架构
+# Mihomo Region Config: + 多源规则 + 自建区域手选/测速架构
 # 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
 # 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
 # 环境适配: 普通客户端 (Desktop / Mobile / Clash Verge / Mihomo Party / ShellCrash)
@@ -19,7 +19,7 @@ bind-address: "*"
 mode: rule
 log-level: info
 unified-delay: true
-tcp-concurrent: true
+tcp-concurrent: false
 find-process-mode: "off"
 disable-keep-alive: false
 keep-alive-interval: 15
@@ -52,6 +52,7 @@ tun:
 
 # === Hosts DNS 引导 ===
 hosts:
+  campus.edu.cn: 10.0.0.1
   dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
   doh.pub: [120.53.53.53, 1.12.12.21]
   dns.google: [8.8.8.8, 8.8.4.4, "2001:4860:4860::8888", "2001:4860:4860::8844"]
@@ -75,8 +76,8 @@ FilterAI: &FilterAI '(?i)(新加坡|狮城|Singapore|日|Japan|美|America|纽�
 FilterLowRate: &FilterLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 FilterExcludeLowRate: &FilterExcludeLowRate '(?i)((?:^|[^.\d])0(?:\.[0-7]\d*)?\s*[xX倍]|低倍)'
 
-direct-doh: &direct-doh ["https://dns.alidns.com/dns-query#h3=true", "https://doh.pub/dns-query"]
-proxy-doh: &proxy-doh ["https://dns.google/dns-query#h3=true#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
+direct-doh: &direct-doh ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query", "223.5.5.5"]
+proxy-doh: &proxy-doh ["https://dns.google/dns-query#代理DNS", "https://dns.quad9.net/dns-query#代理DNS"]
 
 # === 机场节点订阅 ===
 proxy-providers:
@@ -178,6 +179,7 @@ proxy-groups:
 # 规则引擎 (平铺规则, 无 SUB-RULE)
 # ============================================================
 rules:
+  - DOMAIN-SUFFIX,campus.edu.cn,DIRECT
   # --- 基础地址与 NTP 时间保护 (杜绝时间偏移与证书失效) ---
   - IP-CIDR,169.254.169.254/32,REJECT,no-resolve
   - DST-PORT,123,DIRECT
@@ -188,28 +190,8 @@ rules:
   # --- 私有地址 ---
   - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
-  # Google 广告/数据分析 -> AI与Google
-  - DOMAIN-KEYWORD,antigravity,AI与Google
-  - DOMAIN-SUFFIX,adtrafficquality.google,AI与Google
-  - DOMAIN-SUFFIX,fcmatch.google.com,AI与Google
-  - DOMAIN-SUFFIX,googleanalytics.com,AI与Google
-  - DOMAIN-SUFFIX,google-analytics.com,AI与Google
-  - DOMAIN-SUFFIX,app-measurement.com,AI与Google
-  - DOMAIN-SUFFIX,googlesyndication.com,AI与Google
-  - DOMAIN-SUFFIX,doubleclick.net,AI与Google
-  - DOMAIN-SUFFIX,2mdn.net,AI与Google
-  - DOMAIN-SUFFIX,googleadservices.com,AI与Google
-  - DOMAIN-SUFFIX,adservice.google.com,AI与Google
-  - DOMAIN-SUFFIX,googlesyndication-cn.com,AI与Google
-  - DOMAIN-SUFFIX,doubleclick-cn.net,AI与Google
-  - DOMAIN-SUFFIX,googleadservices-cn.com,AI与Google
-  - DOMAIN-SUFFIX,googletagmanager-cn.com,AI与Google
-  # Google 相册/云盘 -> Emby流媒体Github
-  - DOMAIN-SUFFIX,photos.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,photos.googleapis.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,drive.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,docs.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,drive.usercontent.google.com,Emby流媒体Github
+
+  # --- 自定义直连服务 ---
   - DOMAIN-KEYWORD,libvio,DIRECT
   - DOMAIN,train.suuwu.de,DIRECT
   - DOMAIN,mlc.once.im,DIRECT
@@ -226,6 +208,72 @@ rules:
   - DOMAIN-SUFFIX,bytetos.com,DIRECT
   - DOMAIN-SUFFIX,ibytedtos.com,DIRECT
   - DOMAIN-SUFFIX,ibytedapm.com,DIRECT
+
+  # --- 微软苹果Nvidia 国内直连与Push服务 ---
+  - RULE-SET,apple-cn,微软苹果Nvidia
+  - RULE-SET,microsoft-cn,微软苹果Nvidia
+  - DOMAIN-SUFFIX,push.apple.com,DIRECT
+  - DOMAIN-SUFFIX,appleid.apple.com,DIRECT
+  - DOMAIN-SUFFIX,gsa.apple.com,DIRECT
+  - DOMAIN-SUFFIX,idmsa.apple.com,DIRECT
+  - DOMAIN-SUFFIX,icloud.com.cn,DIRECT
+  - DOMAIN-SUFFIX,itunes.apple.com,DIRECT
+
+  # --- 游戏平台国内加速 ---
+  - RULE-SET,games-cn,游戏平台
+
+  # --- 国内大盘直连 (QUIC 拦截之前, 确保国内 UDP 443 不被拦截) ---
+  - RULE-SET,cn,DIRECT
+  - RULE-SET,dnsmasq-china,DIRECT
+
+  # --- 通讯 (Telegram 专属：置于 QUIC 拦截前确保 MTProto UDP 443 与语音畅通) ---
+  - RULE-SET,telegram,通讯
+  - RULE-SET,telegram_ip,通讯,no-resolve
+
+  # --- FCM 原生直连推送端口 (防代理握手超时) ---
+  - DST-PORT,5228-5230,DIRECT
+
+  # --- QUIC 全局拦截 (拦截所有海外 Web UDP 443，防止浏览器 QUIC 握手丢包造成数秒假死卡顿) ---
+  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+
+  # --- Google 与 AI 核心全家桶 (纯净 TCP 流量到达此处, 彻底杜绝 QUIC 握手假死与直连超时) ---
+  - RULE-SET,ai,AI与Google
+  - RULE-SET,google,AI与Google
+  - RULE-SET,google-cn,AI与Google
+  - RULE-SET,fcm,AI与Google
+  - DOMAIN-SUFFIX,google,AI与Google
+  - DOMAIN-SUFFIX,goog,AI与Google
+  - DOMAIN-SUFFIX,gstatic.com,AI与Google
+  - DOMAIN-SUFFIX,googleusercontent.com,AI与Google
+  - DOMAIN-SUFFIX,googleapis.com,AI与Google
+  - DOMAIN-KEYWORD,antigravity,AI与Google
+  - DOMAIN-SUFFIX,adtrafficquality.google,AI与Google
+  - DOMAIN-SUFFIX,fcmatch.google.com,AI与Google
+  - DOMAIN-SUFFIX,googleanalytics.com,AI与Google
+  - DOMAIN-SUFFIX,google-analytics.com,AI与Google
+  - DOMAIN-SUFFIX,app-measurement.com,AI与Google
+  - DOMAIN-SUFFIX,googlesyndication.com,AI与Google
+  - DOMAIN-SUFFIX,doubleclick.net,AI与Google
+  - DOMAIN-SUFFIX,2mdn.net,AI与Google
+  - DOMAIN-SUFFIX,googleadservices.com,AI与Google
+  - DOMAIN-SUFFIX,adservice.google.com,AI与Google
+  - DOMAIN-SUFFIX,googlesyndication-cn.com,AI与Google
+  - DOMAIN-SUFFIX,doubleclick-cn.net,AI与Google
+  - DOMAIN-SUFFIX,googleadservices-cn.com,AI与Google
+  - DOMAIN-SUFFIX,googletagmanager-cn.com,AI与Google
+  - DOMAIN-SUFFIX,photos.google.com,AI与Google
+  - DOMAIN-SUFFIX,photos.googleapis.com,AI与Google
+  - DOMAIN-SUFFIX,drive.google.com,AI与Google
+  - DOMAIN-SUFFIX,docs.google.com,AI与Google
+  - DOMAIN-SUFFIX,drive.usercontent.google.com,AI与Google
+
+  # --- 海外 Web 通讯 ---
+  - RULE-SET,x,通讯
+
+  # --- TikTok ---
+  - RULE-SET,tiktok,TikTok
+
+  # --- 流媒体与 Emby (纯净 TCP 流量) ---
   - DOMAIN-KEYWORD,emby,Emby流媒体Github
   - DOMAIN,v1.uhdnow.com,Emby流媒体Github
   - DOMAIN,v1-vod1.uhdnow.com,Emby流媒体Github
@@ -331,54 +379,18 @@ rules:
   - DOMAIN-KEYWORD,ytoo,Emby流媒体Github
   - DOMAIN-KEYWORD,zi0,Emby流媒体Github
   - DOMAIN-KEYWORD,zox,Emby流媒体Github
-
-  # --- AI 服务 ---
-  - RULE-SET,ai,AI与Google
-
-  # --- 通讯 (含 Telegram 域名与 IP 段，置于 QUIC 拦截前确保 UDP 443 畅通) ---
-  - RULE-SET,telegram,通讯
-  - RULE-SET,telegram_ip,通讯,no-resolve
-  - RULE-SET,x,通讯
-  - RULE-SET,fcm,AI与Google
-
-  # --- TikTok ---
-  - RULE-SET,tiktok,TikTok
-
-  # --- 流媒体 ---
   - RULE-SET,media,Emby流媒体Github
 
-  # --- 开发者 (微软苹果之前, microsoft.mrs 可能含 github 域名) ---
+  # --- 开发者 ---
   - RULE-SET,github,Emby流媒体Github
   - DOMAIN-KEYWORD,github,Emby流媒体Github
 
-  # --- 微软苹果Nvidia (映射至微软苹果Nvidia业务组) ---
-  - RULE-SET,apple-cn,微软苹果Nvidia
-  - RULE-SET,microsoft-cn,微软苹果Nvidia
-  - DOMAIN-SUFFIX,push.apple.com,DIRECT
-  - DOMAIN-SUFFIX,appleid.apple.com,DIRECT
-  - DOMAIN-SUFFIX,gsa.apple.com,DIRECT
-  - DOMAIN-SUFFIX,idmsa.apple.com,DIRECT
-  - DOMAIN-SUFFIX,icloud.com.cn,DIRECT
-  - DOMAIN-SUFFIX,itunes.apple.com,DIRECT
+  # --- 微软苹果Nvidia 海外 ---
   - RULE-SET,apple,微软苹果Nvidia
   - RULE-SET,microsoft,微软苹果Nvidia
 
-  # --- 游戏平台 ---
-  - RULE-SET,games-cn,游戏平台
-
   # --- Captcha ---
   - RULE-SET,captcha,加密货币与兜底
-
-  # --- Google ---
-  - RULE-SET,google,AI与Google
-  - RULE-SET,google-cn,AI与Google
-
-  # --- 国内大盘直连 (QUIC 拦截之前, 确保国内 UDP 443 不被拦截) ---
-  - RULE-SET,cn,DIRECT
-  - RULE-SET,dnsmasq-china,DIRECT
-
-  # --- QUIC 全局拦截 (仅海外流量到达此处) ---
-  - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
 
   # --- 代理兜底 ---
   - RULE-SET,trackerslist,加密货币与兜底
@@ -400,7 +412,6 @@ rules:
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # --- 端口级识别 (域名规则之后, 仅匹配纯 IP 连接) ---
-  - DST-PORT,5228-5230,DIRECT
   - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
 
   # --- GeoIP 兜底 ---
@@ -416,7 +427,7 @@ dns:
   enable: true
   cache-algorithm: arc
   ipv6: false
-  prefer-h3: true
+  prefer-h3: false
   use-hosts: true
   use-system-hosts: false
   respect-rules: true
@@ -426,27 +437,29 @@ dns:
   fake-ip-range6: fd00:bada:55ed::1/64
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    - rule-set:fakeipfilter
+    - rule-set:cn
+    - rule-set:dnsmasq-china
     - "+.lan"
     - "+.local"
+    - "+.campus.edu.cn"
   nameserver: *direct-doh
   proxy-server-nameserver: *direct-doh
   direct-nameserver: *direct-doh
   direct-nameserver-follow-policy: false
-  nameserver-policy: {}
+  nameserver-policy:
+    "+.campus.edu.cn": "1.2.3.4"
 
 # ============================================================
 # 嗅探器 (通用客户端流媒体强制嗅探)
 # ============================================================
 sniffer:
   enable: true
-  force-dns-mapping: true
+  force-dns-mapping: false
   parse-pure-ip: true
   override-destination: false
   sniff:
     HTTP: { ports: [80, 8080-8880], override-destination: true }
     TLS: { ports: [443, 8443] }
-    QUIC: { ports: [443, 8443] }
   force-domain:
     - "+.netflix.com"
     - "+.nflxvideo.net"
