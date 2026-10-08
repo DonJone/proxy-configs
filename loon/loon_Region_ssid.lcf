@@ -32,6 +32,7 @@ ssid: 你的软路由wifi名=server: 192.168.1.1
 # Proxy / Remote Proxy
 # =====================================
 [Proxy]
+TR3000软路由 = socks5, 10.0.0.1, 7891, fast-open=false, udp=true
 
 [Remote Proxy]
 
@@ -47,13 +48,13 @@ AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master
 低倍 = select, 低倍自动, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png
 
 # 2. 业务组策略 (原业务组变为内部策略，供 SSID 场景调用)
-AI与Google策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
-TikTok策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
-Emby流媒体Github策略 = select, DIRECT, 亚太, 欧美, AI, 低倍, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
-通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
-游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
-微软苹果Nvidia策略 = select, DIRECT, 亚太, 欧美, AI, 低倍, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
-加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
+AI与Google策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
+TikTok策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
+Emby流媒体Github策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
+通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+微软苹果Nvidia策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://cdn.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
+加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
 
 # 3. 业务场景组 (SSID 机制，接管软路由下的直连)
 AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
@@ -65,7 +66,7 @@ Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流�
 加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=DIRECT, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 
 # 4. 静默组
-国内服务 = select, DIRECT, 亚太, hidden = true
+国内服务 = select, DIRECT, TR3000软路由, 亚太, hidden = true
 
 # =====================================
 # Remote Filter (定义过滤逻辑)
