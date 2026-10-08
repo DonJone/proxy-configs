@@ -283,11 +283,11 @@ rules:
   - DOMAIN-SUFFIX,doubleclick-cn.net,AI与Google
   - DOMAIN-SUFFIX,googleadservices-cn.com,AI与Google
   - DOMAIN-SUFFIX,googletagmanager-cn.com,AI与Google
-  - DOMAIN-SUFFIX,photos.google.com,AI与Google
-  - DOMAIN-SUFFIX,photos.googleapis.com,AI与Google
-  - DOMAIN-SUFFIX,drive.google.com,AI与Google
-  - DOMAIN-SUFFIX,docs.google.com,AI与Google
-  - DOMAIN-SUFFIX,drive.usercontent.google.com,AI与Google
+  - DOMAIN-SUFFIX,photos.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,photos.googleapis.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,drive.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,docs.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,drive.usercontent.google.com,Emby流媒体Github
 
   # --- 海外 Web 通讯 ---
   - RULE-SET,x,通讯
