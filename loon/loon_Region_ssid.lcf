@@ -57,13 +57,13 @@ Emby流媒体Github策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI,
 加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
 
 # 3. 业务场景组 (SSID 机制，接管软路由下的直连)
-AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-TikTok = ssid, default=TikTok策略, cellular=TikTok策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流媒体Github策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-通讯 = ssid, default=通讯策略, cellular=通讯策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-游戏平台 = ssid, default=游戏平台策略, cellular=游戏平台策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, cellular=微软苹果Nvidia策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+AI与Google = ssid, default=AI与Google策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+TikTok = ssid, default=TikTok策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+Emby流媒体Github = ssid, default=Emby流媒体Github策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+通讯 = ssid, default=通讯策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+游戏平台 = ssid, default=游戏平台策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+加密货币与兜底 = ssid, default=加密货币与兜底策略, "你的软路由wifi名"=TR3000软路由, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 
 # 4. 静默组
 国内服务 = select, DIRECT, TR3000软路由, 亚太, hidden = true
