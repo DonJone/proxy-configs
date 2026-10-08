@@ -43,12 +43,9 @@ TR3000软路由 = Socks5, 10.0.0.1, 7891
 # =====================================
 [Proxy Group]
 # 1. 手选池: 调用 Remote Filter 过滤器
-亚太自动 = url-test, 亚太节点, url = http://www.gstatic.com/generate_204, interval = 180, tolerance = 30
-亚太 = select, 亚太自动, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Asia_Map.png
-欧美自动 = url-test, 欧美节点, url = http://www.gstatic.com/generate_204, interval = 180, tolerance = 30
-欧美 = select, 欧美自动, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/World_Map.png
-AI自动 = url-test, AI节点, url = http://www.gstatic.com/generate_204, interval = 180, tolerance = 30
-AI = select, AI自动, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png
+亚太 = select, 亚太节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Asia_Map.png
+欧美 = select, 欧美节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/World_Map.png
+AI = select, AI节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png
 低倍自动 = url-test, 低倍节点, url = https://cp.cloudflare.com/generate_204, interval = 180, tolerance = 30
 低倍 = select, 低倍自动, 低倍节点, img-url = https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png
 
