@@ -242,6 +242,10 @@ IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 # =====================================
 # Remote Rule (引用外部规则库)
 # =====================================
+# 国内与兜底
+GEOIP, CN, 国内服务, no-resolve
+FINAL, 加密货币与兜底
+
 [Remote Rule]
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
 # AI
@@ -276,9 +280,6 @@ https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudfl
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
 https://cdn.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
 
-# 国内与兜底
-GEOIP, CN, 国内服务, no-resolve
-FINAL, 加密货币与兜底
 
 
 # =====================================
