@@ -13,7 +13,6 @@
 mihomo_Region.yaml            → Region 纯手选 (推荐)
 mihomo_Region_openclash.yaml  → OpenClash 适配
 mihomo_Region_core.yaml       → 路由器 / 嵌入式 Linux 裸核专用 (零泄露纯密 DoH3 + 秒启 + 假死免疫)
-mihomo_Region_nikki.yaml      → Nikki 适配 (OpenWrt 路由器插件)
 mihomo_country.yaml           → Country (待重建)
 mihomodeskmob.yaml            → ABC 线路 (待重建)
 ```
