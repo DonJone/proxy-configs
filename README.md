@@ -87,7 +87,8 @@ proxy-configs/
 ├── mihomo/
 │   ├── mihomo_Region.yaml            # Region 纯手选 (推荐)
 │   ├── mihomo_Region_openclash.yaml  # Region (OpenClash 适配)
-│   └── mihomo_Region_core.yaml       # Region 裸核专用 (Mihomo Standalone Core / OpenWrt 生产级)
+│   ├── mihomo_Region_core.yaml       # Region 裸核专用 (Mihomo Standalone Core / OpenWrt 生产级)
+│   └── mihomo_Region_nikki.yaml      # Region 移动端适配 (Nikki / Android)
 ├── loon/
 │   └── loon_Region_ssid.lcf          # Region 纯手选 + SSID 软路由直连
 ├── Shadowrocket/
@@ -109,6 +110,7 @@ proxy-configs/
 | 通用 (Desktop/Mobile) | Region | [mihomo_Region.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region.yaml) |
 | OpenClash 路由 | Region | [mihomo_Region_openclash.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_openclash.yaml) |
 | 嵌入式 Linux / OpenWrt 裸核 | Region Core | [mihomo_Region_core.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_core.yaml) |
+| Nikki / Android 专属 | Region Nikki | [mihomo_Region_nikki.yaml](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/mihomo/mihomo_Region_nikki.yaml) |
 
 ### Loon
 

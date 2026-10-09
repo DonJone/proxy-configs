@@ -1,8 +1,8 @@
 # ============================================================
-# Mihomo Region Config: + 多源规则 + 自建区域手选/测速架构
+# Mihomo Region Config for Nikki: + 多源规则 + 自建区域手选/测速架构
 # 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
 # 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
-# 环境适配: 普通客户端 (Desktop / Mobile / Clash Verge / Mihomo Party / ShellCrash)
+# 环境适配: Nikki (Android 专属)
 # ============================================================
 
 # === 端口 (通用客户端标准端口) ===

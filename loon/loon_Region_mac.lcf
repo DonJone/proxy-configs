@@ -54,7 +54,7 @@ AI与Google策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由,
 TikTok策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
 Emby流媒体Github策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
 通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
-游戏平台策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+游戏平台策略 = select, DIRECT, 亚太, 欧美, AI, 低倍, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
 微软苹果Nvidia策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://fastly.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
 加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
 
