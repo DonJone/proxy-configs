@@ -2,7 +2,7 @@
 # Mihomo Region Config for Nikki: + 多源规则 + 自建区域手选/测速架构
 # 规则来源: DustinWin + MetaCubeX + echs-top + GinsRule-git
 # 策略组架构: Region (亚太/欧美/AI 手选 + 低倍自动测速), 平铺规则
-# 环境适配: Nikki (Android 专属)
+# 环境适配: Nikki (OpenWrt 路由器插件)
 # ============================================================
 
 # === 端口 (通用客户端标准端口) ===
@@ -37,15 +37,15 @@ geo-auto-update: false
 geo-update-interval: 24
 geodata-mode: false
 
-# === TUN (通用客户端系统路由接管模式) ===
+# === TUN (OpenWrt 托管模式) ===
 tun:
   enable: true
   stack: system
   device: utun
-  auto-route: true
+  auto-route: false
   auto-redirect: false
-  auto-detect-interface: true
-  strict-route: true
+  auto-detect-interface: false
+  strict-route: false
   dns-hijack:
     - 0.0.0.0:53
   endpoint-independent-nat: true
