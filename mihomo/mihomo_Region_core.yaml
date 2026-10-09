@@ -76,7 +76,7 @@ tun:
 hosts:
   campus.edu.cn: 10.0.0.1
   dns.alidns.com: [223.5.5.5, 223.6.6.6, "2400:3200::1", "2400:3200:baba::1"]
-  doh.pub: [120.53.53.53, 1.12.12.21]
+  doh.pub: [120.53.53.53, 1.12.12.12]
   dns.google: [8.8.8.8, 8.8.4.4, "2001:4860:4860::8888", "2001:4860:4860::8844"]
   dns.quad9.net: [9.9.9.9, 149.112.112.112, "2620:fe::fe", "2620:fe::9"]
   services.googleapis.cn: services.googleapis.com
@@ -87,7 +87,7 @@ hosts:
 # ============================================================
 domain: &domain {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs}
 ip: &ip {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs}
-domain_text: &domain_text {type: http, interval: 86400, behavior: domain, format: text}
+domain_text: &domain_text {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: text}
 ip_text: &ip_text {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: text}
 
 Select: &Select {type: select, disable-udp: false, include-all: true}
@@ -232,14 +232,14 @@ rules:
   - DOMAIN-SUFFIX,ibytedapm.com,DIRECT
 
   # --- 微软苹果Nvidia 国内直连与Push服务 ---
-  - RULE-SET,apple-cn,微软苹果Nvidia
-  - RULE-SET,microsoft-cn,微软苹果Nvidia
   - DOMAIN-SUFFIX,push.apple.com,DIRECT
   - DOMAIN-SUFFIX,appleid.apple.com,DIRECT
   - DOMAIN-SUFFIX,gsa.apple.com,DIRECT
   - DOMAIN-SUFFIX,idmsa.apple.com,DIRECT
   - DOMAIN-SUFFIX,icloud.com.cn,DIRECT
   - DOMAIN-SUFFIX,itunes.apple.com,DIRECT
+  - RULE-SET,apple-cn,微软苹果Nvidia
+  - RULE-SET,microsoft-cn,微软苹果Nvidia
 
   # --- 游戏平台国内加速 ---
   - RULE-SET,games-cn,游戏平台
@@ -257,6 +257,13 @@ rules:
 
   # --- QUIC 全局拦截 (拦截所有海外 Web UDP 443，防止浏览器 QUIC 握手丢包造成数秒假死卡顿) ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+
+  # --- Google 相册/云盘分流 (优先匹配高带宽流媒体组，避免被大盘规则截胡) ---
+  - DOMAIN-SUFFIX,photos.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,photos.googleapis.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,drive.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,docs.google.com,Emby流媒体Github
+  - DOMAIN-SUFFIX,drive.usercontent.google.com,Emby流媒体Github
 
   # --- Google 与 AI 核心全家桶 (纯净 TCP 流量到达此处, 彻底杜绝 QUIC 握手假死与直连超时) ---
   - RULE-SET,ai,AI与Google
@@ -283,11 +290,6 @@ rules:
   - DOMAIN-SUFFIX,doubleclick-cn.net,AI与Google
   - DOMAIN-SUFFIX,googleadservices-cn.com,AI与Google
   - DOMAIN-SUFFIX,googletagmanager-cn.com,AI与Google
-  - DOMAIN-SUFFIX,photos.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,photos.googleapis.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,drive.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,docs.google.com,Emby流媒体Github
-  - DOMAIN-SUFFIX,drive.usercontent.google.com,Emby流媒体Github
 
   # --- 海外 Web 通讯 ---
   - RULE-SET,x,通讯
@@ -459,6 +461,7 @@ dns:
   fake-ip-range6: fd00:bada:55ed::1/64
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
+    - rule-set:fakeipfilter
     - rule-set:cn
     - rule-set:dnsmasq-china
     - "+.lan"
