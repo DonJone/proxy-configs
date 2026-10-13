@@ -63,10 +63,10 @@ hosts:
 # ============================================================
 # YAML 锚点定义
 # ============================================================
-domain: &domain {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: mrs}
-ip: &ip {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: mrs}
-domain_text: &domain_text {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: domain, format: text}
-ip_text: &ip_text {type: http, interval: 86400, proxy: 加密货币与兜底, behavior: ipcidr, format: text}
+domain: &domain {type: http, interval: 86400, proxy: 兜底, behavior: domain, format: mrs}
+ip: &ip {type: http, interval: 86400, proxy: 兜底, behavior: ipcidr, format: mrs}
+domain_text: &domain_text {type: http, interval: 86400, proxy: 兜底, behavior: domain, format: text}
+ip_text: &ip_text {type: http, interval: 86400, proxy: 兜底, behavior: ipcidr, format: text}
 
 Select: &Select {type: select, disable-udp: false, include-all: true}
 
@@ -112,6 +112,7 @@ rule-providers:
   trackerslist: { <<: *domain, url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs", path: ./rules/trackerslist.mrs }
 
   # --- MetaCubeX geosite ---
+  youtube: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs", path: ./rules/youtube.mrs }
   fcm: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/googlefcm.mrs", path: ./rules/fcm.mrs }
   telegram: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs", path: ./rules/telegram.mrs }
   x: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/x.mrs", path: ./rules/x.mrs }
@@ -162,17 +163,17 @@ proxy-groups:
   # --- 业务组 (7 个) ---
   - { name: AI与Google, type: select, proxies: [AI, 亚太, 欧美, 低倍, DIRECT] }
   - { name: TikTok, type: select, proxies: [AI, 亚太, 欧美, 低倍, DIRECT] }
-  - { name: Emby流媒体Github, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
+  - { name: Emby流媒体Github, type: select, proxies: [低倍, 亚太, 欧美, AI, DIRECT] }
   - { name: 通讯, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
   - { name: 游戏平台, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
   - { name: 微软苹果Nvidia, type: select, proxies: [DIRECT, 亚太, 欧美, AI, 低倍] }
-  - { name: 加密货币与兜底, type: select, proxies: [亚太, 欧美, AI, 低倍, DIRECT] }
+  - { name: 兜底, type: select, proxies: [低倍, 亚太, 欧美, AI, DIRECT] }
 
   # --- 静默组 (1 个) ---
   - { name: 国内服务, type: select, proxies: [DIRECT, 亚太], hidden: true }
 
   # --- 基础设施组 (2 个) ---
-  - { name: 代理DNS, type: select, proxies: [加密货币与兜底, 欧美, 亚太], hidden: true }
+  - { name: 代理DNS, type: select, proxies: [兜底, 欧美, 亚太], hidden: true }
   - { name: 代理QUIC, type: select, proxies: [REJECT, PASS], hidden: true }
 
 # ============================================================
@@ -235,6 +236,12 @@ rules:
 
   # --- QUIC 全局拦截 (拦截所有海外 Web UDP 443，防止浏览器 QUIC 握手丢包造成数秒假死卡顿) ---
   - AND,((NETWORK,UDP),(DST-PORT,443)),代理QUIC
+
+  # --- YouTube 与 YouTube Music (优先匹配流媒体组, 避免被 Google 与 AI 规则截胡) ---
+  - RULE-SET,youtube,Emby流媒体Github
+  - DOMAIN-KEYWORD,youtube,Emby流媒体Github
+  - DOMAIN,music.youtube.com,Emby流媒体Github
+  - DOMAIN,youtubei.googleapis.com,Emby流媒体Github
 
   # --- Google 相册/云盘分流 (优先匹配高带宽流媒体组，避免被大盘规则截胡) ---
   - DOMAIN-SUFFIX,photos.google.com,Emby流媒体Github
@@ -392,12 +399,12 @@ rules:
   - RULE-SET,microsoft,微软苹果Nvidia
 
   # --- Captcha ---
-  - RULE-SET,captcha,加密货币与兜底
+  - RULE-SET,captcha,兜底
 
   # --- 代理兜底 ---
-  - RULE-SET,trackerslist,加密货币与兜底
-  - RULE-SET,proxy_domain,加密货币与兜底
-  - RULE-SET,proxy,加密货币与兜底
+  - RULE-SET,trackerslist,兜底
+  - RULE-SET,proxy_domain,兜底
+  - RULE-SET,proxy,兜底
 
   # --- IP 级分流 (no-resolve 避免域名误匹配) ---
   - RULE-SET,media_ip,Emby流媒体Github,no-resolve
@@ -410,17 +417,17 @@ rules:
   - IP-CIDR,188.253.5.84/32,Emby流媒体Github,no-resolve
   - IP-CIDR,5.28.195.0/24,REJECT,no-resolve
   - RULE-SET,google_ip,AI与Google,no-resolve
-  - RULE-SET,proxy_ip,加密货币与兜底,no-resolve
+  - RULE-SET,proxy_ip,兜底,no-resolve
   - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # --- 端口级识别 (域名规则之后, 仅匹配纯 IP 连接) ---
-  - DST-PORT,1337/2710/6881-6999/7777,加密货币与兜底
+  - DST-PORT,1337/2710/6881-6999/7777,兜底
 
   # --- GeoIP 兜底 ---
   - GEOIP,CN,DIRECT,no-resolve
 
   # --- 全局兜底 ---
-  - MATCH,加密货币与兜底
+  - MATCH,兜底
 
 # ============================================================
 # DNS (respect-rules + proxy-doh 代理链 + OpenClash listen)

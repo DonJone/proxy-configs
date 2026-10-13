@@ -52,11 +52,11 @@ AI = select, AI节点, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@mas
 # 2. 业务组策略 (供 SSID 场景调用)
 AI与Google策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/ChatGPT3.png
 TikTok策略 = select, AI, 亚太, 欧美, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok_1.png
-Emby流媒体Github策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
+Emby流媒体Github策略 = select, 低倍, 亚太, 欧美, AI, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Emby.png
 通讯策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
 游戏平台策略 = select, DIRECT, 亚太, 欧美, AI, 低倍, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
 微软苹果Nvidia策略 = select, DIRECT, TR3000软路由, 亚太, 欧美, AI, 低倍, img-url = https://fastly.jsdelivr.net/gh/fmz200/wool_scripts@main/icons/apps/Apple_02.png
-加密货币与兜底策略 = select, 亚太, 欧美, AI, 低倍, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
+兜底策略 = select, 低倍, 亚太, 欧美, AI, DIRECT, TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bypass.png
 
 # 3. 业务场景组 (SSID 机制: 软路由 Wi-Fi 下直连，校园网与蜂窝下走代理)
 AI与Google = ssid, default=AI与Google策略, cellular=AI与Google策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
@@ -65,7 +65,7 @@ Emby流媒体Github = ssid, default=Emby流媒体Github策略, cellular=Emby流�
 通讯 = ssid, default=通讯策略, cellular=通讯策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 游戏平台 = ssid, default=游戏平台策略, cellular=游戏平台策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 微软苹果Nvidia = ssid, default=微软苹果Nvidia策略, cellular=微软苹果Nvidia策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
-加密货币与兜底 = ssid, default=加密货币与兜底策略, cellular=加密货币与兜底策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
+兜底 = ssid, default=兜底策略, cellular=兜底策略, "你的软路由wifi名"=TR3000软路由, img-url = https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/SSID.png
 
 # 4. 静默组
 国内服务 = select, DIRECT, TR3000软路由, 亚太, hidden = true
@@ -102,6 +102,10 @@ DOMAIN-SUFFIX, googlesyndication-cn.com, AI与Google
 DOMAIN-SUFFIX, doubleclick-cn.net, AI与Google
 DOMAIN-SUFFIX, googleadservices-cn.com, AI与Google
 DOMAIN-SUFFIX, googletagmanager-cn.com, AI与Google
+# YouTube & YouTube Music -> Emby流媒体Github
+DOMAIN-KEYWORD, youtube, Emby流媒体Github
+DOMAIN, music.youtube.com, Emby流媒体Github
+DOMAIN, youtubei.googleapis.com, Emby流媒体Github
 # Google 相册/云盘 -> Emby流媒体Github
 DOMAIN-SUFFIX, photos.google.com, Emby流媒体Github
 DOMAIN-SUFFIX, photos.googleapis.com, Emby流媒体Github
@@ -245,7 +249,7 @@ IP-CIDR, 5.28.195.0/24, REJECT-NO-DROP, no-resolve
 # =====================================
 # 国内与兜底
 GEOIP, CN, 国内服务, no-resolve
-FINAL, 加密货币与兜底
+FINAL, 兜底
 
 [Remote Rule]
 https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/bypass-domain.lsr, policy=DIRECT, tag=私有网络, enabled=true
@@ -272,10 +276,10 @@ https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/micr
 https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/google.lsr, policy=AI与Google, tag=Google, enabled=true
 # 游戏平台
 https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/steam.lsr, policy=游戏平台, tag=Steam, enabled=true
-# 加密货币与兜底
-https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/proxy-list.lsr, policy=加密货币与兜底, tag=Proxy, enabled=true
-https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gfw-list.lsr, policy=加密货币与兜底, tag=Global, enabled=true
-https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudflare.lsr, policy=加密货币与兜底, tag=Turnstile, enabled=true
+# 兜底
+https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/proxy-list.lsr, policy=兜底, tag=Proxy, enabled=true
+https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/gfw-list.lsr, policy=兜底, tag=Global, enabled=true
+https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/proxy/cloudflare.lsr, policy=兜底, tag=Turnstile, enabled=true
 # 国内服务
 https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/direct/direct-list.lsr, policy=国内服务, tag=国内通用, enabled=true
 https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr, policy=国内服务, tag=国内IP, enabled=true
@@ -292,7 +296,7 @@ https://fastly.jsdelivr.net/gh/DonJone/GinsRule-git@master/rules/loon/ip/cn.lsr,
 # 仅保留纯网络层防泄露与通用去广告组件，移除所有移动端 App (京东/淘宝/贴吧/微信等) 注入插件
 https://kelee.one/Tool/Loon/Lpx/Block_HTTPDNS.lpx, pin=true, enabled=true
 https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx, pin=true, enabled=true
-https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx, policy=加密货币与兜底, enabled=true
+https://kelee.one/Tool/Loon/Lpx/Prevent_DNS_Leaks.lpx, policy=兜底, enabled=true
 https://kelee.one/Tool/Loon/Lpx/QuickSearch.lpx, enabled=true
 https://kelee.one/Tool/Loon/Lpx/Node_detection_tool.lpx, enabled=true
 

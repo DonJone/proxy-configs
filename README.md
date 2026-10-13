@@ -19,10 +19,10 @@
 AI (FilterAI + exclude 低倍)
 低倍 (FilterLowRate, 手选池，包含 低倍自动 url-test)
   ↓
-AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹果Nvidia / 加密货币与兜底
+AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹果Nvidia / 兜底
 ```
 
-核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】、【低倍】四大手选节点池（低倍池内置【低倍自动】url-test 测速优选，180s），上层具体业务组直接引用对应池。全部区域与低倍保持手选掌控感，低倍内嵌自动测速保障可用性。
+核心理念：极致精简的策略组设计。底层通过正则过滤出【亚太】、【欧美】、【AI】、【低倍】四大手选节点池（低倍池内置【低倍自动】url-test 测速优选，180s），上层具体业务组直接引用对应池。全部区域与低倍保持手选掌控感，低倍内嵌自动测速保障可用性。其中【Emby流媒体Github】与【兜底】默认优选【低倍】。
 
 ## 规则来源
 
@@ -38,6 +38,7 @@ AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹�
 |--------|------|--------|
 | `ai` | DustinWin | **AI与Google** |
 | `google`, `google-cn`, `google_ip`, `fcm` | echs-top / MetaCubeX | **AI与Google** |
+| `youtube` | MetaCubeX | **Emby流媒体Github** |
 | `media`, `media_ip` | DustinWin | **Emby流媒体Github** |
 | `github` + `DOMAIN-KEYWORD,github` | GinsRule-git | **Emby流媒体Github** |
 | `telegram`, `telegram_ip`, `x` | MetaCubeX / echs-top | **通讯** |
@@ -45,9 +46,9 @@ AI与Google / TikTok / Emby流媒体Github / 通讯 / 游戏平台 / 微软苹�
 | `apple`, `microsoft` | MetaCubeX | **微软苹果Nvidia** |
 | `apple-cn`, `microsoft-cn` | MetaCubeX | **微软苹果Nvidia** |
 | `games-cn` | MetaCubeX | **游戏平台** |
-| `captcha` | echs-top | **加密货币与兜底** |
-| `trackerslist` | DustinWin | **加密货币与兜底** |
-| `proxy_domain`, `proxy-lite`, `proxy_ip` | MetaCubeX / echs-top | **加密货币与兜底** |
+| `captcha` | echs-top | **兜底** |
+| `trackerslist` | DustinWin | **兜底** |
+| `proxy_domain`, `proxy-lite`, `proxy_ip` | MetaCubeX / echs-top | **兜底** |
 | `cn`, `dnsmasq-china-lite`, `cn_ip` | echs-top | **DIRECT** |
 | `private`, `private_ip` | DustinWin | **DIRECT** |
 

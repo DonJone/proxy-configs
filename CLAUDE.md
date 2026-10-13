@@ -37,11 +37,11 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 | `低倍` | select (手选池) | 包含 低倍自动 (url-test) + FilterLowRate |
 | `AI与Google` | select (业务组) | ai + google + google-cn + google_ip + fcm |
 | `TikTok` | select (业务组) | tiktok 规则集 |
-| `Emby流媒体Github` | select (业务组) | media + media_ip + github 规则集 |
+| `Emby流媒体Github` | select (业务组) | youtube + media + media_ip + github 规则集 (默认低倍) |
 | `通讯` | select (业务组) | telegram + telegram_ip + x |
 | `游戏平台` | select (业务组) | games-cn + steam 规则集 |
 | `微软苹果Nvidia` | select (业务组) | apple + microsoft + apple-cn + microsoft-cn |
-| `加密货币与兜底` | select (业务组) | trackerslist + proxy_domain + proxy-lite, MATCH 兜底 |
+| `兜底` | select (业务组) | trackerslist + proxy_domain + proxy-lite, MATCH 兜底 (默认低倍) |
 | `国内服务` | select (静默组) | 国内流量手动兜底 (默认 DIRECT), hidden |
 | `代理DNS` | select (基础设施) | DoH 代理链 (proxy-doh 经此组路由), hidden |
 | `代理QUIC` | select (基础设施) | UDP 443 控制 (REJECT 强制 TCP 回退), hidden |
@@ -54,7 +54,7 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 3 hand-select pools (亚太/欧美/AI) + 1 select pool (低倍) → 7 business groups → 直接引用池
 ```
 
-亚太/欧美/AI 保持手选，低倍为 select 手选组（包含低倍自动 url-test 测速池及低倍节点）。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`。
+亚太/欧美/AI 保持手选，低倍为 select 手选组（包含低倍自动 url-test 测速池及低倍节点）。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`，其中 Emby流媒体Github 与 兜底 默认优选 `低倍`。
 
 > **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
 
@@ -65,9 +65,9 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 | 规则集 | 目标组 | 平台 |
 |--------|--------|------|
 | `ai`, `google`, `google-cn`, `google_ip`, `fcm` | **AI与Google** | Mihomo |
-| `media`, `media_ip`, `github` | **Emby流媒体Github** | Mihomo |
+| `youtube`, `media`, `media_ip`, `github` | **Emby流媒体Github** | Mihomo |
 | `telegram`, `telegram_ip`, `x` | **通讯** | Mihomo |
-| `captcha`, `trackerslist`, `proxy_domain`, `proxy`, `proxy_ip` | **加密货币与兜底** | Mihomo |
+| `captcha`, `trackerslist`, `proxy_domain`, `proxy`, `proxy_ip` | **兜底** | Mihomo |
 | `AWAvenue-Ads` | **广告拦截** | Mihomo |
 | `apple-cn`, `microsoft-cn`, `games-cn`, `direct_domain`, `cn`, `dnsmasq-china-add` | **DIRECT** | Mihomo |
 | `direct_ip`, `cn_ip`, `enhanced-FaaS-in-China_ip` | **DIRECT** (no-resolve) | Mihomo |
