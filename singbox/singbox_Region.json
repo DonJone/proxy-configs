@@ -1,0 +1,282 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SagerNet/sing-box/main/docs/configuration.schema.json",
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "secret": "",
+      "default_mode": "Rule"
+    },
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "store_fakeip": true,
+      "store_rdrc": true
+    }
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "dns-direct",
+        "address": "https://223.5.5.5/dns-query",
+        "address_resolver": "dns-local",
+        "detour": "DIRECT"
+      },
+      {
+        "tag": "dns-proxy",
+        "address": "https://dns.google/dns-query",
+        "address_resolver": "dns-direct",
+        "detour": "兜底"
+      },
+      {
+        "tag": "dns-local",
+        "address": "223.5.5.5",
+        "detour": "DIRECT"
+      },
+      {
+        "tag": "dns-fakeip",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "server": "dns-direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "server": "dns-direct"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "dns-proxy"
+      },
+      {
+        "domain": [
+          "dns.google",
+          "dns.alidns.com",
+          "doh.pub"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "rule_set": "rule-direct",
+        "server": "dns-direct"
+      },
+      {
+        "rule_set": [
+          "rule-apac",
+          "rule-ai",
+          "rule-lowrate"
+        ],
+        "server": "dns-fakeip"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "dns-fakeip"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "independent_cache": true,
+    "final": "dns-proxy"
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "::",
+      "listen_port": 7890,
+      "sniff": true,
+      "sniff_override_destination": false
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "utun",
+      "address": [
+        "172.19.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": true,
+      "strict_route": true,
+      "stack": "system",
+      "endpoint_independent_nat": true,
+      "sniff": true,
+      "sniff_override_destination": false
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "DIRECT"
+    },
+    {
+      "type": "selector",
+      "tag": "亚太",
+      "outbounds": [
+        "DIRECT"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "欧美",
+      "outbounds": [
+        "DIRECT"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "AI",
+      "outbounds": [
+        "DIRECT"
+      ]
+    },
+    {
+      "type": "urltest",
+      "tag": "低倍自动",
+      "outbounds": [
+        "DIRECT"
+      ],
+      "url": "https://cp.cloudflare.com/generate_204",
+      "interval": "3m",
+      "tolerance": 30
+    },
+    {
+      "type": "selector",
+      "tag": "低倍",
+      "outbounds": [
+        "低倍自动",
+        "DIRECT"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "兜底",
+      "outbounds": [
+        "低倍",
+        "亚太",
+        "欧美",
+        "AI",
+        "DIRECT"
+      ]
+    }
+  ],
+  "route": {
+    "rule_set": [
+      {
+        "tag": "rule-direct",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/direct.srs",
+        "download_detour": "DIRECT",
+        "update_interval": "1d"
+      },
+      {
+        "tag": "rule-apac",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/apac.srs",
+        "download_detour": "兜底",
+        "update_interval": "1d"
+      },
+      {
+        "tag": "rule-ai",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/ai.srs",
+        "download_detour": "兜底",
+        "update_interval": "1d"
+      },
+      {
+        "tag": "rule-lowrate",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/lowrate.srs",
+        "download_detour": "兜底",
+        "update_interval": "1d"
+      }
+    ],
+    "rules": [
+      {
+        "action": "hijack-dns",
+        "protocol": "dns"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "DIRECT"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "兜底"
+      },
+      {
+        "ip_cidr": [
+          "169.254.169.254/32"
+        ],
+        "action": "reject"
+      },
+      {
+        "port": [
+          123
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "domain_keyword": [
+          "ntp"
+        ],
+        "domain_suffix": [
+          "pool.ntp.org",
+          "ntsc.ac.cn",
+          "campus.edu.cn"
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "port": [
+          5228,
+          5229,
+          5230
+        ],
+        "outbound": "DIRECT"
+      },
+      {
+        "rule_set": "rule-direct",
+        "outbound": "DIRECT"
+      },
+      {
+        "rule_set": "rule-apac",
+        "outbound": "亚太"
+      },
+      {
+        "action": "reject",
+        "network": "udp",
+        "port": [
+          443
+        ]
+      },
+      {
+        "rule_set": "rule-ai",
+        "outbound": "AI"
+      },
+      {
+        "rule_set": "rule-lowrate",
+        "outbound": "低倍"
+      }
+    ],
+    "final": "兜底",
+    "auto_detect_interface": true
+  }
+}

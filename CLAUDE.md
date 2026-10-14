@@ -2,10 +2,11 @@
 
 ## 项目概述
 
-为 Mihomo (Clash Meta)、Loon、Shadowrocket 提供跨平台代理配置。
+为 Mihomo (Clash Meta)、Loon、Shadowrocket、Sing-box 提供跨平台代理配置。
 
 - **Mihomo**: 规则来源 [echs-top/proxy](https://github.com/echs-top/proxy) (MRS) + [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) (GeoIP + x.mrs)
 - **Loon / Shadowrocket**: 规则来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git) (.lsr / .list)
+- **Sing-box**: 规则来源 [DonJone/proxy-rulesets](https://github.com/DonJone/proxy-rulesets) (.srs)
 
 ## 文件命名约定
 
@@ -23,6 +24,11 @@ loon_Region_ssid.lcf          → Loon iPhone / iOS 移动端全功能 (含移�
 loon_Region_mac.lcf           → Loon macOS 桌面端专属 (纯净网络栈，DoH 加密，零移动插件)
 ```
 Shadowrocket 文件（`.conf`）遵循相同命名。
+
+Sing-box 文件命名约定：
+```
+singbox_Region.json           → Sing-box 1.11+ Region 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集)
+```
 
 ## 策略组命名字典
 
@@ -58,6 +64,15 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 
 > **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
 
+### Sing-box 四大块架构 (Direct / APAC / AI / LowRate)
+
+在 Sing-box 客户端中，依托 `DonJone/proxy-rulesets` 将庞杂规则收敛为四大规则集：
+- `rule-direct` (`direct.srs`) -> `DIRECT`（国内 IP、国内域名、Steam/Epic 等游戏切片下载 CDN 100% 直连）
+- `rule-apac` (`apac.srs`) -> `亚太`（Telegram 核心 IP/域名、Twitter/X、Steam/Epic 商城与社区）
+- `rule-ai` (`ai.srs`) -> `AI`（OpenAI、Claude、Gemini、Copilot、Grok、Mistral 等）
+- `rule-lowrate` (`lowrate.srs`) -> `低倍`（YouTube、Media/Netflix/Disney+/Emby、GitHub、海外大盘）
+- `final` -> `兜底`（包含低倍、亚太、欧美、AI、DIRECT）
+
 ## 规则路由映射
 
 平铺规则，无 SUB-RULE。域名规则先于 IP 规则，IP 规则带 `no-resolve`。
@@ -72,10 +87,14 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 | `apple-cn`, `microsoft-cn`, `games-cn`, `direct_domain`, `cn`, `dnsmasq-china-add` | **DIRECT** | Mihomo |
 | `direct_ip`, `cn_ip`, `enhanced-FaaS-in-China_ip` | **DIRECT** (no-resolve) | Mihomo |
 | `private`, `private_ip` | **DIRECT** | Mihomo |
+| `direct.srs` | **DIRECT** | Sing-box |
+| `apac.srs` | **亚太** | Sing-box |
+| `ai.srs` | **AI** | Sing-box |
+| `lowrate.srs` | **低倍** | Sing-box |
 
 规则匹配顺序：`预留地址 → 私有地址 → 广告拦截 → 国内直连 → QUIC → 代理业务 → IP 分流 → 端口识别 → GEOIP → MATCH`
 
-Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 MRS，沿用 GinsRule-git 的 `.lsr` / `.list` 格式规则。组名与 Mihomo 保持一致。
+Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 MRS，沿用 GinsRule-git 的 `.lsr` / `.list` 格式规则。组名与 Mihomo 保持一致。Sing-box 使用编译好的 `.srs` 二进制规则集。
 
 ## DNS 架构
 
@@ -87,17 +106,19 @@ Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 
 - `hosts`: DNS 服务器域名硬编码 IP，避免冷启动死锁
 - `geodata-mode: true` + `GEOIP,CN,DIRECT` 兜底
 
+Sing-box 采用双 DoH 架构：国内流量经由 `dns-direct` (Alidns DoH) 直连解析，代理流量通过 `dns-fakeip` 分配 Fake-IP，未收录类型及兜底流量由 `dns-proxy` (Google DoH via 兜底) 解析。
+
 ## 平台差异
 
-| 特性 | Mihomo | Loon | Shadowrocket |
-|------|--------|------|-------------|
-| 规则来源 | echs-top/proxy (MRS) | GinsRule-git (.lsr) | GinsRule-git (.list) |
-| 策略组过滤 | `filter` / `exclude-filter` | Remote Filter NameRegex | `policy-regex-filter` |
-| DNS | fake-ip + nameserver-policy | `dns-server` (阿里/腾讯/system) | `dns-server` + `fallback-dns-server` |
-| 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 |
-| QUIC | AND 规则 → 代理QUIC | — | `block-quic=all-proxy` |
+| 特性 | Mihomo | Loon | Shadowrocket | Sing-box |
+|------|--------|------|-------------|----------|
+| 规则来源 | echs-top/proxy (MRS) | GinsRule-git (.lsr) | GinsRule-git (.list) | proxy-rulesets (.srs) |
+| 策略组过滤 | `filter` / `exclude-filter` | Remote Filter NameRegex | `policy-regex-filter` | 手选池 (selector) + 测速 (urltest) |
+| DNS | fake-ip + nameserver-policy | `dns-server` (阿里/腾讯/system) | `dns-server` + `fallback-dns-server` | fake-ip (198.18/15) + 双 DoH 路由 |
+| 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 | `sniff: true` (系统级嗅探) |
+| QUIC | AND 规则 → 代理QUIC | — | `block-quic=all-proxy` | `action: reject` (UDP 443 拦截) |
 
-Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。
+Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。Sing-box 采用 1.11+ Action 语法和独立的规则路由架构。
 
 ## 修改指南
 
@@ -110,7 +131,7 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 
 ### 添加/删除策略组
 1. 修改 `mihomo_Region.yaml`（主文件）的 `proxy-groups` 节
-2. 同步到 OpenClash、Loon、Shadowrocket 对应文件
+2. 同步到 OpenClash、Loon、Shadowrocket、Sing-box 对应文件
 3. 如需 fallback 版本，同步到 `_fallback` 文件
 4. 更新 README.md 和本文件
 
@@ -119,8 +140,8 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 2. 同步更新 `rules` / `dns.nameserver-policy` / `dns.fake-ip-filter` / `sniffer` 中引用
 3. 所有 mihomo 文件（desktop/OpenClash/Mobile_Modules）规则集名称必须一致
 
-### 修改规则集来源 (Loon/Shadowrocket)
-1. 修改 `[Remote Rule]` 节对应的 URL
+### 修改规则集来源 (Loon/Shadowrocket/Sing-box)
+1. 修改 `[Remote Rule]` 节对应的 URL 或 Sing-box `route.rule_set` URL
 2. Loon 和 Shadowrocket 不共享 rule-providers，需分别修改
 
 ### 修改组名
@@ -132,15 +153,16 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 - Loon `NameRegex` 支持 `(?<!...)` 负向回顾
 - Shadowrocket `policy-regex-filter` 使用 `^(?i)(?!...).*` 格式
 
-### 规则顺序约束 (Mihomo)
+### 规则顺序约束 (Mihomo & Sing-box)
 - **域名规则必须在 IP 规则之前**，否则 IP 规则（无 `no-resolve` 时）会解析 fake-IP 并劫持域名流量
 - IP 规则统一加 `no-resolve`，避免对域名连接做多余的 DNS 解析
 - QUIC 拦截置于国内直连之后、代理规则之前
-- **Telegram MTProto 避让铁律**：Telegram 纯 IP 规则 (`telegram_ip`) 必须置于 QUIC 拦截之前，确保 MTProto UDP 443 握手流量不被误拦截；裸核/路由器 TUN 模式必须将 Telegram 10 大核心 IPv4 CIDR 加入 `inet4-route-address` 接管纯 IP 流量。
+- **Telegram MTProto 避让铁律**：Telegram 纯 IP 规则 (`telegram_ip` 或 `apac.srs`) 必须置于 QUIC 拦截之前，确保 MTProto UDP 443 握手流量不被误拦截；裸核/路由器 TUN 模式必须接管 Telegram 纯 IP 流量。
 
 ## 外部参考
 
 ```
+proxy-rulesets:     https://github.com/DonJone/proxy-rulesets  — 四端规则编译管线与 Sing-box SRS
 echs-top/proxy:     https://github.com/echs-top/proxy          — Mihomo MRS 规则
 GinsRule-git:       https://github.com/DonJone/GinsRule-git    — Loon/SR 规则
 MetaCubeX:          https://github.com/MetaCubeX/meta-rules-dat — GeoIP + x.mrs
@@ -148,3 +170,4 @@ Qure icons:         https://github.com/Koolson/Qure             — 策略组图
 wool_scripts:       https://github.com/fmz200/wool_scripts      — AI 规则 / Loon 插件
 ShellCrash:         https://github.com/juewuy/ShellCrash        — fake-ip-filter
 ```
+
