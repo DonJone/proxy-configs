@@ -142,8 +142,7 @@ proxy-configs/
 
 | 适用环境 | 架构 | 链接 |
 |----------|------|------|
-| 通用客户端 / 裸核 / 路由 (v1.11 ~ v1.13) | Region (4 大块 + Zashboard) | [singbox_Region.json](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/singbox/singbox_Region.json) |
-| 官方最新客户端 / 路由 (v1.14 ~ v1.15+) | Region Next (强类型 DNS + Zashboard) | [singbox_Region_next.json](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/singbox/singbox_Region_next.json) |
+| 通用客户端 / 裸核 / 路由 (v1.14+ Latest Release) | Region (4 大块 + Zashboard) | [singbox_Region.json](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/singbox/singbox_Region.json) |
 
 ## 参考
 

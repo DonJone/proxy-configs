@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/SagerNet/sing-box/main/docs/configuration.schema.json",
+  "$schema": "https://raw.githubusercontent.com/SagerNet/sing-box/main/docs/schema.json",
   "log": {
     "disabled": false,
     "level": "info",
@@ -20,35 +20,42 @@
       "store_fakeip": true
     }
   },
+  "http_clients": [
+    {
+      "tag": "http-direct"
+    },
+    {
+      "tag": "http-proxy",
+      "detour": "兜底"
+    }
+  ],
   "dns": {
     "servers": [
       {
+        "type": "https",
         "tag": "dns-direct",
-        "address": "https://223.5.5.5/dns-query",
-        "address_resolver": "dns-local",
-        "detour": "DIRECT"
+        "server": "223.5.5.5"
       },
       {
+        "type": "https",
         "tag": "dns-proxy",
-        "address": "https://dns.google/dns-query",
-        "address_resolver": "dns-direct",
+        "server": "dns.google",
+        "domain_resolver": "dns-direct",
         "detour": "兜底"
       },
       {
+        "type": "udp",
         "tag": "dns-local",
-        "address": "223.5.5.5",
-        "detour": "DIRECT"
+        "server": "223.5.5.5"
       },
       {
+        "type": "fakeip",
         "tag": "dns-fakeip",
-        "address": "fakeip"
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
-      {
-        "outbound": "any",
-        "server": "dns-direct"
-      },
       {
         "clash_mode": "Direct",
         "server": "dns-direct"
@@ -85,11 +92,6 @@
         "server": "dns-fakeip"
       }
     ],
-    "fakeip": {
-      "enabled": true,
-      "inet4_range": "198.18.0.0/15",
-      "inet6_range": "fc00::/18"
-    },
     "final": "dns-proxy"
   },
   "inbounds": [
@@ -97,9 +99,7 @@
       "type": "mixed",
       "tag": "mixed-in",
       "listen": "::",
-      "listen_port": 7890,
-      "sniff": true,
-      "sniff_override_destination": false
+      "listen_port": 7890
     },
     {
       "type": "tun",
@@ -110,10 +110,7 @@
         "fdfe:dcba:9876::1/126"
       ],
       "auto_route": true,
-      "strict_route": true,
-      "stack": "system",
-      "sniff": true,
-      "sniff_override_destination": false
+      "strict_route": true
     }
   ],
   "outbounds": [
@@ -173,13 +170,15 @@
     }
   ],
   "route": {
+    "default_domain_resolver": "dns-direct",
+    "default_http_client": "http-direct",
     "rule_set": [
       {
         "tag": "rule-direct",
         "type": "remote",
         "format": "binary",
         "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/direct.srs",
-        "download_detour": "DIRECT",
+        "http_client": "http-direct",
         "update_interval": "1d"
       },
       {
@@ -187,7 +186,7 @@
         "type": "remote",
         "format": "binary",
         "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/apac.srs",
-        "download_detour": "兜底",
+        "http_client": "http-proxy",
         "update_interval": "1d"
       },
       {
@@ -195,7 +194,7 @@
         "type": "remote",
         "format": "binary",
         "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/ai.srs",
-        "download_detour": "兜底",
+        "http_client": "http-proxy",
         "update_interval": "1d"
       },
       {
@@ -203,7 +202,7 @@
         "type": "remote",
         "format": "binary",
         "url": "https://fastly.jsdelivr.net/gh/DonJone/proxy-rulesets@release/rules/singbox/lowrate.srs",
-        "download_detour": "兜底",
+        "http_client": "http-proxy",
         "update_interval": "1d"
       }
     ],

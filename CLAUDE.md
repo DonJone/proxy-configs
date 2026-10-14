@@ -27,8 +27,7 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 
 Sing-box 文件命名约定：
 ```
-singbox_Region.json           → Sing-box 1.11 ~ 1.13 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集 + Zashboard)
-singbox_Region_next.json      → Sing-box 1.14 ~ 1.15+ 现代标准配置 (强类型 DNS/FakeIP + schema.json 严格对齐)
+singbox_Region.json           → Sing-box 1.14.3+ 官方最新标准配置 (强类型 DNS/FakeIP + http_clients + Tun + 四大 .srs 规则集 + Zashboard)
 ```
 
 ## 策略组命名字典
@@ -116,10 +115,10 @@ Sing-box 采用双 DoH 架构：国内流量经由 `dns-direct` (Alidns DoH) 直
 | 规则来源 | echs-top/proxy (MRS) | GinsRule-git (.lsr) | GinsRule-git (.list) | proxy-rulesets (.srs) |
 | 策略组过滤 | `filter` / `exclude-filter` | Remote Filter NameRegex | `policy-regex-filter` | 手选池 (selector) + 测速 (urltest) |
 | DNS | fake-ip + nameserver-policy | `dns-server` (阿里/腾讯/system) | `dns-server` + `fallback-dns-server` | fake-ip (198.18/15) + 双 DoH 路由 |
-| 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 | `sniff: true` (系统级嗅探) |
+| 嗅探 | sniffer 配置块 | `sni-sniffing=true` | 内置 | `action: sniff` (首行路由嗅探) |
 | QUIC | AND 规则 → 代理QUIC | — | `block-quic=all-proxy` | `action: reject` (UDP 443 拦截) |
 
-Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。Sing-box 采用 1.11+ Action 语法和独立的规则路由架构。
+Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/嗅探）。Sing-box 采用 1.14+ 现代 Action 语法与强类型 DNS / http_clients 架构。
 
 ## 修改指南
 
