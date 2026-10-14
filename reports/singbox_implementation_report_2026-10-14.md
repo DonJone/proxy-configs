@@ -88,3 +88,29 @@
 | `91.108.4.1` (Telegram) | `apac.srs` | 成功 | match rules.[0]: ip_cidr |
 
 全部测试靶点 100% 精准归流，动静解耦机制与 Telegram 避让逻辑完全生效。
+
+---
+
+## 4. 基于官方仓库 docs/schema.json 的严格审查与版本演进报告
+
+对照用户拉取的 Sing-box 官方仓库最新文档 (`/Users/don/work/proxy/sing-box/docs`) 及 `schema.json`，配置文件的版本语法差异如下：
+
+### 4.1 核心语法版本分水岭
+
+| 模块 / 字段 | Sing-box 1.11.x (当前生产内核) | Sing-box 1.14+ ~ 1.15+ (官方最新标准) | 规范变更与处理依据 |
+|---|---|---|---|
+| **DNS 服务器声明** | `address: "https://..."`, `address: "fakeip"` | `type: "https", server: "..."`, `type: "fakeip"` | 1.12.0 重构 DNS 服务器为类型化对象，1.14.0 正式移除旧版 `address` 字符串字段。 |
+| **Fake-IP 作用域** | 独立于根级 `dns.fakeip: {...}` | 内置于 `dns.servers` 的 `type: "fakeip"` 中 | 1.14.0 彻底移除根级 `dns.fakeip` 字段。 |
+| **出站 DNS 引导** | DNS 规则 `outbound: any -> dns-direct` | 路由层 `route.default_domain_resolver: "dns-direct"` | 1.12.0 废弃 `outbound` DNS 规则项，改为显式配置域解析器。 |
+| **DNS 缓存隔离** | `independent_cache: true` | 已废弃并删除 | 官方文档指出启用后会降低性能，1.14.0 废弃，已从两套配置中移除。 |
+| **拒绝响应缓存** | `store_rdrc: true` | 已废弃并删除 | 1.14.0 废弃（由 `store_dns` 取代），已从配置中移除。 |
+| **TUN 协议栈** | `stack: "system"` | 字段废弃，移除以启用自研 stack | 1.15.0 废弃 `stack`，采用自研高性能 sing-tun TCP/IP 栈，移除即可自动启用。 |
+| **TUN NAT** | `endpoint_independent_nat: true` | 已废弃并删除 | 官方文档明确注明自 1.11.0 起已不再生效，已从两套配置中彻底移除。 |
+| **协议与域名嗅探** | 入站 `sniff: true` | 路由规则动作 `{"action": "sniff"}` | 1.14.0 废弃入站监听级嗅探字段，推荐作为路由首条规则执行。两套配置均已加入路由首行 `action: sniff`。 |
+
+### 4.2 双轨落地成果
+
+针对不同环境的客户端，工作区现同时提供两套经严格校验的实现方案：
+1. [singbox_Region.json](file:///Users/don/work/proxy/proxy-configs/singbox/singbox_Region.json)：面向当前生产运行环境（Sing-box 1.11.x ~ 1.13.x），已清洗全部废弃及失效参数，`sing-box check` 校验通过，Exit code 0。
+2. [singbox_Region_next.json](file:///Users/don/work/proxy/proxy-configs/singbox/singbox_Region_next.json)：面向 Sing-box 1.14+ 及 1.15+ 最新官方规范，严格对齐 `/Users/don/work/proxy/sing-box/docs/schema.json`，Python 强校验 0 错误。
+

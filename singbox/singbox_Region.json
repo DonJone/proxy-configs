@@ -17,8 +17,7 @@
     "cache_file": {
       "enabled": true,
       "path": "cache.db",
-      "store_fakeip": true,
-      "store_rdrc": true
+      "store_fakeip": true
     }
   },
   "dns": {
@@ -91,7 +90,6 @@
       "inet4_range": "198.18.0.0/15",
       "inet6_range": "fc00::/18"
     },
-    "independent_cache": true,
     "final": "dns-proxy"
   },
   "inbounds": [
@@ -114,7 +112,6 @@
       "auto_route": true,
       "strict_route": true,
       "stack": "system",
-      "endpoint_independent_nat": true,
       "sniff": true,
       "sniff_override_destination": false
     }
@@ -211,6 +208,9 @@
       }
     ],
     "rules": [
+      {
+        "action": "sniff"
+      },
       {
         "action": "hijack-dns",
         "protocol": "dns"

@@ -27,7 +27,8 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 
 Sing-box 文件命名约定：
 ```
-singbox_Region.json           → Sing-box 1.11+ Region 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集 + Zashboard)
+singbox_Region.json           → Sing-box 1.11 ~ 1.13 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集 + Zashboard)
+singbox_Region_next.json      → Sing-box 1.14 ~ 1.15+ 现代标准配置 (强类型 DNS/FakeIP + schema.json 严格对齐)
 ```
 
 ## 策略组命名字典
