@@ -142,10 +142,11 @@ proxy-configs/
 
 | 适用环境 | 架构 | 链接 |
 |----------|------|------|
-| 通用客户端 / 裸核 / 路由 (v1.11+) | Region (4 大块) | [singbox_Region.json](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/singbox/singbox_Region.json) |
+| 通用客户端 / 裸核 / 路由 (v1.11+) | Region (4 大块 + Zashboard) | [singbox_Region.json](https://cdn.jsdelivr.net/gh/DonJone/proxy-configs@master/singbox/singbox_Region.json) |
 
 ## 参考
 
+- [Zephyruso/zashboard](https://github.com/Zephyruso/zashboard) — 现代 Web 控制面板 (Mihomo & Sing-box)
 - [DonJone/proxy-rulesets](https://github.com/DonJone/proxy-rulesets) — 四端规则编译管线与 Sing-box .srs 二进制规则集
 - [DustinWin/ruleset_geodata](https://github.com/DustinWin/ruleset_geodata) — Mihomo 规则源 (private/ai/media/trackerslist)
 - [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) — Mihomo 规则源 (geosite/geoip) + GeoIP 数据库

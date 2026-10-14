@@ -27,7 +27,7 @@ Shadowrocket 文件（`.conf`）遵循相同命名。
 
 Sing-box 文件命名约定：
 ```
-singbox_Region.json           → Sing-box 1.11+ Region 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集)
+singbox_Region.json           → Sing-box 1.11+ Region 生产级配置 (Tun/Mixed/Fake-IP + 四大 .srs 规则集 + Zashboard)
 ```
 
 ## 策略组命名字典
@@ -163,6 +163,7 @@ Loon 和 Shadowrocket 不支持 mihomo 的三系统联动（规则集驱动 DNS/
 
 ```
 proxy-rulesets:     https://github.com/DonJone/proxy-rulesets  — 四端规则编译管线与 Sing-box SRS
+zashboard:          https://github.com/Zephyruso/zashboard    — 现代 Web 控制面板
 echs-top/proxy:     https://github.com/echs-top/proxy          — Mihomo MRS 规则
 GinsRule-git:       https://github.com/DonJone/GinsRule-git    — Loon/SR 规则
 MetaCubeX:          https://github.com/MetaCubeX/meta-rules-dat — GeoIP + x.mrs

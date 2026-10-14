@@ -53,6 +53,12 @@
    - 然后拦截海外 QUIC：`action: reject, network: udp, port: 443`（阻止海外网页与 YouTube QUIC 假死卡顿）；
    - 最后分流 `rule-ai` 与 `rule-lowrate`，最终兜底至 `兜底`。
 
+### 2.5 Web 控制面板 (Zashboard 集成)
+
+* 配置 Clash API 扩展模块，监听地址 `0.0.0.0:9090`，支持局域网设备与本地浏览器访问。
+* 静态资源路径指定为 `zashboard`，自动拉取上游发布包 `https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip`。
+* 首次启动时内核自动解压至本地目录，访问 `http://<ip>:9090/ui` 即可体验与 Mihomo 一致的现代可视化控制面板。
+
 ---
 
 ## 3. 校验与测试结果
