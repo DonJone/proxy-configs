@@ -5,7 +5,8 @@
 为 Mihomo (Clash Meta)、Loon、Shadowrocket、Sing-box 提供跨平台代理配置。
 
 - **Mihomo**: 规则来源 [echs-top/proxy](https://github.com/echs-top/proxy) (MRS) + [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) (GeoIP + x.mrs)
-- **Loon / Shadowrocket**: 规则来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git) (.lsr / .list)
+- **Loon**: 规则来源 [DonJone/proxy-rulesets](https://github.com/DonJone/proxy-rulesets) (.lsr) 四大规则集 (与 Sing-box 架构对齐)
+- **Shadowrocket**: 规则来源 [GinsRule-git](https://github.com/DonJone/GinsRule-git) (.list)
 - **Sing-box**: 规则来源 [DonJone/proxy-rulesets](https://github.com/DonJone/proxy-rulesets) (.srs)
 
 ## 文件命名约定
@@ -20,8 +21,8 @@ mihomodeskmob.yaml            → ABC 线路 (待重建)
 
 Loon 文件命名约定：
 ```
-loon_Region_ssid.lcf          → Loon iPhone / iOS 移动端全功能 (含移动去广告插件与任务脚本)
-loon_Region_mac.lcf           → Loon macOS 桌面端专属 (纯净网络栈，DoH 加密，零移动插件)
+loon_Region_ssid.lcf          → Loon iPhone / iOS 移动端四大块架构 (含移动去广告插件与任务脚本)
+loon_Region_mac.lcf           → Loon macOS 桌面端四大块架构 (纯净网络栈，DoH 加密，零移动插件)
 ```
 Shadowrocket 文件（`.conf`）遵循相同命名。
 
@@ -54,7 +55,7 @@ singbox_Region.json           → Sing-box 1.14.3+ 官方最新标准配置 (强
 
 ## 架构
 
-### Region — 纯手选 (主力, 15 个策略组)
+### Region — 纯手选 (Mihomo/Shadowrocket, 15 个策略组)
 
 ```
 3 hand-select pools (亚太/欧美/AI) + 1 select pool (低倍) → 7 business groups → 直接引用池
@@ -62,16 +63,16 @@ singbox_Region.json           → Sing-box 1.14.3+ 官方最新标准配置 (强
 
 亚太/欧美/AI 保持手选，低倍为 select 手选组（包含低倍自动 url-test 测速池及低倍节点）。业务组直指 `[亚太, 欧美, AI, 低倍, DIRECT]`，其中 Emby流媒体Github 与 兜底 默认优选 `低倍`。
 
-> **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。
+> **注**: Fallback 备选架构（`_fallback` 后缀文件）已废弃移除。Loon 原 15 策略组旧架构已归档至 `archive_loon_legacy` 分支。
 
-### Sing-box 四大块架构 (Direct / APAC / AI / LowRate)
+### 四大块收敛架构 (Sing-box & Loon: Direct / APAC / AI / LowRate)
 
-在 Sing-box 客户端中，依托 `DonJone/proxy-rulesets` 将庞杂规则收敛为四大规则集：
-- `rule-direct` (`direct.srs`) -> `DIRECT`（国内 IP、国内域名、Steam/Epic 等游戏切片下载 CDN 100% 直连）
-- `rule-apac` (`apac.srs`) -> `亚太`（Telegram 核心 IP/域名、Twitter/X、Steam/Epic 商城与社区）
-- `rule-ai` (`ai.srs`) -> `AI`（OpenAI、Claude、Gemini、Copilot、Grok、Mistral 等）
-- `rule-lowrate` (`lowrate.srs`) -> `低倍`（YouTube、Media/Netflix/Disney+/Emby、GitHub、海外大盘）
-- `final` -> `兜底`（包含低倍、亚太、欧美、AI、DIRECT）
+在 Sing-box 与 Loon 客户端中，依托 `DonJone/proxy-rulesets` 将庞杂规则收敛为四大规则集：
+- `direct.srs` / `direct.lsr` -> `DIRECT`（国内 IP、国内域名、Steam/Epic 等游戏切片下载 CDN 100% 直连）
+- `apac.srs` / `apac.lsr` -> `亚太`（Telegram 核心 IP/域名、Twitter/X、Steam/Epic 商城与社区）
+- `ai.srs` / `ai.lsr` -> `AI`（OpenAI、Claude、Gemini、Copilot、Grok、Mistral 等）
+- `lowrate.srs` / `lowrate.lsr` -> `低倍`（YouTube、Media/Netflix/Disney+/Emby、GitHub、海外大盘）
+- `final` / `FINAL` -> `兜底`（包含低倍、亚太、AI、DIRECT）
 
 ## 规则路由映射
 
@@ -87,14 +88,14 @@ singbox_Region.json           → Sing-box 1.14.3+ 官方最新标准配置 (强
 | `apple-cn`, `microsoft-cn`, `games-cn`, `direct_domain`, `cn`, `dnsmasq-china-add` | **DIRECT** | Mihomo |
 | `direct_ip`, `cn_ip`, `enhanced-FaaS-in-China_ip` | **DIRECT** (no-resolve) | Mihomo |
 | `private`, `private_ip` | **DIRECT** | Mihomo |
-| `direct.srs` | **DIRECT** | Sing-box |
-| `apac.srs` | **亚太** | Sing-box |
-| `ai.srs` | **AI** | Sing-box |
-| `lowrate.srs` | **低倍** | Sing-box |
+| `direct.srs` / `direct.lsr` | **DIRECT** | Sing-box / Loon |
+| `apac.srs` / `apac.lsr` | **亚太** | Sing-box / Loon |
+| `ai.srs` / `ai.lsr` | **AI** | Sing-box / Loon |
+| `lowrate.srs` / `lowrate.lsr` | **低倍** | Sing-box / Loon |
 
 规则匹配顺序：`预留地址 → 私有地址 → 广告拦截 → 国内直连 → QUIC → 代理业务 → IP 分流 → 端口识别 → GEOIP → MATCH`
 
-Loon / Shadowrocket 规则通过 Remote Rule URL 逐个引用，内核不支持 MRS，沿用 GinsRule-git 的 `.lsr` / `.list` 格式规则。组名与 Mihomo 保持一致。Sing-box 使用编译好的 `.srs` 二进制规则集。
+Shadowrocket 规则通过 Remote Rule URL 逐个引用，沿用 GinsRule-git 的 `.list` 格式规则。Sing-box 使用编译好的 `.srs` 二进制规则集，Loon 使用编译好的 `.lsr` 规则集。组名与内核保持一致。
 
 ## DNS 架构
 
