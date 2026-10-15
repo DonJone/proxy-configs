@@ -30,6 +30,7 @@
     }
   ],
   "dns": {
+    "strategy": "prefer_ipv4",
     "servers": [
       {
         "type": "https",
@@ -127,13 +128,6 @@
     },
     {
       "type": "selector",
-      "tag": "欧美",
-      "outbounds": [
-        "DIRECT"
-      ]
-    },
-    {
-      "type": "selector",
       "tag": "AI",
       "outbounds": [
         "DIRECT"
@@ -163,7 +157,6 @@
       "outbounds": [
         "低倍",
         "亚太",
-        "欧美",
         "AI",
         "DIRECT"
       ]
