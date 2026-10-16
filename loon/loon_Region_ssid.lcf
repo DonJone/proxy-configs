@@ -79,10 +79,14 @@ DOMAIN-SUFFIX, pool.ntp.org, DIRECT
 DOMAIN-SUFFIX, ntsc.ac.cn, DIRECT
 DOMAIN-SUFFIX, campus.edu.cn, DIRECT
 
-# Google FCM 推送端口直连保护
+# Apple APNs 与 Google FCM 推送端口及网段直连保护
+DEST-PORT, 5223, DIRECT
+DEST-PORT, 2195, DIRECT
+DEST-PORT, 2196, DIRECT
 DEST-PORT, 5228, DIRECT
 DEST-PORT, 5229, DIRECT
 DEST-PORT, 5230, DIRECT
+IP-CIDR, 17.0.0.0/8, DIRECT, no-resolve
 
 # 国内 IP 兜底 (与 direct 规则集互补保护)
 GEOIP, CN, DIRECT, no-resolve

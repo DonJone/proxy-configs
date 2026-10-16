@@ -158,8 +158,11 @@ rules:
   - DOMAIN-SUFFIX,pool.ntp.org,DIRECT
   - DOMAIN-SUFFIX,ntsc.ac.cn,DIRECT
 
-  # --- Google FCM 推送端口直连保护 ---
+  # --- Apple APNs 与 Google FCM 推送端口及网段直连保护 ---
+  - DST-PORT,5223,DIRECT
+  - DST-PORT,2195-2196,DIRECT
   - DST-PORT,5228-5230,DIRECT
+  - IP-CIDR,17.0.0.0/8,DIRECT,no-resolve
 
   # --- 直连规则集 (包含私有网络、国内大盘、Apple/Microsoft国内生态、游戏切片CDN等) ---
   - RULE-SET,direct,DIRECT
