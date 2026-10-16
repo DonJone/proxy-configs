@@ -147,8 +147,7 @@
       "type": "selector",
       "tag": "低倍",
       "outbounds": [
-        "低倍自动",
-        "DIRECT"
+        "低倍自动"
       ]
     },
     {
