@@ -58,6 +58,13 @@
     ],
     "rules": [
       {
+        "query_type": [
+          "HTTPS",
+          "SVCB"
+        ],
+        "action": "reject"
+      },
+      {
         "clash_mode": "Direct",
         "server": "dns-direct"
       },
@@ -78,6 +85,10 @@
         "server": "dns-direct"
       },
       {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
         "rule_set": [
           "rule-apac",
           "rule-ai",
